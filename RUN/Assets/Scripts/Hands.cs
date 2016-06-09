@@ -4,16 +4,17 @@ using System.Collections;
 public class Hands : MonoBehaviour {
 
     RaycastHit hit;
+    Collider m_Collider;
 
-    // Use this for initialization
+    public bool m_CanClimb;
+
     void Start ()
     {
-	
+        m_Collider = GetComponent<BoxCollider>();
 	}
 	
-	// Update is called once per frame
 	void Update ()
-    {
+    { /*
         Debug.DrawRay(transform.position + transform.right * 0.4f, transform.TransformDirection(Vector3.forward) * 0.5f);
 
         Debug.DrawRay(transform.position - transform.right * 0.4f, transform.TransformDirection(Vector3.forward) * 0.5f);
@@ -25,12 +26,41 @@ public class Hands : MonoBehaviour {
                 hit.collider.SendMessage("HitByRaycast", SendMessageOptions.DontRequireReceiver);
             }
         }
+
         else if (Physics.Raycast(transform.position - transform.right * 0.4f, transform.TransformDirection(Vector3.forward), out hit))
         {
             if (hit.distance < 0.5f)
             {
                 hit.collider.SendMessage("HitByRaycast", SendMessageOptions.DontRequireReceiver);
             }
+        }
+       */
+    }
+
+    void OnTriggerStay(Collider col)
+    {
+        if (col.GetComponent<ParkourObject>())
+        {
+            if (col.bounds.max.y < m_Collider.bounds.max.y && col.GetComponent<ParkourObject>().m_Climbable)
+            {
+                m_CanClimb = true;
+            }
+            else
+            {
+                m_CanClimb = false;
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.GetComponent<ParkourObject>())
+        {
+            if (col.GetComponent<ParkourObject>().m_Climbable)
+            {
+                m_CanClimb = false;
+            }
+            
         }
     }
 

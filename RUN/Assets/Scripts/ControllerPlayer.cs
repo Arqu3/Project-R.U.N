@@ -17,10 +17,13 @@ public class ControllerPlayer : MonoBehaviour
     public float m_JumpForce;
 
     Rigidbody m_Rigidbody;
-    Vector3 m_LastMousePos;
+    Collider m_Collider;
+    Hands m_PlayerHands;
 
     void Start()
     {
+        m_PlayerHands = GetComponentInChildren<Hands>();
+        m_Collider = GetComponent<Collider>();
         m_Rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -37,20 +40,23 @@ public class ControllerPlayer : MonoBehaviour
             timer = 0.0f;
         }
 
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             ToggleBlink();
         }
 
-        HorizontalMovement();
+        Vector3 hMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
+        CheckClimb(hMovement);
+        HorizontalMovement(hMovement);
         Jump();
     }
 
-    void HorizontalMovement()
+    void HorizontalMovement(Vector3 inputVector)
     {
-        Vector3 hMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        m_Rigidbody.AddRelativeForce(hMovement * m_MovementSpeed, ForceMode.Acceleration);
+
+        m_Rigidbody.AddRelativeForce(inputVector * m_MovementSpeed, ForceMode.Acceleration);
     }
 
     void Jump()
@@ -64,7 +70,7 @@ public class ControllerPlayer : MonoBehaviour
 
     bool RaycastDir(Vector3 direction)
     {
-        Vector3 v = new Vector3(GetComponent<Collider>().bounds.center.x, GetComponent<Collider>().bounds.min.y, GetComponent<Collider>().bounds.center.z);
+        Vector3 v = new Vector3(m_Collider.bounds.center.x, m_Collider.bounds.min.y, m_Collider.bounds.center.z);
 
         Ray ray = new Ray(v, direction);
 
@@ -81,11 +87,10 @@ public class ControllerPlayer : MonoBehaviour
     void ToggleBlink()
     {
         //Get forward direction
-        forwardDir = transform.forward;
-        forwardDir.y = 0;
+        forwardDir = Camera.main.transform.forward;
 
         //Store velocity
-        playerVel = GetComponent<Rigidbody>().velocity;
+        playerVel = m_Rigidbody.velocity;
 
         if (!isBlinking)
         {
@@ -98,15 +103,21 @@ public class ControllerPlayer : MonoBehaviour
         //Add velocity
         if (timer < blinkTime)
         {
-            GetComponent<Rigidbody>().AddForce(forwardDir * blinkVelocity);
+            m_Rigidbody.AddForce(forwardDir * blinkVelocity);
         }
         else
         {
             isBlinking = false;
-            GetComponent<Rigidbody>().velocity = playerVel;
+            m_Rigidbody.velocity = playerVel;
         }
+    }
 
-
+    void CheckClimb(Vector3 inputVector)
+    {
+        if (m_PlayerHands.m_CanClimb && inputVector.magnitude > 0.4f)
+        {
+            m_Rigidbody.AddForce(Vector3.up * 6.5f, ForceMode.Impulse);
+        }
     }
 }
 
