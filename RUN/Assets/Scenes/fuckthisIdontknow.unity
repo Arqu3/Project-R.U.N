@@ -996,6 +996,22 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 514858522}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &516422556 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 172402, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
+  m_PrefabInternal: {fileID: 1772055358}
+--- !u!114 &516422560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 516422556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Climbable: 1
 --- !u!1 &584669783
 GameObject:
   m_ObjectHideFlags: 0
@@ -2048,8 +2064,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4cee9a4ce25b54e9fab05f009a75f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blinkTime: 0.1
-  blinkVelocity: 10000
+  m_BlinkTime: 0.5
+  m_BlinkVelocity: 200
   m_MovementSpeed: 30
   m_JumpForce: 60
 --- !u!33 &1079391575
@@ -2302,8 +2318,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.99, y: 11.568036, z: 2.8}
-  m_Center: {x: 0, y: -1.4840282, z: -0.60000235}
+  m_Size: {x: 0.99, y: 1.06, z: 2.6}
+  m_Center: {x: 0, y: -0.03, z: 0.19}
 --- !u!33 &1135394748
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3526,6 +3542,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05367fc875ffe8141b8242fc958f5fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Active: 0
+  m_HeadBobAmount: 0
 --- !u!114 &1648858936
 MonoBehaviour:
   m_ObjectHideFlags: 0

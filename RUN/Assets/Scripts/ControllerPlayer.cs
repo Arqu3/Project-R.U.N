@@ -4,14 +4,14 @@ using System.Collections;
 public class ControllerPlayer : MonoBehaviour
 {
 
-    public float blinkTime = 0.5f;
-    public float blinkVelocity = 200.0f;
+    public float m_BlinkTime = 0.5f;
+    public float m_BlinkVelocity = 200.0f;
 
-    bool isBlinking = false;
-    float timer = 0.0f;
+    bool m_IsBlinking = false;
+    float m_Timer = 0.0f;
 
-    Vector3 forwardDir;
-    Vector3 playerVel;
+    Vector3 m_ForwardDir;
+    Vector3 m_PlayerVel;
 
     public float m_MovementSpeed;
     public float m_JumpForce;
@@ -19,6 +19,8 @@ public class ControllerPlayer : MonoBehaviour
     Rigidbody m_Rigidbody;
     Collider m_Collider;
     Hands m_PlayerHands;
+
+    bool m_IsGrabbed = false;
 
     void Start()
     {
@@ -30,14 +32,14 @@ public class ControllerPlayer : MonoBehaviour
     void Update()
     {
         //Blink timer
-        if (isBlinking)
+        if (m_IsBlinking)
         {
-            timer += Time.deltaTime;
+            m_Timer += Time.deltaTime;
             Blink();
         }
         else
         {
-            timer = 0.0f;
+            m_Timer = 0.0f;
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -45,11 +47,14 @@ public class ControllerPlayer : MonoBehaviour
             ToggleBlink();
         }
 
-        Vector3 hMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 
-        CheckClimb(hMovement);
-        HorizontalMovement(hMovement);
-        Jump();
+        //CheckClimb(hMovement);
+        if (!m_IsGrabbed)
+        {
+            Vector3 hMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            HorizontalMovement(hMovement);
+            Jump();
+        }
     }
 
     void HorizontalMovement(Vector3 inputVector)
@@ -87,28 +92,28 @@ public class ControllerPlayer : MonoBehaviour
     void ToggleBlink()
     {
         //Get forward direction
-        forwardDir = Camera.main.transform.forward;
+        m_ForwardDir = Camera.main.transform.forward;
 
         //Store velocity
-        playerVel = m_Rigidbody.velocity;
+        m_PlayerVel = m_Rigidbody.velocity;
 
-        if (!isBlinking)
+        if (!m_IsBlinking)
         {
-            isBlinking = true;
+            m_IsBlinking = true;
         }
     }
 
     void Blink()
     {
         //Add velocity
-        if (timer < blinkTime)
+        if (m_Timer < m_BlinkTime)
         {
-            m_Rigidbody.AddForce(forwardDir * blinkVelocity);
+            m_Rigidbody.AddForce(m_ForwardDir * m_BlinkVelocity);
         }
         else
         {
-            isBlinking = false;
-            m_Rigidbody.velocity = playerVel;
+            m_IsBlinking = false;
+            m_Rigidbody.velocity = m_PlayerVel;
         }
     }
 
@@ -116,8 +121,31 @@ public class ControllerPlayer : MonoBehaviour
     {
         if (m_PlayerHands.m_CanClimb && inputVector.magnitude > 0.4f)
         {
-            m_Rigidbody.AddForce(Vector3.up * 6.5f, ForceMode.Impulse);
+            m_Rigidbody.AddForce(Vector3.up * 3.0f, ForceMode.Impulse);
         }
+    }
+
+    void IsGrabbed()
+    {
+        m_IsGrabbed = true;
+    }
+
+    void IsntGrabbed()
+    {
+        m_IsGrabbed = false;
+    }
+
+    void FastClimb()
+    {
+        m_Rigidbody.AddForce(Vector3.up * 6.5f, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Vector3.forward * 3.0f, ForceMode.Impulse);
+
+        Debug.Log("FastClimb");
+    }
+
+    void SlowClimb()
+    {
+        Debug.Log("SlowClimb");
     }
 }
 
