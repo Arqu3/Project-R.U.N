@@ -1,9 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum MovementState
+{
+    Idle, Moving, Jumping, Wallrunning, Grabbing, Blinking
+}
+
 public class ControllerPlayer : MonoBehaviour
 {
-
+ 
+    MovementState m_MoveState = MovementState.Idle;
+    
+    public float m_Friction;
     public float m_BlinkTime = 0.5f;
     public float m_BlinkVelocity = 200.0f;
 
@@ -31,6 +39,8 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
+        CheckState();
+
         //Blink timer
         if (m_IsBlinking)
         {
@@ -47,21 +57,76 @@ public class ControllerPlayer : MonoBehaviour
             ToggleBlink();
         }
 
-
         //CheckClimb(hMovement);
         if (!m_IsGrabbed)
         {
-            Vector3 hMovement = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Vector3 hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
             HorizontalMovement(hMovement);
             Jump();
+        }
+    }
+    
+    public MovementState GetState()
+    {
+        return m_MoveState;
+    }
+
+    void CheckState()
+    {
+        if (!m_IsBlinking) { 
+        //Checks if player is in air
+            if (!RaycastDir(Vector3.down))
+            {
+                m_MoveState = MovementState.Jumping;
+
+                if (m_IsGrabbed)
+                {
+                    m_MoveState = MovementState.Grabbing;
+                }
+            }
+            //If player is not in air then only following states are possible
+            else
+            {
+                Debug.Log(m_Rigidbody.velocity.magnitude);
+
+                if (m_Rigidbody.velocity.magnitude > 1f)
+                {
+                    m_MoveState = MovementState.Moving;
+                }
+                else
+                {
+                    m_MoveState = MovementState.Idle;
+                }
+            }
+        }
+        else
+        {
+            m_MoveState = MovementState.Blinking;
         }
     }
 
     void HorizontalMovement(Vector3 inputVector)
     {
+        Vector3 movementVector = inputVector;
+        bool gravityBool;
 
+        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Idle)) {
 
+            gravityBool = false;
+            if (movementVector.magnitude < 0.4 && m_Rigidbody.velocity.magnitude > 0f)
+            {
+                m_Rigidbody.velocity -= m_Rigidbody.velocity.normalized * m_Friction;
+            }
+        }
+        else
+        {
+            gravityBool = true;
+        }
+
+        ToggleGravity(gravityBool);
         m_Rigidbody.AddRelativeForce(inputVector * m_MovementSpeed, ForceMode.Acceleration);
+
+
     }
 
     void Jump()
@@ -70,7 +135,6 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
         }
-
     }
 
     bool RaycastDir(Vector3 direction)
@@ -89,6 +153,11 @@ public class ControllerPlayer : MonoBehaviour
         return false;
     }
 
+    public void ToggleGravity(bool active)
+    {
+        m_Rigidbody.useGravity = active;
+    }
+
     void ToggleBlink()
     {
         //Get forward direction
@@ -99,6 +168,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (!m_IsBlinking)
         {
+            ToggleGravity(false);
             m_IsBlinking = true;
         }
     }
@@ -112,6 +182,7 @@ public class ControllerPlayer : MonoBehaviour
         }
         else
         {
+            ToggleGravity(true);
             m_IsBlinking = false;
             m_Rigidbody.velocity = m_PlayerVel;
         }
@@ -137,8 +208,8 @@ public class ControllerPlayer : MonoBehaviour
 
     void FastClimb()
     {
-        m_Rigidbody.AddForce(Vector3.up * 6.5f, ForceMode.Impulse);
-        m_Rigidbody.AddForce(Vector3.forward * 3.0f, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.9f, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Vector3.forward * m_MovementSpeed, ForceMode.Impulse);
 
         Debug.Log("FastClimb");
     }

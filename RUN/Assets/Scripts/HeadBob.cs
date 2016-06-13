@@ -5,28 +5,52 @@ public class HeadBob : MonoBehaviour {
 
     public bool m_Active;
     public float m_HeadBobAmount;
-
-    Vector3 originalPosition;
-    SimpleSmoothMouseLook m_CameraLookScript;
+    public float m_BobSpeed;
+    int direction = 1;
+    Vector3 m_OriginalPosition;
+    ControllerPlayer m_Player;
 
     void Start()
     {
-        originalPosition = transform.localPosition;
-        m_CameraLookScript = GetComponent<SimpleSmoothMouseLook>();
+        m_OriginalPosition = transform.localPosition;
+        m_Player = GetComponentInParent<ControllerPlayer>();
     }
-
 
 	void Update () {
         if (m_Active)
         {
-            int direction = -1;
+            if (m_Player.GetState().Equals(MovementState.Moving))
+            {
+                Bob();
+            }
+            else
+            {
+                MoveToCenter();
+            }
+        }
+    }
 
-            if (transform.localPosition.y > originalPosition.y + m_HeadBobAmount)
+    void Bob()
+    {
+            if (transform.localPosition.y > m_OriginalPosition.y + m_HeadBobAmount && direction != -1)
+            {
+                direction = -1;
+            }
+            if (transform.localPosition.y < m_OriginalPosition.y - m_HeadBobAmount && direction != 1)
             {
                 direction = 1;
             }
 
-            //transform.localPosition += 
+            transform.localPosition += Vector3.up * Time.deltaTime * direction * m_BobSpeed;
+    }
+
+    void MoveToCenter()
+    {
+        float positionDelta = m_OriginalPosition.y - transform.localPosition.y;
+
+        if (positionDelta > 0.1f || positionDelta < -0.1)
+        {
+            transform.localPosition += Vector3.up * Mathf.Sign(positionDelta) * Time.deltaTime;
         }
-	}
+    }
 }

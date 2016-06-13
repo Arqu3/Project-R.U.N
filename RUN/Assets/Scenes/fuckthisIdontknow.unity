@@ -2064,10 +2064,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4cee9a4ce25b54e9fab05f009a75f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BlinkTime: 0.5
-  m_BlinkVelocity: 200
-  m_MovementSpeed: 30
-  m_JumpForce: 60
+  m_Friction: 1
+  m_BlinkTime: 0.15
+  m_BlinkVelocity: 2500
+  m_MovementSpeed: 20
+  m_JumpForce: 90
 --- !u!33 &1079391575
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3542,8 +3543,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05367fc875ffe8141b8242fc958f5fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Active: 0
-  m_HeadBobAmount: 0
+  m_Active: 1
+  m_HeadBobAmount: 0.01
+  m_BobSpeed: 0.05
 --- !u!114 &1648858936
 MonoBehaviour:
   m_ObjectHideFlags: 0
