@@ -2066,8 +2066,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Friction: 1
   m_BlinkTime: 0.15
-  m_BlinkVelocity: 2500
-  m_MovementSpeed: 20
+  m_BlinkVelocity: 50
+  m_MovementSpeed: 12
+  m_MaxSpeed: 15
   m_JumpForce: 90
 --- !u!33 &1079391575
 MeshFilter:
@@ -3545,7 +3546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Active: 1
   m_HeadBobAmount: 0.01
-  m_BobSpeed: 0.05
+  m_BobSpeed: 0.11
 --- !u!114 &1648858936
 MonoBehaviour:
   m_ObjectHideFlags: 0

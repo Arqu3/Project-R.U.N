@@ -8,7 +8,6 @@ public enum MovementState
 
 public class ControllerPlayer : MonoBehaviour
 {
- 
     MovementState m_MoveState = MovementState.Idle;
     
     public float m_Friction;
@@ -16,12 +15,15 @@ public class ControllerPlayer : MonoBehaviour
     public float m_BlinkVelocity = 200.0f;
 
     bool m_IsBlinking = false;
-    float m_Timer = 0.0f;
+    float m_BlinkTimer = 0.0f;
 
     Vector3 m_ForwardDir;
     Vector3 m_PlayerVel;
+    Vector3 m_hMovement;
 
+    float m_AccelPercent = 0;
     public float m_MovementSpeed;
+    public float m_MaxSpeed;
     public float m_JumpForce;
 
     Rigidbody m_Rigidbody;
@@ -44,12 +46,12 @@ public class ControllerPlayer : MonoBehaviour
         //Blink timer
         if (m_IsBlinking)
         {
-            m_Timer += Time.deltaTime;
+            m_BlinkTimer += Time.deltaTime;
             Blink();
         }
         else
         {
-            m_Timer = 0.0f;
+            m_BlinkTimer = 0.0f;
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -58,10 +60,11 @@ public class ControllerPlayer : MonoBehaviour
         }
 
         //CheckClimb(hMovement);
-        if (!m_IsGrabbed)
+        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing))
         {
-            Vector3 hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-            HorizontalMovement(hMovement);
+            m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+            HorizontalMovement(m_hMovement);
+            CalculateFriction(m_hMovement);
             Jump();
         }
     }
@@ -73,28 +76,34 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckState()
     {
+        //AccelPercent is incremented/decremented here
+
+        //Blink is a special state and is checked first before all others
         if (!m_IsBlinking) { 
-        //Checks if player is in air
+
+            //Checks if player is in air
             if (!RaycastDir(Vector3.down))
             {
+                m_AccelPercent = m_AccelPercent + Time.deltaTime * 20;
                 m_MoveState = MovementState.Jumping;
 
                 if (m_IsGrabbed)
                 {
+                    m_AccelPercent = m_AccelPercent - Time.deltaTime * 20;
                     m_MoveState = MovementState.Grabbing;
                 }
             }
             //If player is not in air then only following states are possible
             else
             {
-                Debug.Log(m_Rigidbody.velocity.magnitude);
-
-                if (m_Rigidbody.velocity.magnitude > 1f)
+                if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
                 {
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20;
                     m_MoveState = MovementState.Moving;
                 }
                 else
                 {
+                    m_AccelPercent = m_AccelPercent - Time.deltaTime * 150;
                     m_MoveState = MovementState.Idle;
                 }
             }
@@ -103,30 +112,44 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_MoveState = MovementState.Blinking;
         }
+
+        m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);
+        
     }
 
-    void HorizontalMovement(Vector3 inputVector)
+    void HorizontalMovement(Vector3 movementVector)
     {
-        Vector3 movementVector = inputVector;
-        bool gravityBool;
+        float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed, m_AccelPercent * 0.01f);
+        Vector3 forward = Camera.main.transform.forward;
+        forward.y = 0;
 
-        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Idle)) {
+        Quaternion rotation = Quaternion.LookRotation(forward, Vector3.up);
+        movementVector = rotation * movementVector * currentMoveSpeed;
+
+        m_Rigidbody.velocity = new Vector3(movementVector.x, m_Rigidbody.velocity.y, movementVector.z);
+ 
+        //m_Rigidbody.AddRelativeForce(movementVector * currentMoveSpeed, ForceMode.Acceleration); 
+    }
+
+    void CalculateFriction(Vector3 movementVector)
+    {
+        bool gravityBool = true;
+
+        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Idle))
+        {
 
             gravityBool = false;
             if (movementVector.magnitude < 0.4 && m_Rigidbody.velocity.magnitude > 0f)
             {
                 m_Rigidbody.velocity -= m_Rigidbody.velocity.normalized * m_Friction;
             }
-        }
-        else
-        {
-            gravityBool = true;
-        }
 
+            if (m_MoveState.Equals(MovementState.Idle))
+            {
+                m_Rigidbody.velocity = Vector3.Lerp(Vector3.zero, m_Rigidbody.velocity, m_AccelPercent * 0.01f);
+            }
+        }
         ToggleGravity(gravityBool);
-        m_Rigidbody.AddRelativeForce(inputVector * m_MovementSpeed, ForceMode.Acceleration);
-
-
     }
 
     void Jump()
@@ -176,9 +199,9 @@ public class ControllerPlayer : MonoBehaviour
     void Blink()
     {
         //Add velocity
-        if (m_Timer < m_BlinkTime)
+        if (m_BlinkTimer < m_BlinkTime)
         {
-            m_Rigidbody.AddForce(m_ForwardDir * m_BlinkVelocity);
+            m_Rigidbody.velocity = m_ForwardDir * m_BlinkVelocity;
         }
         else
         {
@@ -208,15 +231,15 @@ public class ControllerPlayer : MonoBehaviour
 
     void FastClimb()
     {
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.9f, ForceMode.Impulse);
-        m_Rigidbody.AddForce(Vector3.forward * m_MovementSpeed, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.4f, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Camera.main.transform.forward * m_MovementSpeed, ForceMode.Impulse);
 
-        Debug.Log("FastClimb");
+        //Debug.Log("FastClimb");
     }
 
     void SlowClimb()
     {
-        Debug.Log("SlowClimb");
+        //Debug.Log("SlowClimb");
     }
 }
 
