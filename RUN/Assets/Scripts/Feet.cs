@@ -21,6 +21,7 @@ public class Feet : MonoBehaviour
     {
         if (col.GetComponent<ParkourObject>())
         {
+            if (col.GetComponent<ParkourObject>().m_Climbable)
             {
                 m_Player.SendMessage("FeetClimb");
             }
