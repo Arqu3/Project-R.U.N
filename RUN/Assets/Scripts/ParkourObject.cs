@@ -10,4 +10,9 @@ public class ParkourObject : MonoBehaviour
     {
 
     }
+
+    public bool GetClimbable()
+    {
+        return m_Climbable;
+    }
 }

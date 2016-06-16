@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Hands : MonoBehaviour {
 
-    RaycastHit m_Hit;
     Collider m_Collider;
     Rigidbody m_Rigidbody;
     ControllerPlayer m_CPlayer;
@@ -22,28 +21,7 @@ public class Hands : MonoBehaviour {
 	}
 	
 	void Update ()
-    { /*
-        Debug.DrawRay(transform.position + transform.right * 0.4f, transform.TransformDirection(Vector3.forward) * 0.5f);
-
-        Debug.DrawRay(transform.position - transform.right * 0.4f, transform.TransformDirection(Vector3.forward) * 0.5f);
-
-        if (Physics.Raycast(transform.position + transform.right * 0.4f, transform.TransformDirection(Vector3.forward), out m_Hit))
-        {
-            if (m_Hit.distance < 0.5f)
-            {
-                m_Hit.collider.SendMessage("HitByRaycast", SendMessageOptions.DontRequireReceiver);
-            }
-        }
-
-        else if (Physics.Raycast(transform.position - transform.right * 0.4f, transform.TransformDirection(Vector3.forward), out m_Hit))
-        {
-            if (m_Hit.distance < 0.5f)
-            {
-                m_Hit.collider.SendMessage("HitByRaycast", SendMessageOptions.DontRequireReceiver);
-            }
-        }
-       */
-
+    { 
         if (m_CanClimb)
         {
             //Climb if pressing space
@@ -58,6 +36,8 @@ public class Hands : MonoBehaviour {
                 {
                     m_CPlayer.SendMessage("SlowClimb");
                 }
+
+                m_CPlayer.SendMessage("IsGrabbed", false);
             }
 
             m_LedgeTimer += Time.deltaTime;
@@ -77,7 +57,7 @@ public class Hands : MonoBehaviour {
                 m_Rigidbody.useGravity = false;
                 m_Rigidbody.velocity = Vector3.zero;
 
-                m_CPlayer.SendMessage("IsGrabbed");
+                m_CPlayer.SendMessage("IsGrabbed", true);
             }
         }
     }
@@ -106,24 +86,8 @@ public class Hands : MonoBehaviour {
                 m_CanClimb = false;
 
                 m_Rigidbody.useGravity = true;
-                m_CPlayer.SendMessage("IsntGrabbed");
+                m_CPlayer.SendMessage("IsGrabbed", false);
             }
         }
     }
-
-    /*bool RaycastDir(Vector3 direction)
-    {
-        Vector3 v1 = transform.position + transform.right * 0.4f;
-        Vector3 v2 = transform.position - transform.right * 0.4f;
-
-        Ray ray1 = new Ray(v1, direction);
-        Ray ray2 = new Ray(v2, direction);
-
-        if (Physics.Raycast(ray1, 0.5f) || Physics.Raycast(ray2, 0.5f))
-        {
-            return true;
-        }
-
-        return false;
-    }*/
 }

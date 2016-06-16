@@ -3,12 +3,12 @@ using System.Collections;
 
 public enum MovementState
 {
-    Idle, Moving, Jumping, Wallrunning, Grabbing, Blinking
+    Idle, Moving, Jumping, Wallrunning, Grabbing, Blinking, Climbing
 }
 
 public class ControllerPlayer : MonoBehaviour
 {
-    MovementState m_MoveState = MovementState.Idle;
+    public MovementState m_MoveState = MovementState.Idle;
     
     public float m_Friction;
     public float m_BlinkTime = 0.5f;
@@ -28,14 +28,18 @@ public class ControllerPlayer : MonoBehaviour
 
     Rigidbody m_Rigidbody;
     Collider m_Collider;
+    Collider m_MeshCol;
     Hands m_PlayerHands;
 
     bool m_IsGrabbed = false;
+    bool m_IsClimbing = false;
+    float m_ClimbTimer = 0.0f;
 
     void Start()
     {
         m_PlayerHands = GetComponentInChildren<Hands>();
         m_Collider = GetComponent<Collider>();
+        m_MeshCol = GetComponentInChildren<MeshCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -59,8 +63,26 @@ public class ControllerPlayer : MonoBehaviour
             ToggleBlink();
         }
 
+        //Climbing
+        if (m_IsClimbing)
+        {
+            m_ClimbTimer += Time.deltaTime;
+            m_MeshCol.enabled = false;
+        }
+        else
+        {
+            m_MeshCol.enabled = true;
+            m_ClimbTimer = 0.0f;
+        }
+
+        //Climb timer
+        if (m_IsClimbing && m_ClimbTimer > 0.1f)
+        {
+            m_IsClimbing = false;
+        }
+
         //CheckClimb(hMovement);
-        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing))
+        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
         {
             m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
             HorizontalMovement(m_hMovement);
@@ -111,6 +133,12 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             m_MoveState = MovementState.Blinking;
+        }
+
+        //Checks if player is currently climbing
+        if (m_IsClimbing)
+        {
+            m_MoveState = MovementState.Climbing;
         }
 
         m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);
@@ -219,27 +247,38 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
-    void IsGrabbed()
+    void IsGrabbed(bool state)
     {
-        m_IsGrabbed = true;
-    }
-
-    void IsntGrabbed()
-    {
-        m_IsGrabbed = false;
+        m_IsGrabbed = state;
     }
 
     void FastClimb()
     {
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.4f, ForceMode.Impulse);
-        m_Rigidbody.AddForce(Camera.main.transform.forward * m_MovementSpeed, ForceMode.Impulse);
+        m_IsClimbing = true;
 
-        //Debug.Log("FastClimb");
+        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.4f, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Camera.main.transform.forward * m_MovementSpeed * 4, ForceMode.Impulse);
+
+        Debug.Log("Fastclimb");
     }
 
     void SlowClimb()
     {
         //Debug.Log("SlowClimb");
+    }
+
+    void FeetClimb()
+    {
+        //Safety check
+        if (m_hMovement.magnitude > 0.4f && !m_IsClimbing)
+        {
+            m_IsClimbing = true;
+
+            m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.2f, ForceMode.Impulse);
+            m_Rigidbody.AddForce(Camera.main.transform.forward * m_MovementSpeed, ForceMode.Impulse);
+
+            Debug.Log("Feetclimb");
+        }
     }
 }
 

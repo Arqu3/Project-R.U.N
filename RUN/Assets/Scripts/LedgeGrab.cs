@@ -16,9 +16,4 @@ public class LedgeGrab : MonoBehaviour {
     {
 	
 	}
-
-    void HitByRaycast()
-    {
-        Debug.Log("I was hit!");
-    }
 }
