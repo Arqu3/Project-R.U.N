@@ -4,6 +4,7 @@ using System.Collections;
 public class Feet : MonoBehaviour
 {
     ControllerPlayer m_Player;
+    bool m_HasSentMsg = false;
 
 	// Use this for initialization
 	void Start ()
@@ -23,7 +24,22 @@ public class Feet : MonoBehaviour
         {
             if (col.GetComponent<ParkourObject>().m_Climbable)
             {
-                m_Player.SendMessage("FeetClimb");
+                if (!m_HasSentMsg)
+                {
+                    m_Player.SendMessage("FeetClimb");
+                    m_HasSentMsg = true;
+                }
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (col.GetComponent<ParkourObject>())
+        {
+            if (col.GetComponent<ParkourObject>().m_Climbable)
+            {
+                m_HasSentMsg = false;
             }
         }
     }

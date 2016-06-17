@@ -3,18 +3,16 @@ using System.Collections;
 
 public class Hands : MonoBehaviour {
 
-    Collider m_Collider;
     Rigidbody m_Rigidbody;
     ControllerPlayer m_CPlayer;
 
     public bool m_CanClimb;
 
     float m_LedgeTimer;
+    bool m_HasSentMsg = false;
 
     void Start ()
     {
-        m_Collider = GetComponent<BoxCollider>();
-
         m_Rigidbody = GetComponentInParent<Rigidbody>();
         m_CPlayer = GetComponentInParent<ControllerPlayer>();
         m_LedgeTimer = 0.0f;
@@ -30,11 +28,19 @@ public class Hands : MonoBehaviour {
                 m_Rigidbody.useGravity = true;
                 if (m_LedgeTimer < 0.5)
                 {
-                    m_CPlayer.SendMessage("FastClimb");
+                    if (!m_HasSentMsg)
+                    {
+                        m_CPlayer.SendMessage("FastClimb");
+                        m_HasSentMsg = true;
+                    }
                 }
                 else
                 {
-                    m_CPlayer.SendMessage("SlowClimb");
+                    if (!m_HasSentMsg)
+                    {
+                        m_CPlayer.SendMessage("SlowClimb");
+                        m_HasSentMsg = true;
+                    }
                 }
 
                 m_CPlayer.SendMessage("IsGrabbed", false);
@@ -45,6 +51,7 @@ public class Hands : MonoBehaviour {
         else
         {
             m_LedgeTimer = 0.0f;
+            m_HasSentMsg = false;
         }
     }
 
@@ -66,7 +73,7 @@ public class Hands : MonoBehaviour {
     {
         if (col.GetComponent<ParkourObject>())
         {
-            if (/*col.bounds.max.y < m_Collider.bounds.max.y &&*/ col.GetComponent<ParkourObject>().m_Climbable)
+            if (col.GetComponent<ParkourObject>().m_Climbable)
             {
                 m_CanClimb = true;
             }

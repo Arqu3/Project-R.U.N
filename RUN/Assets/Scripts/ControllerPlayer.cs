@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public enum MovementState
 {
@@ -16,6 +17,10 @@ public class ControllerPlayer : MonoBehaviour
 
     bool m_IsBlinking = false;
     float m_BlinkTimer = 0.0f;
+    public float m_BlinkCD = 3.0f;
+    float m_CurBlinkCD;
+    bool m_IsBlinkCD = false;
+    public Text m_BlinkCDText;
 
     Vector3 m_ForwardDir;
     Vector3 m_PlayerVel;
@@ -34,6 +39,8 @@ public class ControllerPlayer : MonoBehaviour
     bool m_IsGrabbed = false;
     bool m_IsClimbing = false;
     float m_ClimbTimer = 0.0f;
+    float m_ColliderTimer = 0.0f;
+    bool m_IsColliderActive = true;
 
     void Start()
     {
@@ -41,45 +48,19 @@ public class ControllerPlayer : MonoBehaviour
         m_Collider = GetComponent<Collider>();
         m_MeshCol = GetComponentInChildren<MeshCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
+
+        m_CurBlinkCD = m_BlinkCD;
     }
 
     void Update()
     {
         CheckState();
 
-        //Blink timer
-        if (m_IsBlinking)
-        {
-            m_BlinkTimer += Time.deltaTime;
-            Blink();
-        }
-        else
-        {
-            m_BlinkTimer = 0.0f;
-        }
+        BlinkUpdate();
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            ToggleBlink();
-        }
+        ClimbUpdate();
 
-        //Climbing
-        if (m_IsClimbing)
-        {
-            m_ClimbTimer += Time.deltaTime;
-            m_MeshCol.enabled = false;
-        }
-        else
-        {
-            m_MeshCol.enabled = true;
-            m_ClimbTimer = 0.0f;
-        }
-
-        //Climb timer
-        if (m_IsClimbing && m_ClimbTimer > 0.1f)
-        {
-            m_IsClimbing = false;
-        }
+        TextUpdate();
 
         //CheckClimb(hMovement);
         if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
@@ -255,9 +236,11 @@ public class ControllerPlayer : MonoBehaviour
     void FastClimb()
     {
         m_IsClimbing = true;
+        m_IsColliderActive = false;
 
         m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.4f, ForceMode.Impulse);
-        m_Rigidbody.AddForce(Camera.main.transform.forward * m_MovementSpeed * 4, ForceMode.Impulse);
+        Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
+        m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
 
         Debug.Log("Fastclimb");
     }
@@ -273,13 +256,96 @@ public class ControllerPlayer : MonoBehaviour
         if (m_hMovement.magnitude > 0.4f && !m_IsClimbing)
         {
             m_IsClimbing = true;
+            m_IsColliderActive = false;
 
             m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.2f, ForceMode.Impulse);
-            m_Rigidbody.AddForce(Camera.main.transform.forward * m_MovementSpeed, ForceMode.Impulse);
+            Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
+            m_Rigidbody.AddForce(temp * m_MovementSpeed, ForceMode.Impulse);
 
             Debug.Log("Feetclimb");
         }
     }
+
+    void BlinkUpdate()
+    {
+        //Blinking
+        if (m_IsBlinking)
+        {
+            m_BlinkTimer += Time.deltaTime;
+            Blink();
+        }
+        else
+        {
+            m_BlinkTimer = 0.0f;
+        }
+
+        if (!m_IsBlinkCD && Input.GetMouseButtonDown(0))
+        {
+            m_IsBlinkCD = true;
+            ToggleBlink();
+        }
+
+        //Clink cooldown
+        if (m_IsBlinkCD)
+        {
+            m_CurBlinkCD -= Time.deltaTime;
+            if (m_CurBlinkCD <= 0.0f)
+            {
+                m_CurBlinkCD = m_BlinkCD;
+                m_IsBlinkCD = false;
+            }
+        }
+    }
+
+    void ClimbUpdate()
+    {
+        //Climbing
+        if (m_IsClimbing)
+        {
+            m_ClimbTimer += Time.deltaTime;
+        }
+        else
+        {
+            m_ClimbTimer = 0.0f;
+        }
+
+        //Climb timer
+        if (m_IsClimbing && m_ClimbTimer > 0.4f)
+        {
+            m_IsClimbing = false;
+        }
+
+        //How long mesh collider is disabled
+        if (!m_IsColliderActive)
+        {
+            m_ColliderTimer += Time.deltaTime;
+            m_MeshCol.enabled = false;
+        }
+        else
+        {
+            m_MeshCol.enabled = true;
+            m_ColliderTimer = 0.0f;
+        }
+
+        if (m_ColliderTimer > 0.2f)
+        {
+            m_IsColliderActive = true;
+        }
+    }
+
+    void TextUpdate()
+    {
+        if (!m_IsBlinkCD)
+        {
+            //Set text to display blink is ready
+            m_BlinkCDText.text = "Blink Ready";
+            m_BlinkCDText.color = Color.green;
+        }
+        else
+        {
+            //Set text to current CD
+            m_BlinkCDText.text = m_CurBlinkCD.ToString("F1");
+            m_BlinkCDText.color = Color.red;
+        }
+    }
 }
-
-
