@@ -42,6 +42,13 @@ public class ControllerPlayer : MonoBehaviour
     float m_ColliderTimer = 0.0f;
     bool m_IsColliderActive = true;
 
+    float m_FallTimer = 0.0f;
+    bool m_Dampening = false;
+    bool m_RequireDampening = false;
+    bool m_Dampened = false;
+    float m_SlowedTimer = 0.0f;
+    bool m_Slowed = false;
+
     void Start()
     {
         m_PlayerHands = GetComponentInChildren<Hands>();
@@ -54,11 +61,15 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        CheckState();
+        m_Dampening = Input.GetKey("left ctrl");
+
+        CheckState();  
 
         BlinkUpdate();
 
         ClimbUpdate();
+
+        FallUpdate();
 
         TextUpdate();
 
@@ -135,8 +146,15 @@ public class ControllerPlayer : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(forward, Vector3.up);
         movementVector = rotation * movementVector * currentMoveSpeed;
 
-        m_Rigidbody.velocity = new Vector3(movementVector.x, m_Rigidbody.velocity.y, movementVector.z);
- 
+        if (!m_Slowed)
+        {
+            m_Rigidbody.velocity = new Vector3(movementVector.x, m_Rigidbody.velocity.y, movementVector.z);
+        }
+        else
+        {
+            m_Rigidbody.velocity = new Vector3(movementVector.x / 2, m_Rigidbody.velocity.y, movementVector.z / 2);
+        }
+
         //m_Rigidbody.AddRelativeForce(movementVector * currentMoveSpeed, ForceMode.Acceleration); 
     }
 
@@ -346,6 +364,65 @@ public class ControllerPlayer : MonoBehaviour
             //Set text to current CD
             m_BlinkCDText.text = m_CurBlinkCD.ToString("F1");
             m_BlinkCDText.color = Color.red;
+        }
+    }
+
+    void FallUpdate()
+    {
+        if (m_MoveState == MovementState.Jumping)
+        {
+            m_FallTimer += Time.deltaTime;
+        }
+        else
+        {
+            m_FallTimer = 0.0f;
+        }
+
+        if (RaycastDir(Vector3.down))
+        {
+            if (m_RequireDampening && !m_Dampened)
+            {
+                //Debug.Log("Slowed");
+                m_Slowed = true;
+            }
+            else if (m_RequireDampening && m_Dampened)
+            {
+                //Debug.Log("Not Slowed");
+                m_Slowed = false;
+            }
+        }
+
+        if (m_Slowed)
+        {
+            m_SlowedTimer += Time.deltaTime;
+        }
+        else
+        {
+            m_SlowedTimer = 0.0f;
+        }
+
+        if (m_SlowedTimer > 0.5f)
+        {
+            //Debug.Log("No more slow");
+            m_Slowed = false;
+        }
+
+        if (m_FallTimer > 0.5f)
+        {
+            m_RequireDampening = true;
+        }
+        else
+        {
+            m_RequireDampening = false;
+        }
+
+        if (m_RequireDampening && !m_Dampening)
+        {
+            m_Dampened = false;
+        }
+        else if (m_RequireDampening && m_Dampening)
+        {
+            m_Dampened = true;
         }
     }
 }
