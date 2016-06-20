@@ -5,6 +5,7 @@ public class Hands : MonoBehaviour {
 
     Rigidbody m_Rigidbody;
     ControllerPlayer m_CPlayer;
+    AnimationHandler m_AnimHandler;
 
     public bool m_CanClimb;
 
@@ -15,6 +16,7 @@ public class Hands : MonoBehaviour {
     {
         m_Rigidbody = GetComponentInParent<Rigidbody>();
         m_CPlayer = GetComponentInParent<ControllerPlayer>();
+        m_AnimHandler = GetComponentInParent<AnimationHandler>();
         m_LedgeTimer = 0.0f;
 	}
 	
@@ -32,6 +34,7 @@ public class Hands : MonoBehaviour {
                     {
                         m_CPlayer.SendMessage("FastClimb");
                         m_HasSentMsg = true;
+                        m_AnimHandler.SendMessage("IsGrabbed", true);
                     }
                 }
                 else
@@ -94,6 +97,7 @@ public class Hands : MonoBehaviour {
 
                 m_Rigidbody.useGravity = true;
                 m_CPlayer.SendMessage("IsGrabbed", false);
+                m_AnimHandler.SendMessage("IsGrabbed", false);
             }
         }
     }

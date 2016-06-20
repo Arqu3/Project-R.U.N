@@ -43,6 +43,7 @@ public class ControllerPlayer : MonoBehaviour
     bool m_IsColliderActive = true;
 
     float m_FallTimer = 0.0f;
+    public float m_FallThreshold = 1.0f;
     bool m_Dampening = false;
     bool m_RequireDampening = false;
     bool m_Dampened = false;
@@ -133,8 +134,7 @@ public class ControllerPlayer : MonoBehaviour
             m_MoveState = MovementState.Climbing;
         }
 
-        m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);
-        
+        m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);        
     }
 
     void HorizontalMovement(Vector3 movementVector)
@@ -271,7 +271,7 @@ public class ControllerPlayer : MonoBehaviour
     void FeetClimb()
     {
         //Safety check
-        if (m_hMovement.magnitude > 0.4f && !m_IsClimbing)
+        if (m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > -2.0f)
         {
             m_IsClimbing = true;
             m_IsColliderActive = false;
@@ -407,7 +407,7 @@ public class ControllerPlayer : MonoBehaviour
             m_Slowed = false;
         }
 
-        if (m_FallTimer > 0.5f)
+        if (m_FallTimer > m_FallThreshold)
         {
             m_RequireDampening = true;
         }
