@@ -302,7 +302,8 @@ public class ControllerPlayer : MonoBehaviour
         m_IsClimbing = true;
         m_IsColliderActive = false;
 
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.4f, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
+        //Only get forward in X and Z
         Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
         m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
 
@@ -344,7 +345,7 @@ public class ControllerPlayer : MonoBehaviour
             ToggleBlink();
         }
 
-        //Clink cooldown
+        //Blink cooldown
         if (m_IsBlinkCD)
         {
             m_CurBlinkCD -= Time.deltaTime;
@@ -374,15 +375,15 @@ public class ControllerPlayer : MonoBehaviour
             m_IsClimbing = false;
         }
 
-        //How long mesh collider is disabled
+        //Set mesh collider to trigger when climbing
         if (!m_IsColliderActive)
         {
             m_ColliderTimer += Time.deltaTime;
-            m_MeshCol.enabled = false;
+            m_MeshCol.isTrigger = true;
         }
         else
         {
-            m_MeshCol.enabled = true;
+            m_MeshCol.isTrigger = false;
             m_ColliderTimer = 0.0f;
         }
 

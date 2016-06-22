@@ -30,20 +30,13 @@ public class Hands : MonoBehaviour {
                 m_Rigidbody.useGravity = true;
                 if (m_LedgeTimer < 0.5)
                 {
-                    if (!m_HasSentMsg)
-                    {
-                        m_CPlayer.SendMessage("FastClimb");
-                        m_HasSentMsg = true;
-                        //m_AnimHandler.SendMessage("IsGrabbed", true);
-                    }
                 }
-                else
+
+                if (!m_HasSentMsg)
                 {
-                    if (!m_HasSentMsg)
-                    {
-                        m_CPlayer.SendMessage("SlowClimb");
-                        m_HasSentMsg = true;
-                    }
+                    m_CPlayer.SendMessage("FastClimb");
+                    m_HasSentMsg = true;
+                    //m_AnimHandler.SendMessage("IsGrabbed", true);
                 }
 
                 m_CPlayer.SendMessage("IsGrabbed", false);

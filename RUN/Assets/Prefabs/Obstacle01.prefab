@@ -12,7 +12,7 @@ GameObject:
   - 65: {fileID: 6595138}
   - 23: {fileID: 2341636}
   - 54: {fileID: 5490890}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Obstacle01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30,7 +30,8 @@ GameObject:
   - 65: {fileID: 6583900}
   - 114: {fileID: 11486940}
   - 114: {fileID: 11400092}
-  m_Layer: 0
+  - 114: {fileID: 11401804}
+  m_Layer: 9
   m_Name: Ledge
   m_TagString: Ledge
   m_Icon: {fileID: 0}
@@ -44,8 +45,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 172402}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.175, z: 0}
-  m_LocalScale: {x: 0.94596887, y: 0.8147362, z: 0.945969}
+  m_LocalPosition: {x: 0, y: 0.251, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 484406}
   m_RootOrder: 0
@@ -56,8 +57,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 151708}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 20.93, y: 12.59, z: -10.11}
-  m_LocalScale: {x: 5.1240015, y: 5.1240044, z: 5.1240044}
+  m_LocalPosition: {x: 20.93, y: 12.7, z: -28.49}
+  m_LocalScale: {x: 5.353145, y: 5.353151, z: 5.353151}
   m_Children:
   - {fileID: 400768}
   m_Father: {fileID: 0}
@@ -120,8 +121,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.35, y: 0.28, z: 1.35}
-  m_Center: {x: 0, y: 0.37, z: 0}
+  m_Size: {x: 1.09, y: 0.13, z: 1.09}
+  m_Center: {x: 0, y: 0.17, z: 0}
 --- !u!65 &6595138
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -145,7 +146,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Wallrunnable: 0
   m_Climbable: 1
+--- !u!114 &11401804
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1e5eccefbc8d8d48b4113257d592629, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11486940
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -163,7 +176,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 151708}

@@ -914,8 +914,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.3, y: 3.2, z: 1.3}
-  m_Center: {x: 0, y: -0.81, z: 0}
+  m_Size: {x: 1.3, y: 4.77, z: 1.3}
+  m_Center: {x: 0, y: -1.6, z: 0}
 --- !u!33 &496977791
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2232,7 +2232,7 @@ MonoBehaviour:
   m_BlinkCD: 3
   m_MovementSpeed: 15
   m_MaxSpeed: 18
-  m_JumpForce: 60
+  m_JumpForce: 80
   m_FallThreshold: 1
 --- !u!33 &1079391575
 MeshFilter:
@@ -3810,7 +3810,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1624076524}
   - 64: {fileID: 1624076527}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4015,9 +4015,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05367fc875ffe8141b8242fc958f5fc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Active: 1
-  m_HeadBobAmount: 1
-  m_BobSpeed: 0.1
+  m_Active: 0
+  m_HeadBobAmount: 0.1
+  m_BobSpeed: 1
 --- !u!114 &1648858936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4571,7 +4571,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 484406, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 12.59
+      value: 12.7
       objectReference: {fileID: 0}
     - target: {fileID: 484406, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
       propertyPath: m_LocalPosition.z
@@ -4596,26 +4596,6 @@ Prefab:
     - target: {fileID: 484406, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 400768, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.251
-      objectReference: {fileID: 0}
-    - target: {fileID: 400768, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 0.52220166
-      objectReference: {fileID: 0}
-    - target: {fileID: 6583900, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
-      propertyPath: m_Size.x
-      value: 1.14
-      objectReference: {fileID: 0}
-    - target: {fileID: 6583900, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
-      propertyPath: m_Size.z
-      value: 1.14
-      objectReference: {fileID: 0}
-    - target: {fileID: 6583900, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
-      propertyPath: m_Size.y
-      value: 0.19
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
