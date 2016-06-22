@@ -7,7 +7,10 @@ public class AnimationHandler : MonoBehaviour
 
     bool m_IsGrabbed = false;
     bool m_IsClimbing = false;
-	
+
+    bool m_AnimationStarted = true;
+    bool m_AnimationFinished = false;
+
 	void Start()
     {
         m_Animator = GetComponent<Animator>();
@@ -18,6 +21,17 @@ public class AnimationHandler : MonoBehaviour
     {
         ClimbUpdate();
 	}
+
+    void LateUpdate()
+    {
+        if (m_AnimationFinished && m_AnimationStarted)
+        {
+            m_AnimationStarted = false;
+
+            transform.parent.position = transform.position;
+            transform.localPosition = Vector3.zero;
+        }
+    }
 
     void IsGrabbed(bool state)
     {
@@ -39,10 +53,16 @@ public class AnimationHandler : MonoBehaviour
         //Play climb animation if flag is set and not climbing
         if (!m_IsClimbing && m_IsGrabbed)
         {
+            m_AnimationStarted = true;
+            m_AnimationFinished = false;
             m_Animator.SetBool("Climb", true);
         }
         else
         {
+            if (!m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Climb"))
+            {
+                m_AnimationFinished = true;
+            }
             m_Animator.SetBool("Climb", false);
         }
     }
