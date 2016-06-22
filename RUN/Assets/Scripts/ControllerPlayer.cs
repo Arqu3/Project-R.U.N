@@ -61,7 +61,11 @@ public class ControllerPlayer : MonoBehaviour
     bool m_WallrunDirSet;
     bool m_WallrunInterrupted;
     Vector3 m_WallrunDir;
-    const float m_WallrunAngle = 30;
+    const float m_WallrunAngle = 45;
+
+    bool m_isMovingFromInput;
+    Vector3 m_lastPosition;
+    int m_NotMovingCount = 0;
 
     void Start()
     {
@@ -86,6 +90,8 @@ public class ControllerPlayer : MonoBehaviour
             m_Dampening = Input.GetKeyDown("left ctrl");
         }
 
+        CheckNotMovingFromInput();
+
         CheckState();
 
         BlinkUpdate();
@@ -95,6 +101,7 @@ public class ControllerPlayer : MonoBehaviour
         FallUpdate();
 
         CheckWallrun();
+
 
         TextUpdate();
 
@@ -174,7 +181,6 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Wallrunning))
         {
-            
             movementVector = m_WallrunDir * Mathf.Clamp01(movementVector.z) * currentMoveSpeed;   
         }
         else
@@ -222,15 +228,24 @@ public class ControllerPlayer : MonoBehaviour
         }
 
         ToggleGravity(gravityBool);
-
     }
 
     void JumpUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && RaycastDir(Vector3.down))
+        if (Input.GetKeyDown(KeyCode.Space) && (RaycastDir(Vector3.down) || m_MoveState.Equals(MovementState.Wallrunning)))
         {
+            if (m_MoveState.Equals(MovementState.Wallrunning)){
+                m_WallrunInterrupted = true;
+            }
+
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
         }
+
+        if (m_MoveState.Equals(MovementState.Jumping) && !m_isMovingFromInput)
+        {
+            m_hMovement = Vector3.zero; 
+        }
+
     }
 
     bool RaycastDir(Vector3 direction)
@@ -238,8 +253,6 @@ public class ControllerPlayer : MonoBehaviour
         Vector3 v = new Vector3(m_Collider.bounds.center.x, m_Collider.bounds.min.y, m_Collider.bounds.center.z);
 
         Ray ray = new Ray(v, direction);
-
-        Debug.DrawRay(v, direction);
 
         if (Physics.Raycast(ray, 1f))
         {
@@ -477,19 +490,23 @@ public class ControllerPlayer : MonoBehaviour
             StartWallrun();
         }
         
-        if (!m_MySides.m_CanWallrun || Input.GetKeyDown(KeyCode.Space))
+        if (!m_MySides.m_CanWallrun || m_WallrunInterrupted)
         {
             m_IsWallrunning = false;
             m_WallrunDirSet = false;
         }
 
-
-        /*
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            m_WallrunInterrupted = true;
+        if (m_IsWallrunning) { 
+            if (Input.GetKeyDown(KeyCode.Space) || !m_isMovingFromInput)
+            {
+                m_WallrunInterrupted = true;
+            }
         }
-        */
+
+        if (m_MySides.WallrunObjectChanged || RaycastDir(Vector3.down))
+        {
+            m_WallrunInterrupted = false;
+        }
     }
 
     void StartWallrun()
@@ -501,7 +518,7 @@ public class ControllerPlayer : MonoBehaviour
             Vector3[] tempV = m_MySides.GetColliderInfo();
 
             Vector3 forward = new Vector3(transform.forward.x, 0, transform.forward.z);
-
+            
             for (int t = 0; t < 2; t++) {  
                 for (int i = 0; i < 4; i++){
                     if (Vector3.Angle(t * 2 * -tempV[i] +tempV[i], forward) < m_WallrunAngle)
@@ -512,6 +529,37 @@ public class ControllerPlayer : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    void CheckNotMovingFromInput()
+    {
+        Vector3 movementDelta = transform.position - m_lastPosition;
+
+        movementDelta.y = 0;
+
+        m_lastPosition = transform.position;
+
+        if (m_MoveState.Equals(MovementState.Climbing) || m_MoveState.Equals(MovementState.Blinking))
+        {
+            m_isMovingFromInput = true;
+        }
+
+        if (movementDelta.magnitude > 0.2f)
+        {
+            m_isMovingFromInput = true;
+            m_NotMovingCount = 0;
+        }
+        else
+        {
+            m_NotMovingCount++;            
+        }
+
+        Mathf.Clamp(m_NotMovingCount, 0, 3);
+
+        if (m_NotMovingCount == 3)
+        {
+            m_isMovingFromInput = false;
         }
     }
 }
