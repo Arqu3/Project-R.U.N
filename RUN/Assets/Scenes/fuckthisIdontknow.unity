@@ -337,7 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &147004743
 GameObject:
   m_ObjectHideFlags: 0
@@ -1236,7 +1236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &600248571
 GameObject:
   m_ObjectHideFlags: 0
@@ -1475,7 +1475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &697110562
 GameObject:
   m_ObjectHideFlags: 0
@@ -1714,7 +1714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &820609975
 GameObject:
   m_ObjectHideFlags: 0
@@ -2226,13 +2226,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MoveState: 0
   m_BlinkCDText: {fileID: 1596960747}
-  m_Friction: 1
-  m_BlinkTime: 0.15
-  m_BlinkVelocity: 50
-  m_BlinkCD: 2
-  m_MovementSpeed: 12
+  m_Friction: 0
+  m_BlinkTime: 0.1
+  m_BlinkVelocity: 200
+  m_BlinkCD: 3
+  m_MovementSpeed: 15
   m_MaxSpeed: 18
-  m_JumpForce: 90
+  m_JumpForce: 60
   m_FallThreshold: 1
 --- !u!33 &1079391575
 MeshFilter:
@@ -2682,7 +2682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &1226496819
 GameObject:
   m_ObjectHideFlags: 0
@@ -3254,7 +3254,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.4, y: 1, z: 1}
+  m_Size: {x: 2.6, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!33 &1369329206
 MeshFilter:
@@ -3725,7 +3725,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &1622475709
 GameObject:
   m_ObjectHideFlags: 0
@@ -4016,8 +4016,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Active: 1
-  m_HeadBobAmount: 0.01
-  m_BobSpeed: 0.11
+  m_HeadBobAmount: 1
+  m_BobSpeed: 0.1
 --- !u!114 &1648858936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4029,7 +4029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef32d186ef9627c4da8cf50d0db0de0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clampInDegrees: {x: 360, y: 140}
+  clampInDegrees: {x: 360, y: 180}
   lockCursor: 1
   sensitivity: {x: 2, y: 2}
   smoothing: {x: 3, y: 3}
@@ -4124,7 +4124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &1680299920
 GameObject:
   m_ObjectHideFlags: 0
@@ -4424,7 +4424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &1729155484
 GameObject:
   m_ObjectHideFlags: 0
@@ -4575,7 +4575,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 484406, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -10.11
+      value: -28.49
       objectReference: {fileID: 0}
     - target: {fileID: 484406, guid: 217a2604a8b675b419aaef902a396d74, type: 2}
       propertyPath: m_LocalRotation.x
@@ -4814,7 +4814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!114 &1792628806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5300,7 +5300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
-  m_Climbable: 1
+  m_Climbable: 0
 --- !u!1 &2059113180
 GameObject:
   m_ObjectHideFlags: 0

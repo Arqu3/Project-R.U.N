@@ -57,7 +57,10 @@ public class ControllerPlayer : MonoBehaviour
 
     //Wallrun vars
     bool m_IsWallrunning;
-
+    bool m_WallrunDirSet;
+    bool m_WallrunInterrupted;
+    Vector3 m_WallrunDir;
+    const float m_WallrunAngle = 30;
 
     void Start()
     {
@@ -74,7 +77,7 @@ public class ControllerPlayer : MonoBehaviour
     {
         m_Dampening = Input.GetKey("left ctrl");
 
-        CheckState();  
+        CheckState();
 
         BlinkUpdate();
 
@@ -82,24 +85,17 @@ public class ControllerPlayer : MonoBehaviour
 
         FallUpdate();
 
+        CheckWallrun();
+
         TextUpdate();
 
         //CheckClimb(hMovement);
         if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
         {
-            if (m_MoveState.Equals(MovementState.Wallrunning))
-            {
-                Vector3 tempV = m_MySides.GetColliderInfo().
-
-                m_hMovement = Vector3.Project(new Vector3(0, 0, Input.GetAxis("Vertical")), )
-            }
-            else { 
-                m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-                CalculateFriction(m_hMovement);
-                JumpUpdate();
-            }
+            m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+            CalculateFriction(m_hMovement);
+            JumpUpdate();
             HorizontalMovement(m_hMovement);
-            
         }
     }
     
@@ -166,11 +162,20 @@ public class ControllerPlayer : MonoBehaviour
     void HorizontalMovement(Vector3 movementVector)
     {
         float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed, m_AccelPercent * 0.01f);
-        Vector3 forward = Camera.main.transform.forward;
-        forward.y = 0;
 
-        Quaternion rotation = Quaternion.LookRotation(forward, Vector3.up);
-        movementVector = rotation * movementVector * currentMoveSpeed;
+        if (m_MoveState.Equals(MovementState.Wallrunning))
+        {
+            
+            movementVector = m_WallrunDir * Mathf.Clamp01(movementVector.z) * currentMoveSpeed;   
+        }
+        else
+        { 
+            Vector3 forward = Camera.main.transform.forward;
+            forward.y = 0;
+
+            Quaternion rotation = Quaternion.LookRotation(forward, Vector3.up);
+            movementVector = rotation * movementVector * currentMoveSpeed;
+        }
 
         if (!m_Slowed)
         {
@@ -190,7 +195,6 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Idle))
         {
-
             gravityBool = false;
             if (movementVector.magnitude < 0.4 && m_Rigidbody.velocity.magnitude > 0f)
             {
@@ -202,7 +206,14 @@ public class ControllerPlayer : MonoBehaviour
                 m_Rigidbody.velocity = Vector3.Lerp(Vector3.zero, m_Rigidbody.velocity, m_AccelPercent * 0.01f);
             }
         }
+
+        if (m_MoveState.Equals(MovementState.Wallrunning)) {
+            gravityBool = false;
+            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -10f + movementVector.z * 9.5f, m_Rigidbody.velocity.z);
+        }
+
         ToggleGravity(gravityBool);
+
     }
 
     void JumpUpdate()
@@ -449,9 +460,48 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckWallrun()
     {
-        if (m_MySides.m_CanWallrun && Input.GetKeyDown(KeyCode.Space))
+        if (m_MySides.m_CanWallrun && m_MoveState.Equals(MovementState.Jumping))
         {
             m_IsWallrunning = true;
+
+            StartWallrun();
+        }
+        
+        if (!m_MySides.m_CanWallrun || Input.GetKeyDown(KeyCode.Space))
+        {
+            m_IsWallrunning = false;
+            m_WallrunDirSet = false;
+        }
+
+
+        /*
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            m_WallrunInterrupted = true;
+        }
+        */
+    }
+
+    void StartWallrun()
+    {
+        if (m_IsWallrunning && !m_WallrunDirSet)
+        {
+            m_WallrunDirSet = true;
+
+            Vector3[] tempV = m_MySides.GetColliderInfo();
+
+            Vector3 forward = new Vector3(transform.forward.x, 0, transform.forward.z);
+
+            for (int t = 0; t < 2; t++) {  
+                for (int i = 0; i < 4; i++){
+                    if (Vector3.Angle(t * 2 * -tempV[i] +tempV[i], forward) < m_WallrunAngle)
+                    {
+                        m_WallrunDir = (t * 2 * -tempV[i] + tempV[i]).normalized;
+                        t = 2;
+                        i = 4;
+                    }
+                }
+            }
         }
     }
 }

@@ -20,17 +20,35 @@ public class Sides : MonoBehaviour {
             }
         }
     }
+    void OnTriggerExit(Collider col)
+    {
+        if (col.GetComponent<ParkourObject>())
+        {
+            if (col.GetComponent<ParkourObject>().m_Wallrunnable)
+            {
+                m_CanWallrun = false;
+            }
+        }
+    }
+
     
-    public Bounds GetColliderInfo()
+    public Vector3[] GetColliderInfo()
     {
         Bounds b = GetComponent<Collider>().bounds;
 
-        Vector2 v1 = b.min - new Vector3(b.max.x, b.min.y);
-        Vector2 v2 = new Vector3(b.max.x, b.min.y) - b.max;
-        Vector2 v3 = b.max - new Vector3(b.min.x, b.max.y);
-        Vector2 v4 = new Vector3(b.max.y, b.min.x) - b.min;
+        Vector3[] returnVector = new Vector3[4];
 
-        return m_WallrunObject.GetComponent<Collider>().bounds;
+        returnVector[0] = b.min - new Vector3(b.max.x, 0, b.min.z);
+        returnVector[1] = new Vector3(b.max.x, 0, b.min.z) - b.max;
+        returnVector[2] = b.max - new Vector3(b.min.x, 0,b.max.z);
+        returnVector[3] = new Vector3(b.max.y, 0,b.min.z) - b.min;
+
+        for (int i = 0; i < 4; i++)
+        {
+            returnVector[i].y = 0;
+        }
+
+        return returnVector;
     }
 
 }
