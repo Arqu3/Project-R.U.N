@@ -54,6 +54,7 @@ public class ControllerPlayer : MonoBehaviour
     bool m_Slowed = false;
     float m_SlowedTimer = 0.0f;
     float m_FallTimer = 0.0f;
+    float m_DampeningTimer = 0.0f;
 
     //Wallrun vars
     bool m_IsWallrunning;
@@ -75,7 +76,15 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        m_Dampening = Input.GetKey("left ctrl");
+        if (m_Dampening && m_DampeningTimer < 0.4f)
+        {
+            m_DampeningTimer += Time.deltaTime;
+        }
+        else
+        {
+            m_DampeningTimer = 0.0f;
+            m_Dampening = Input.GetKeyDown("left ctrl");
+        }
 
         CheckState();
 
@@ -448,13 +457,13 @@ public class ControllerPlayer : MonoBehaviour
             m_RequireDampening = false;
         }
 
-        if (m_RequireDampening && !m_Dampening)
-        {
-            m_Dampened = false;
-        }
-        else if (m_RequireDampening && m_Dampening)
+        if (m_RequireDampening && m_Dampening)
         {
             m_Dampened = true;
+        }
+        else
+        {
+            m_Dampened = false;
         }
     }
 
