@@ -34,7 +34,7 @@ public class Hands : MonoBehaviour {
                     {
                         m_CPlayer.SendMessage("FastClimb");
                         m_HasSentMsg = true;
-                        m_AnimHandler.SendMessage("IsGrabbed", true);
+                        //m_AnimHandler.SendMessage("IsGrabbed", true);
                     }
                 }
                 else
@@ -97,7 +97,7 @@ public class Hands : MonoBehaviour {
 
                 m_Rigidbody.useGravity = true;
                 m_CPlayer.SendMessage("IsGrabbed", false);
-                m_AnimHandler.SendMessage("IsGrabbed", false);
+                //m_AnimHandler.SendMessage("IsGrabbed", false);
             }
         }
     }
