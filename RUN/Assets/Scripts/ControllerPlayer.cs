@@ -102,10 +102,8 @@ public class ControllerPlayer : MonoBehaviour
 
         CheckWallrun();
 
-
         TextUpdate();
 
-        //CheckClimb(hMovement);
         if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
         {
             m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
@@ -297,48 +295,6 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
-    void CheckClimb(Vector3 inputVector)
-    {
-        if (m_PlayerHands.m_CanClimb && inputVector.magnitude > 0.4f)
-        {
-            m_Rigidbody.AddForce(Vector3.up * 3.0f, ForceMode.Impulse);
-        }
-    }
-
-    void IsGrabbed(bool state)
-    {
-        m_IsGrabbed = state;
-    }
-
-    void FastClimb()
-    {
-        m_IsClimbing = true;
-        m_IsColliderActive = false;
-
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
-        //Only get forward in X and Z
-        Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
-        m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
-
-        Debug.Log("Fastclimb");
-    }
-
-    void FeetClimb()
-    {
-        //Safety check
-        if (m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > -2.0f)
-        {
-            m_IsClimbing = true;
-            m_IsColliderActive = false;
-
-            m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.2f, ForceMode.Impulse);
-            Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
-            m_Rigidbody.AddForce(temp * m_MovementSpeed, ForceMode.Impulse);
-
-            Debug.Log("Feetclimb");
-        }
-    }
-
     void BlinkUpdate()
     {
         //Blinking
@@ -367,6 +323,57 @@ public class ControllerPlayer : MonoBehaviour
                 m_CurBlinkCD = m_BlinkCD;
                 m_IsBlinkCD = false;
             }
+        }
+    }
+
+    bool IsMovingForward()
+    {
+        //Checks if player is moving foward
+        m_PlayerVel = m_Rigidbody.velocity;
+        //Translate world space velocity to localspace velocity to be able to read if negative or not
+        Vector3 vel = transform.InverseTransformDirection(m_PlayerVel);
+
+        if (vel.z > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    void IsGrabbed(bool state)
+    {
+        m_IsGrabbed = state;
+    }
+
+    void FastClimb()
+    {
+        m_IsClimbing = true;
+        m_IsColliderActive = false;
+
+        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
+        //Only get forward in X and Z
+        Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
+        m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
+
+        Debug.Log("Fastclimb");
+    }
+
+    void FeetClimb()
+    {
+        //Safety check
+        if (IsMovingForward() && m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > -2.0f)
+        {
+            m_IsClimbing = true;
+            m_IsColliderActive = false;
+
+            m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.2f, ForceMode.Impulse);
+            Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
+            m_Rigidbody.AddForce(temp * m_MovementSpeed, ForceMode.Impulse);
+
+            Debug.Log("Feetclimb");
         }
     }
 
