@@ -5,19 +5,34 @@ public class Sides : MonoBehaviour {
 
     ParkourObject m_WallrunObject;
     public bool m_CanWallrun;
+    private bool m_WallrunObjectChanged;
+    public bool WallrunObjectChanged {
+        get
+        {
+            return m_WallrunObjectChanged;
+        }
+    }
 
     void OnTriggerStay(Collider col)
     {
         m_CanWallrun = false;
-        m_WallrunObject = null;
 
         if (col.GetComponent<ParkourObject>())
         {
             if (col.GetComponent<ParkourObject>().m_Wallrunnable)
             {
+                CheckWallrunObjectChanged(col);
                 m_WallrunObject = col.GetComponent<ParkourObject>();
                 m_CanWallrun = true;
             }
+            else
+            {
+                m_WallrunObject = null;
+            }
+        }
+        else
+        {
+            m_WallrunObject = null;
         }
     }
     void OnTriggerExit(Collider col)
@@ -26,12 +41,33 @@ public class Sides : MonoBehaviour {
         {
             if (col.GetComponent<ParkourObject>().m_Wallrunnable)
             {
+                m_WallrunObject = null;
                 m_CanWallrun = false;
             }
         }
     }
 
-    
+    void CheckWallrunObjectChanged(Collider c)
+    {
+        if (c != null) {
+            if (m_WallrunObject != null) {  
+
+                if (m_WallrunObject.Equals(c.GetComponent<ParkourObject>()))
+                {
+                    m_WallrunObjectChanged = false;
+                }
+                else
+                {
+                    m_WallrunObjectChanged = false;
+                }
+            }
+            else
+            {
+                m_WallrunObjectChanged = false;
+            }
+        }
+    }
+
     public Vector3[] GetColliderInfo()
     {
         Bounds b = GetComponent<Collider>().bounds;
