@@ -848,7 +848,7 @@ GameObject:
   - 65: {fileID: 496977790}
   - 23: {fileID: 496977789}
   - 114: {fileID: 496977788}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Feet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2253,7 +2253,7 @@ GameObject:
   - 23: {fileID: 1079391576}
   - 33: {fileID: 1079391575}
   - 136: {fileID: 1079391573}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerBody
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2326,6 +2326,9 @@ MonoBehaviour:
   m_MaxSpeed: 18
   m_JumpForce: 80
   m_FallThreshold: 1
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967039
 --- !u!33 &1079391575
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2521,7 +2524,7 @@ GameObject:
   - 65: {fileID: 1135394747}
   - 23: {fileID: 1135394746}
   - 114: {fileID: 1135394749}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Hands
   m_TagString: Hand
   m_Icon: {fileID: 0}
@@ -3279,7 +3282,7 @@ GameObject:
   - 65: {fileID: 1369329205}
   - 23: {fileID: 1369329204}
   - 114: {fileID: 1369329203}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sides
   m_TagString: Untagged
   m_Icon: {fileID: 0}
