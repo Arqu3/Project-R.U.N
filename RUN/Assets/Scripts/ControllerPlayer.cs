@@ -20,6 +20,7 @@ public class ControllerPlayer : MonoBehaviour
     public float m_MaxSpeed;
     public float m_JumpForce;
     public float m_FallThreshold = 1.0f;
+    public LayerMask m_LayerMask;
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -39,6 +40,9 @@ public class ControllerPlayer : MonoBehaviour
     bool m_IsBlinkCD = false;
     float m_BlinkTimer = 0.0f;
     float m_CurBlinkCD;
+    float m_DistanceTravelled = 0.0f;
+    RaycastHit m_Hit;
+    Ray m_Ray;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -111,6 +115,8 @@ public class ControllerPlayer : MonoBehaviour
             JumpUpdate();
             HorizontalMovement(m_hMovement);
         }
+
+        Debug.DrawRay(transform.position + Camera.main.transform.forward * 2, Camera.main.transform.forward);
     }
     
     public MovementState GetState()
@@ -282,8 +288,13 @@ public class ControllerPlayer : MonoBehaviour
 
     void Blink()
     {
+        //Distance ray
+        m_Ray = new Ray(transform.position + m_ForwardDir * 2.0f, m_ForwardDir);
+        Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask);
+        Debug.Log(m_Hit.distance);
+
         //Add velocity
-        if (m_BlinkTimer < m_BlinkTime)
+        if (m_BlinkTimer < m_BlinkTime && (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 1.5f))
         {
             m_Rigidbody.velocity = m_ForwardDir * m_BlinkVelocity;
         }
