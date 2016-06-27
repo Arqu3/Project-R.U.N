@@ -298,11 +298,10 @@ public class ControllerPlayer : MonoBehaviour
     {
         //Distance ray
         m_Ray = new Ray(transform.position + m_ForwardDir * 2.0f, m_ForwardDir);
-        Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask);
-        Debug.Log(m_Hit.distance);
+        //Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask);
 
         //Add velocity
-        if (m_BlinkTimer < m_BlinkTime && (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 1.5f))
+        if (m_BlinkTimer < m_BlinkTime && (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 2.0f))
         {
             m_Rigidbody.velocity = m_ForwardDir * m_BlinkVelocity;
         }
