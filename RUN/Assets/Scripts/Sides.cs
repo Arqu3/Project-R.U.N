@@ -4,7 +4,9 @@ using System.Collections;
 public class Sides : MonoBehaviour {
 
     ParkourObject m_WallrunObject;
+    private Collision m_Collision;
     public bool m_CanWallrun;
+    public bool m_WallrunSideRight;
     private bool m_WallrunObjectChanged;
     public bool WallrunObjectChanged {
         get
@@ -35,6 +37,31 @@ public class Sides : MonoBehaviour {
             m_WallrunObject = null;
         }
     }
+
+    void OnCollisionStay(Collision col)
+    {
+
+        Debug.Log("Colliding");
+
+        if (m_CanWallrun) {
+
+
+            Vector3 colVector = col.contacts[0].point - transform.position;
+
+            colVector = Vector3.Project(colVector, transform.right);
+
+            if (colVector.normalized == transform.right.normalized)
+            {
+                m_WallrunSideRight = true;
+            }
+            else
+            {
+                m_WallrunSideRight = false;
+            }
+        }
+    }
+
+
     void OnTriggerExit(Collider col)
     {
         if (col.GetComponent<ParkourObject>())
@@ -74,10 +101,17 @@ public class Sides : MonoBehaviour {
 
         Vector3[] returnVector = new Vector3[4];
 
+        returnVector[0] = transform.forward;
+        returnVector[1] = -transform.forward;
+        returnVector[2] = transform.right;
+        returnVector[3] = -transform.right;
+
+        /*
         returnVector[0] = b.min - new Vector3(b.max.x, 0, b.min.z);
         returnVector[1] = new Vector3(b.max.x, 0, b.min.z) - b.max;
         returnVector[2] = b.max - new Vector3(b.min.x, 0,b.max.z);
         returnVector[3] = new Vector3(b.max.y, 0,b.min.z) - b.min;
+        */
 
         for (int i = 0; i < 4; i++)
         {
@@ -86,5 +120,4 @@ public class Sides : MonoBehaviour {
 
         return returnVector;
     }
-
 }

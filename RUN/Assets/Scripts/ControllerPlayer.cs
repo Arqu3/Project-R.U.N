@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public enum MovementState
 {
-    Idle, Moving, Jumping, Wallrunning, Grabbing, Blinking, Climbing
+    Idle, Moving, Jumping, Falling, Wallrunning, Grabbing, Blinking, Climbing
 }
 
 public class ControllerPlayer : MonoBehaviour
@@ -20,6 +20,7 @@ public class ControllerPlayer : MonoBehaviour
     public float m_MaxSpeed;
     public float m_JumpForce;
     public float m_FallThreshold = 1.0f;
+    public LayerMask m_LayerMask;
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -39,6 +40,9 @@ public class ControllerPlayer : MonoBehaviour
     bool m_IsBlinkCD = false;
     float m_BlinkTimer = 0.0f;
     float m_CurBlinkCD;
+    float m_DistanceTravelled = 0.0f;
+    RaycastHit m_Hit;
+    Ray m_Ray;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -60,6 +64,7 @@ public class ControllerPlayer : MonoBehaviour
     bool m_IsWallrunning;
     bool m_WallrunDirSet;
     bool m_WallrunInterrupted;
+    bool m_WallrunRight;
     Vector3 m_WallrunDir;
     const float m_WallrunAngle = 45;
 
@@ -72,8 +77,10 @@ public class ControllerPlayer : MonoBehaviour
         m_PlayerHands = GetComponentInChildren<Hands>();
         m_MySides = GetComponentInChildren<Sides>();
         m_Collider = GetComponent<Collider>();
-        m_MeshCol = GetComponentInChildren<MeshCollider>();
+        //m_MeshCol = GetComponentInChildren<MeshCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
+
+        m_MeshCol = transform.FindChild("Collider").GetComponent<MeshCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
     }
@@ -111,6 +118,8 @@ public class ControllerPlayer : MonoBehaviour
             JumpUpdate();
             HorizontalMovement(m_hMovement);
         }
+
+        Debug.DrawRay(transform.position + Camera.main.transform.forward * 2, Camera.main.transform.forward);
     }
     
     public MovementState GetState()
@@ -129,9 +138,17 @@ public class ControllerPlayer : MonoBehaviour
                 //Checks if player is in air
                 if (!RaycastDir(Vector3.down))
                 {
-                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20;
-                    m_MoveState = MovementState.Jumping;
 
+                    if (m_Rigidbody.velocity.y > 0f) { 
+                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 20;
+                        m_MoveState = MovementState.Jumping;
+                    }
+                    else
+                    {
+                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 10;
+                        m_MoveState = MovementState.Falling;
+                    }
+                    
                     if (m_IsGrabbed)
                     {
                         m_AccelPercent = m_AccelPercent - Time.deltaTime * 20;
@@ -198,8 +215,6 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_Rigidbody.velocity = new Vector3(movementVector.x / 2, m_Rigidbody.velocity.y, movementVector.z / 2);
         }
-
-        //m_Rigidbody.AddRelativeForce(movementVector * currentMoveSpeed, ForceMode.Acceleration); 
     }
 
     void CalculateFriction(Vector3 movementVector)
@@ -222,7 +237,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Wallrunning)) {
             gravityBool = false;
-            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -10f + movementVector.z * 9.5f, m_Rigidbody.velocity.z);
+            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -10f + movementVector.z * 9.5f + m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
         }
 
         ToggleGravity(gravityBool);
@@ -239,13 +254,12 @@ public class ControllerPlayer : MonoBehaviour
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
         }
 
-        if (m_MoveState.Equals(MovementState.Jumping) && !m_isMovingFromInput)
+        if (m_MoveState.Equals(MovementState.Falling) && !m_isMovingFromInput)
         {
-            m_hMovement = Vector3.zero; 
+            m_hMovement = Vector3.zero;
         }
-
     }
-
+    
     bool RaycastDir(Vector3 direction)
     {
         Vector3 v = new Vector3(m_Collider.bounds.center.x, m_Collider.bounds.min.y, m_Collider.bounds.center.z);
@@ -282,8 +296,12 @@ public class ControllerPlayer : MonoBehaviour
 
     void Blink()
     {
+        //Distance ray
+        m_Ray = new Ray(transform.position + m_ForwardDir * 2.0f, m_ForwardDir);
+        //Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask);
+
         //Add velocity
-        if (m_BlinkTimer < m_BlinkTime)
+        if (m_BlinkTimer < m_BlinkTime && (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 2.0f))
         {
             m_Rigidbody.velocity = m_ForwardDir * m_BlinkVelocity;
         }
@@ -379,6 +397,8 @@ public class ControllerPlayer : MonoBehaviour
 
     void ClimbUpdate()
     {
+        if (!m_MoveState.Equals(MovementState.Jumping )) { 
+
         //Climbing
         if (m_IsClimbing)
         {
@@ -411,6 +431,7 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_IsColliderActive = true;
         }
+        }   
     }
 
     void TextUpdate()
@@ -499,11 +520,14 @@ public class ControllerPlayer : MonoBehaviour
         
         if (!m_MySides.m_CanWallrun || m_WallrunInterrupted)
         {
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().clampInDegrees = new Vector2(360, 180);
             m_IsWallrunning = false;
             m_WallrunDirSet = false;
         }
 
-        if (m_IsWallrunning) { 
+        if (m_IsWallrunning) {
+
+
             if (Input.GetKeyDown(KeyCode.Space) || !m_isMovingFromInput)
             {
                 m_WallrunInterrupted = true;
@@ -520,6 +544,7 @@ public class ControllerPlayer : MonoBehaviour
     {
         if (m_IsWallrunning && !m_WallrunDirSet)
         {
+            m_WallrunRight = m_MySides.m_WallrunSideRight;
             m_WallrunDirSet = true;
 
             Vector3[] tempV = m_MySides.GetColliderInfo();
@@ -536,6 +561,14 @@ public class ControllerPlayer : MonoBehaviour
                     }
                 }
             }
+            Debug.Log(transform.localRotation.eulerAngles);
+
+            //transform.localRotation.SetFromToRotation(transform.forward, m_WallrunDir);
+
+
+
+            //Camera.main.GetComponent<SimpleSmoothMouseLook>().targetDirection = new Vector2(m_WallrunDir.x, m_WallrunDir.z);
+           // Camera.main.GetComponent<SimpleSmoothMouseLook>().clampInDegrees = new Vector2(180, 180);
         }
     }
 
