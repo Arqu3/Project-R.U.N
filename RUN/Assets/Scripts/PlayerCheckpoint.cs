@@ -3,10 +3,11 @@ using System.Collections;
 
 public class PlayerCheckpoint : MonoBehaviour {
 
-    public static int m_Current = 0;
+    public float ResetDepth = 0.0f;
+    public static int m_LastPassed = 0;
     public Transform[] m_CheckPoints;
     Transform m_Temp;
-    bool m_HasReachedLast = false;
+    bool m_IsColliding = false;
 
 	void Start ()
     {
@@ -39,8 +40,16 @@ public class PlayerCheckpoint : MonoBehaviour {
 	
 	void Update ()
     {
+        m_IsColliding = false;
+
         if (Input.GetKeyDown(KeyCode.R))
         {
+            SetToLastCheckpoint();
+        }
+
+        if (transform.localPosition.y < ResetDepth)
+        {
+            Debug.Log("Depth reset");
             SetToLastCheckpoint();
         }
 	}
@@ -50,27 +59,38 @@ public class PlayerCheckpoint : MonoBehaviour {
         //Reset player velocity
         GetComponent<Rigidbody>().velocity = Vector3.zero;
 
-        //If current is first
-        if (m_Current - 1 < 0)
-        {
-            transform.position = m_CheckPoints[0].position;
-        }
-        else
-        {
-            //If current is last
-            if (m_HasReachedLast)
-            {
-                transform.position = m_CheckPoints[m_CheckPoints.Length - 1].position;
-            }
-            else
-            {
-                transform.position = m_CheckPoints[m_Current - 1].position;
-            }
-        }
+        transform.position = m_CheckPoints[m_LastPassed].position;
     }
 
-    void SetReachedLast(bool state)
+    void OnTriggerEnter(Collider col)
     {
-        m_HasReachedLast = state;
+        if (m_IsColliding)
+        {
+            return;
+        }
+        m_IsColliding = true;
+
+        //If collision with checkpoint
+        if (col.gameObject.tag == "Checkpoint")
+        {
+            for (int i = 0; i < m_CheckPoints.Length; i++)
+            {
+                if (col.gameObject == m_CheckPoints[i].gameObject)
+                {
+                    m_LastPassed = i;
+                }
+            }
+            if (m_LastPassed + 1 == m_CheckPoints.Length)
+            {
+                Debug.Log("Reached last checkpoint");
+            }
+        }
+
+        //If collision with killbox
+        if (col.gameObject.tag == "KillBox")
+        {
+            Debug.Log("Killbox reset");
+            SetToLastCheckpoint();
+        }
     }
 }
