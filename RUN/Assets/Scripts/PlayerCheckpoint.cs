@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerCheckpoint : MonoBehaviour {
 
+    //Public vars
     public float ResetDepth = 0.0f;
     public static int m_LastPassed = 0;
     public Transform[] m_CheckPoints;
+    public Text m_ElapsedText;
+
+    //Other vars
     Transform m_Temp;
     bool m_IsColliding = false;
+    float m_ElapsedTime = 0.0f;
 
 	void Start ()
     {
@@ -52,6 +58,8 @@ public class PlayerCheckpoint : MonoBehaviour {
             Debug.Log("Depth reset");
             SetToLastCheckpoint();
         }
+
+        ElapsedTimeUpdate();
 	}
 
     void SetToLastCheckpoint()
@@ -92,5 +100,12 @@ public class PlayerCheckpoint : MonoBehaviour {
             Debug.Log("Killbox reset");
             SetToLastCheckpoint();
         }
+    }
+
+    void ElapsedTimeUpdate()
+    {
+        m_ElapsedTime += Time.deltaTime;
+
+        m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
     }
 }

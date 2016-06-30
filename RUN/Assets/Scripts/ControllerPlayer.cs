@@ -21,6 +21,7 @@ public class ControllerPlayer : MonoBehaviour
     public float m_JumpForce;
     public float m_FallThreshold = 1.0f;
     public LayerMask m_LayerMask;
+    public bool m_IsAirControl = false;
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -113,10 +114,25 @@ public class ControllerPlayer : MonoBehaviour
 
         if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
         {
-            m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-            CalculateFriction(m_hMovement);
-            JumpUpdate();
-            HorizontalMovement(m_hMovement);
+            if (!m_IsAirControl)
+            {
+                //Disable horizontal movement while in air
+                if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                {
+                    m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                    HorizontalMovement(m_hMovement);
+                }
+                CalculateFriction(m_hMovement);
+                JumpUpdate();
+            }
+            else
+            {
+                //Horizontal movement is enabled while in air
+                m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                HorizontalMovement(m_hMovement);
+                CalculateFriction(m_hMovement);
+                JumpUpdate();
+            }
         }
 
         Debug.DrawRay(transform.position + Camera.main.transform.forward * 2, Camera.main.transform.forward);
@@ -256,7 +272,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Falling) && !m_isMovingFromInput)
         {
-            m_hMovement = Vector3.zero;
+            //m_hMovement = Vector3.zero;
         }
     }
     
