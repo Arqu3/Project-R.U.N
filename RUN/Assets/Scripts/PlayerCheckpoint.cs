@@ -1,16 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerCheckpoint : MonoBehaviour {
 
+    //Public vars
     public float ResetDepth = 0.0f;
     public static int m_LastPassed = 0;
     public Transform[] m_CheckPoints;
+    public Text m_ElapsedText;
+
+    //Other vars
     Transform m_Temp;
     bool m_IsColliding = false;
+    float m_ElapsedTime = 0.0f;
+    ControllerPlayer m_CPlayer;
+    SimpleSmoothMouseLook m_Camera;
 
 	void Start ()
     {
+        m_CPlayer = GetComponent<ControllerPlayer>();
+        m_Camera = GetComponentInChildren<SimpleSmoothMouseLook>();
+
         //Find checkpoints
         var checkPoints = GameObject.FindGameObjectsWithTag("Checkpoint");
 
@@ -52,14 +63,24 @@ public class PlayerCheckpoint : MonoBehaviour {
             Debug.Log("Depth reset");
             SetToLastCheckpoint();
         }
+
+        ElapsedTimeUpdate();
 	}
 
     void SetToLastCheckpoint()
     {
         //Reset player velocity
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-
+        
+        //Set position
         transform.position = m_CheckPoints[m_LastPassed].position;
+
+        //Reset blink CD
+        m_CPlayer.SendMessage("BlinkReset");
+
+        //Set rotation to corresponding checkpoint
+        m_Camera._mouseAbsolute.x = m_CheckPoints[m_LastPassed].localEulerAngles.y;
+        m_Camera._mouseAbsolute.y = m_CheckPoints[m_LastPassed].localEulerAngles.x;
     }
 
     void OnTriggerEnter(Collider col)
@@ -92,5 +113,12 @@ public class PlayerCheckpoint : MonoBehaviour {
             Debug.Log("Killbox reset");
             SetToLastCheckpoint();
         }
+    }
+
+    void ElapsedTimeUpdate()
+    {
+        m_ElapsedTime += Time.deltaTime;
+
+        m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
     }
 }

@@ -21,6 +21,7 @@ public class ControllerPlayer : MonoBehaviour
     public float m_JumpForce;
     public float m_FallThreshold = 1.0f;
     public LayerMask m_LayerMask;
+    public bool m_IsAirControl = false;
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -113,13 +114,28 @@ public class ControllerPlayer : MonoBehaviour
 
         if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
         {
-            m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-            CalculateFriction(m_hMovement);
-            JumpUpdate();
-            HorizontalMovement(m_hMovement);
+            if (!m_IsAirControl)
+            {
+                //Disable horizontal movement while in air
+                if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                {
+                    m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                    HorizontalMovement(m_hMovement);
+                }
+                CalculateFriction(m_hMovement);
+                JumpUpdate();
+            }
+            else
+            {
+                //Horizontal movement is enabled while in air
+                m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                HorizontalMovement(m_hMovement);
+                CalculateFriction(m_hMovement);
+                JumpUpdate();
+            }
         }
 
-        Debug.DrawRay(transform.position + Camera.main.transform.forward * 2, Camera.main.transform.forward);
+        Debug.DrawRay(transform.position, Camera.main.transform.forward);
     }
     
     public MovementState GetState()
@@ -256,7 +272,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Falling) && !m_isMovingFromInput)
         {
-            m_hMovement = Vector3.zero;
+            //m_hMovement = Vector3.zero;
         }
     }
     
@@ -282,13 +298,15 @@ public class ControllerPlayer : MonoBehaviour
     void ToggleBlink()
     {
         //Get forward direction
-        m_ForwardDir = Camera.main.transform.forward;
+        m_ForwardDir = Camera.main.transform.forward.normalized;
 
         //Store velocity
         m_PlayerVel = m_Rigidbody.velocity;
 
         if (!m_IsBlinking)
         {
+            //m_Rigidbody.AddForce(m_ForwardDir * m_BlinkVelocity * 10, ForceMode.Impulse);
+
             ToggleGravity(false);
             m_IsBlinking = true;
         }
@@ -297,40 +315,61 @@ public class ControllerPlayer : MonoBehaviour
     void Blink()
     {
         //Distance ray
-        m_Ray = new Ray(transform.position + m_ForwardDir * 2.0f, m_ForwardDir);
+        m_Ray = new Ray(transform.position, m_ForwardDir);
         //Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask);
 
         //Add velocity
         if (m_BlinkTimer < m_BlinkTime && (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 2.0f))
         {
+            m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
             m_Rigidbody.velocity = m_ForwardDir * m_BlinkVelocity;
         }
         else
         {
+            m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+
+            m_Rigidbody.velocity = m_ForwardDir * m_PlayerVel.magnitude;
             ToggleGravity(true);
             m_IsBlinking = false;
-            m_Rigidbody.velocity = m_PlayerVel;
         }
     }
 
     void BlinkUpdate()
     {
-        //Blinking
-        if (m_IsBlinking)
-        {
-            m_BlinkTimer += Time.deltaTime;
-            Blink();
-        }
-        else
-        {
-            m_BlinkTimer = 0.0f;
-        }
-
         if (!m_IsBlinkCD && Input.GetMouseButtonDown(0))
         {
             m_IsBlinkCD = true;
             ToggleBlink();
         }
+
+        //Blinking
+        if (m_IsBlinking)
+        {
+            m_BlinkTimer += Time.deltaTime;
+            Blink();
+
+            /*m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
+            m_Ray = new Ray(transform.position, m_ForwardDir);
+            if (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 1.5f)
+            {
+                m_BlinkTimer = m_BlinkTime + 1;
+            }*/
+        }
+        else
+        {
+            //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+
+            m_BlinkTimer = 0.0f;
+        }
+
+        /*if (m_BlinkTimer > m_BlinkTime)
+        {
+            m_Rigidbody.velocity = m_ForwardDir * m_PlayerVel.magnitude;
+            ToggleGravity(true);
+            m_IsBlinking = false;
+        }*/
 
         //Blink cooldown
         if (m_IsBlinkCD)
@@ -342,6 +381,12 @@ public class ControllerPlayer : MonoBehaviour
                 m_IsBlinkCD = false;
             }
         }
+    }
+
+    void BlinkReset()
+    {
+        m_IsBlinkCD = false;
+        m_CurBlinkCD = m_BlinkCD;
     }
 
     bool IsMovingForward()
@@ -382,7 +427,7 @@ public class ControllerPlayer : MonoBehaviour
     void FeetClimb()
     {
         //Safety check
-        if (IsMovingForward() && m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > -2.0f)
+        if (IsMovingForward() && m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > -2.0f && !m_MoveState.Equals(MovementState.Blinking))
         {
             m_IsClimbing = true;
             m_IsColliderActive = false;
