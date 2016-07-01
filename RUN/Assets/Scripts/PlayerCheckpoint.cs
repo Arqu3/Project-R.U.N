@@ -14,9 +14,14 @@ public class PlayerCheckpoint : MonoBehaviour {
     Transform m_Temp;
     bool m_IsColliding = false;
     float m_ElapsedTime = 0.0f;
+    ControllerPlayer m_CPlayer;
+    SimpleSmoothMouseLook m_Camera;
 
 	void Start ()
     {
+        m_CPlayer = GetComponent<ControllerPlayer>();
+        m_Camera = GetComponentInChildren<SimpleSmoothMouseLook>();
+
         //Find checkpoints
         var checkPoints = GameObject.FindGameObjectsWithTag("Checkpoint");
 
@@ -66,8 +71,16 @@ public class PlayerCheckpoint : MonoBehaviour {
     {
         //Reset player velocity
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-
+        
+        //Set position
         transform.position = m_CheckPoints[m_LastPassed].position;
+
+        //Reset blink CD
+        m_CPlayer.SendMessage("BlinkReset");
+
+        //Set rotation to corresponding checkpoint
+        m_Camera._mouseAbsolute.x = m_CheckPoints[m_LastPassed].localEulerAngles.y;
+        m_Camera._mouseAbsolute.y = m_CheckPoints[m_LastPassed].localEulerAngles.x;
     }
 
     void OnTriggerEnter(Collider col)

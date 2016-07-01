@@ -7,7 +7,7 @@ using UnityEngine;
 [AddComponentMenu("Camera/Simple Smooth Mouse Look ")]
 public class SimpleSmoothMouseLook : MonoBehaviour
 {
-    Vector2 _mouseAbsolute;
+    public Vector2 _mouseAbsolute;
     Vector2 _smoothMouse;
 
     public Vector2 clampInDegrees = new Vector2(360, 180);
