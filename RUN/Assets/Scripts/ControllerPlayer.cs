@@ -44,6 +44,7 @@ public class ControllerPlayer : MonoBehaviour
     float m_DistanceTravelled = 0.0f;
     RaycastHit m_Hit;
     Ray m_Ray;
+    Vector3 m_BPlayerVel;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -301,7 +302,7 @@ public class ControllerPlayer : MonoBehaviour
         m_ForwardDir = Camera.main.transform.forward.normalized;
 
         //Store velocity
-        m_PlayerVel = m_Rigidbody.velocity;
+        m_BPlayerVel = m_Rigidbody.velocity;
 
         if (!m_IsBlinking)
         {
@@ -329,7 +330,7 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
 
-            m_Rigidbody.velocity = m_ForwardDir * m_PlayerVel.magnitude;
+            m_Rigidbody.velocity = m_ForwardDir * m_BPlayerVel.magnitude;
             ToggleGravity(true);
             m_IsBlinking = false;
         }
@@ -427,7 +428,7 @@ public class ControllerPlayer : MonoBehaviour
     void FeetClimb()
     {
         //Safety check
-        if (IsMovingForward() && m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > -2.0f && !m_MoveState.Equals(MovementState.Blinking))
+        if (IsMovingForward() && m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > 1.0f && !m_MoveState.Equals(MovementState.Blinking))
         {
             m_IsClimbing = true;
             m_IsColliderActive = false;

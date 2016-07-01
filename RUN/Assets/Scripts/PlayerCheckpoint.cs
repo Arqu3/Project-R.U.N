@@ -16,6 +16,7 @@ public class PlayerCheckpoint : MonoBehaviour {
     float m_ElapsedTime = 0.0f;
     ControllerPlayer m_CPlayer;
     SimpleSmoothMouseLook m_Camera;
+    bool m_HasReachedLast = false;
 
 	void Start ()
     {
@@ -103,6 +104,7 @@ public class PlayerCheckpoint : MonoBehaviour {
             }
             if (m_LastPassed + 1 == m_CheckPoints.Length)
             {
+                m_HasReachedLast = true;
                 Debug.Log("Reached last checkpoint");
             }
         }
@@ -117,8 +119,10 @@ public class PlayerCheckpoint : MonoBehaviour {
 
     void ElapsedTimeUpdate()
     {
-        m_ElapsedTime += Time.deltaTime;
-
+        if (!m_HasReachedLast)
+        {
+            m_ElapsedTime += Time.deltaTime;
+        }
         m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
     }
 }
