@@ -61,6 +61,9 @@ public class ControllerPlayer : MonoBehaviour
     float m_SlowedTimer = 0.0f;
     float m_FallTimer = 0.0f;
     float m_DampeningTimer = 0.0f;
+    public float m_SlowMultiplier = 0.5f;
+    public float m_SlowTime = 0.5f;
+    public float m_DampeningTime = 0.4f;
 
     //Wallrun vars
     bool m_IsWallrunning;
@@ -89,7 +92,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_Dampening && m_DampeningTimer < 0.4f)
+        if (m_Dampening && m_DampeningTimer < m_DampeningTime)
         {
             m_DampeningTimer += Time.deltaTime;
         }
@@ -230,7 +233,7 @@ public class ControllerPlayer : MonoBehaviour
         }
         else
         {
-            m_Rigidbody.velocity = new Vector3(movementVector.x / 2, m_Rigidbody.velocity.y, movementVector.z / 2);
+            m_Rigidbody.velocity = new Vector3(movementVector.x * m_SlowMultiplier, m_Rigidbody.velocity.y, movementVector.z * m_SlowMultiplier);
         }
     }
 
@@ -498,7 +501,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void FallUpdate()
     {
-        if (m_MoveState == MovementState.Jumping)
+        if (m_MoveState == MovementState.Falling)
         {
             m_FallTimer += Time.deltaTime;
         }
@@ -511,12 +514,10 @@ public class ControllerPlayer : MonoBehaviour
         {
             if (m_RequireDampening && !m_Dampened)
             {
-                //Debug.Log("Slowed");
                 m_Slowed = true;
             }
             else if (m_RequireDampening && m_Dampened)
             {
-                //Debug.Log("Not Slowed");
                 m_Slowed = false;
             }
         }
@@ -530,9 +531,8 @@ public class ControllerPlayer : MonoBehaviour
             m_SlowedTimer = 0.0f;
         }
 
-        if (m_SlowedTimer > 0.5f)
+        if (m_SlowedTimer > m_SlowTime)
         {
-            //Debug.Log("No more slow");
             m_Slowed = false;
         }
 
