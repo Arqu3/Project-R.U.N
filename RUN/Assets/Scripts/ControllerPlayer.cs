@@ -20,8 +20,12 @@ public class ControllerPlayer : MonoBehaviour
     public float m_MaxSpeed;
     public float m_JumpForce;
     public float m_FallThreshold = 1.0f;
-    public LayerMask m_LayerMask;
+    public LayerMask m_BlinkMask;
+    public LayerMask m_JumpMask;
     public bool m_IsAirControl = false;
+    public float m_SlowMultiplier = 0.5f;
+    public float m_SlowTime = 0.5f;
+    public float m_DampeningTime = 0.4f;
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -61,9 +65,6 @@ public class ControllerPlayer : MonoBehaviour
     float m_SlowedTimer = 0.0f;
     float m_FallTimer = 0.0f;
     float m_DampeningTimer = 0.0f;
-    public float m_SlowMultiplier = 0.5f;
-    public float m_SlowTime = 0.5f;
-    public float m_DampeningTime = 0.4f;
 
     //Wallrun vars
     bool m_IsWallrunning;
@@ -82,7 +83,6 @@ public class ControllerPlayer : MonoBehaviour
         m_PlayerHands = GetComponentInChildren<Hands>();
         m_MySides = GetComponentInChildren<Sides>();
         m_Collider = GetComponent<Collider>();
-        //m_MeshCol = GetComponentInChildren<MeshCollider>();
         m_Rigidbody = GetComponent<Rigidbody>();
 
         m_MeshCol = transform.FindChild("Collider").GetComponent<MeshCollider>();
@@ -92,15 +92,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_Dampening && m_DampeningTimer < m_DampeningTime)
-        {
-            m_DampeningTimer += Time.deltaTime;
-        }
-        else
-        {
-            m_DampeningTimer = 0.0f;
-            m_Dampening = Input.GetKeyDown("left ctrl");
-        }
+        DampeningUpdate();
 
         CheckNotMovingFromInput();
 
@@ -139,7 +131,7 @@ public class ControllerPlayer : MonoBehaviour
             }
         }
 
-        Debug.DrawRay(transform.position, Camera.main.transform.forward);
+        Debug.DrawRay(transform.position, m_ForwardDir, Color.red);
     }
     
     public MovementState GetState()
@@ -276,7 +268,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Falling) && !m_isMovingFromInput)
         {
-            //m_hMovement = Vector3.zero;
+            m_hMovement = Vector3.zero;
         }
     }
     
@@ -286,7 +278,7 @@ public class ControllerPlayer : MonoBehaviour
 
         Ray ray = new Ray(v, direction);
 
-        if (Physics.Raycast(ray, 1f))
+        if (Physics.Raycast(ray, 1f, m_JumpMask))
         {
             return true;
         }
@@ -302,10 +294,12 @@ public class ControllerPlayer : MonoBehaviour
     void ToggleBlink()
     {
         //Get forward direction
-        m_ForwardDir = Camera.main.transform.forward.normalized;
+        m_ForwardDir = Camera.main.transform.forward;
 
         //Store velocity
         m_BPlayerVel = m_Rigidbody.velocity;
+
+        m_Rigidbody.AddForce(new Vector3(0.0f, 10.0f, 0.0f), ForceMode.Impulse);
 
         if (!m_IsBlinking)
         {
@@ -320,10 +314,9 @@ public class ControllerPlayer : MonoBehaviour
     {
         //Distance ray
         m_Ray = new Ray(transform.position, m_ForwardDir);
-        //Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask);
 
         //Add velocity
-        if (m_BlinkTimer < m_BlinkTime && (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 2.0f))
+        if (m_BlinkTimer <= m_BlinkTime && (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_BlinkMask) || m_Hit.distance > 2.0f))
         {
             m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
@@ -396,9 +389,8 @@ public class ControllerPlayer : MonoBehaviour
     bool IsMovingForward()
     {
         //Checks if player is moving foward
-        m_PlayerVel = m_Rigidbody.velocity;
         //Translate world space velocity to localspace velocity to be able to read if negative or not
-        Vector3 vel = transform.InverseTransformDirection(m_PlayerVel);
+        Vector3 vel = transform.InverseTransformDirection(m_Rigidbody.velocity);
 
         if (vel.z > 0)
         {
@@ -496,6 +488,19 @@ public class ControllerPlayer : MonoBehaviour
             //Set text to current CD
             m_BlinkCDText.text = m_CurBlinkCD.ToString("F1");
             m_BlinkCDText.color = Color.red;
+        }
+    }
+
+    void DampeningUpdate()
+    {
+        if (m_Dampening && m_DampeningTimer < m_DampeningTime)
+        {
+            m_DampeningTimer += Time.deltaTime;
+        }
+        else
+        {
+            m_DampeningTimer = 0.0f;
+            m_Dampening = Input.GetKeyDown("left ctrl");
         }
     }
 
