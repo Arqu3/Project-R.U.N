@@ -25,7 +25,7 @@ public class PlayerCheckpoint : MonoBehaviour {
 	void Start ()
     {
         m_CPlayer = GetComponent<ControllerPlayer>();
-        m_Camera = GetComponentInChildren<SimpleSmoothMouseLook>();
+        m_Camera = GameObject.Find("Main Camera").GetComponent<SimpleSmoothMouseLook>();
 
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
         m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
