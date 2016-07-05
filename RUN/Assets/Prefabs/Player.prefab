@@ -30,7 +30,7 @@ GameObject:
   - 81: {fileID: 8161934}
   - 114: {fileID: 11464136}
   - 114: {fileID: 11449184}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - 114: {fileID: 11443132}
   - 95: {fileID: 9519202}
   - 114: {fileID: 11440130}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -496,7 +496,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_updateInterval: 0.5
-  m_Text: {fileID: 0}
 --- !u!114 &11443132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -520,7 +519,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_MoveState: 0
-  m_BlinkCDText: {fileID: 0}
   m_Friction: 0
   m_BlinkTime: 0.1
   m_BlinkVelocity: 100
@@ -583,9 +581,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b82ab6ebd6729d446a3192573058d4c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ResetDepth: -13
+  m_ResetDepth: -13
+  m_PromptTime: 1
   m_CheckPoints: []
-  m_ElapsedText: {fileID: 0}
 --- !u!124 &12493112
 Behaviour:
   m_ObjectHideFlags: 1

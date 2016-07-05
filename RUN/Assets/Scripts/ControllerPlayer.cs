@@ -11,7 +11,6 @@ public class ControllerPlayer : MonoBehaviour
 {
     //Public vars
     public MovementState m_MoveState = MovementState.Idle;
-    public Text m_BlinkCDText;
     public float m_Friction;
     public float m_BlinkTime = 0.5f;
     public float m_BlinkVelocity = 200.0f;
@@ -49,6 +48,7 @@ public class ControllerPlayer : MonoBehaviour
     RaycastHit m_Hit;
     Ray m_Ray;
     Vector3 m_BPlayerVel;
+    Text m_BlinkCDText;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -87,6 +87,7 @@ public class ControllerPlayer : MonoBehaviour
 
         m_MeshCol = transform.FindChild("Collider").GetComponent<MeshCollider>();
 
+        m_BlinkCDText = GameObject.Find("BlinkText").GetComponent<Text>();
         m_CurBlinkCD = m_BlinkCD;
     }
 

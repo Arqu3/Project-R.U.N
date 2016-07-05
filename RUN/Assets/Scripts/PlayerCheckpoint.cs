@@ -5,15 +5,19 @@ using UnityEngine.UI;
 public class PlayerCheckpoint : MonoBehaviour {
 
     //Public vars
-    public float ResetDepth = 0.0f;
+    public float m_ResetDepth = 0.0f;
+    public float m_PromptTime = 1.0f;
     public static int m_LastPassed = 0;
     public Transform[] m_CheckPoints;
-    public Text m_ElapsedText;
+    Text m_ElapsedText;
+    Text m_PromptText;
 
     //Other vars
     Transform m_Temp;
     bool m_IsColliding = false;
     float m_ElapsedTime = 0.0f;
+    float m_PromptTimer = 0.0f;
+    bool m_ReachedCheckpoint = false;
     ControllerPlayer m_CPlayer;
     SimpleSmoothMouseLook m_Camera;
     bool m_HasReachedLast = false;
@@ -22,6 +26,9 @@ public class PlayerCheckpoint : MonoBehaviour {
     {
         m_CPlayer = GetComponent<ControllerPlayer>();
         m_Camera = GetComponentInChildren<SimpleSmoothMouseLook>();
+
+        m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
+        m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
 
         //Find checkpoints
         var checkPoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -59,13 +66,13 @@ public class PlayerCheckpoint : MonoBehaviour {
             SetToLastCheckpoint();
         }
 
-        if (transform.localPosition.y < ResetDepth)
+        if (transform.localPosition.y < m_ResetDepth)
         {
             Debug.Log("Depth reset");
             SetToLastCheckpoint();
         }
 
-        ElapsedTimeUpdate();
+        TextUpdate();
 	}
 
     void SetToLastCheckpoint()
@@ -100,6 +107,7 @@ public class PlayerCheckpoint : MonoBehaviour {
                 if (col.gameObject == m_CheckPoints[i].gameObject)
                 {
                     m_LastPassed = i;
+                    m_ReachedCheckpoint = true;
                 }
             }
             if (m_LastPassed + 1 == m_CheckPoints.Length)
@@ -117,12 +125,27 @@ public class PlayerCheckpoint : MonoBehaviour {
         }
     }
 
-    void ElapsedTimeUpdate()
+    void TextUpdate()
     {
         if (!m_HasReachedLast)
         {
             m_ElapsedTime += Time.deltaTime;
         }
         m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
+
+        if (m_ReachedCheckpoint)
+        {
+            m_PromptTimer += Time.deltaTime;
+            m_PromptText.text = "CHECKPOINT";
+        }
+        else
+        {
+            m_PromptText.text = "";
+        }
+        if (m_PromptTimer >= m_PromptTime)
+        {
+            m_ReachedCheckpoint = false;
+            m_PromptTimer = 0.0f;
+        }
     }
 }

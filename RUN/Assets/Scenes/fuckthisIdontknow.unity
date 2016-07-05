@@ -572,7 +572,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 16.14
+      value: 26.8
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_LocalPosition.y
@@ -580,7 +580,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -32.95
+      value: -20.26
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_LocalRotation.x
@@ -644,18 +644,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11443146, guid: 4943b3eca58bc3c44afa00a0eaf4f2df, type: 2}
-      propertyPath: m_BlinkCDText
-      value: 
-      objectReference: {fileID: 1596960747}
-    - target: {fileID: 11468882, guid: 4943b3eca58bc3c44afa00a0eaf4f2df, type: 2}
-      propertyPath: m_ElapsedText
-      value: 
-      objectReference: {fileID: 1924988501}
-    - target: {fileID: 11440130, guid: 4943b3eca58bc3c44afa00a0eaf4f2df, type: 2}
-      propertyPath: m_Text
-      value: 
-      objectReference: {fileID: 1294749477}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4943b3eca58bc3c44afa00a0eaf4f2df, type: 2}
   m_IsPrefabParent: 0
@@ -2589,6 +2577,79 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
   m_Climbable: 0
+--- !u!1 &1206802492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 224: {fileID: 1206802495}
+  - 222: {fileID: 1206802494}
+  - 114: {fileID: 1206802493}
+  m_Layer: 5
+  m_Name: CheckpointPromptText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1206802493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1206802492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 28
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 2
+    m_MaxSize: 40
+    m_Alignment: 4
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: Checkpoint prompt here
+--- !u!222 &1206802494
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1206802492}
+--- !u!224 &1206802495
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1206802492}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1489460719}
+  m_RootOrder: 3
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -58.5}
+  m_SizeDelta: {x: 304, y: 88}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1206812569
 GameObject:
   m_ObjectHideFlags: 0
@@ -2687,7 +2748,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 432998, guid: b14cbb53a0011f544a04dd5ab99e5e50, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 16.02
+      value: 24.16
       objectReference: {fileID: 0}
     - target: {fileID: 432998, guid: b14cbb53a0011f544a04dd5ab99e5e50, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3520,6 +3581,7 @@ RectTransform:
   - {fileID: 1596960746}
   - {fileID: 1924988500}
   - {fileID: 1294749476}
+  - {fileID: 1206802495}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 0}
@@ -4517,7 +4579,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 452464, guid: 1033069c649731f4abfefd74baa3c02d, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 15.91
+      value: 19.82
       objectReference: {fileID: 0}
     - target: {fileID: 452464, guid: 1033069c649731f4abfefd74baa3c02d, type: 2}
       propertyPath: m_LocalPosition.y
@@ -4525,7 +4587,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 452464, guid: 1033069c649731f4abfefd74baa3c02d, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -21.87
+      value: -22.51
       objectReference: {fileID: 0}
     - target: {fileID: 452464, guid: 1033069c649731f4abfefd74baa3c02d, type: 2}
       propertyPath: m_LocalRotation.x
@@ -4993,7 +5055,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 457638, guid: 8b2c6df098363884c898f998328f4143, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -2.9823122
+      value: 0.37
       objectReference: {fileID: 0}
     - target: {fileID: 457638, guid: 8b2c6df098363884c898f998328f4143, type: 2}
       propertyPath: m_LocalPosition.y
@@ -5001,7 +5063,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 457638, guid: 8b2c6df098363884c898f998328f4143, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -29.57
+      value: -3.73
       objectReference: {fileID: 0}
     - target: {fileID: 457638, guid: 8b2c6df098363884c898f998328f4143, type: 2}
       propertyPath: m_LocalRotation.x
