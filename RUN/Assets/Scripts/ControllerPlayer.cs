@@ -85,7 +85,7 @@ public class ControllerPlayer : MonoBehaviour
         m_Collider = GetComponent<Collider>();
         m_Rigidbody = GetComponent<Rigidbody>();
 
-        m_MeshCol = transform.FindChild("Collider").GetComponent<MeshCollider>();
+        m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_BlinkCDText = GameObject.Find("BlinkText").GetComponent<Text>();
         m_CurBlinkCD = m_BlinkCD;
@@ -93,6 +93,8 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
+
         DampeningUpdate();
 
         CheckNotMovingFromInput();
