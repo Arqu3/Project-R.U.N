@@ -6,7 +6,7 @@ public class FramesPerSecond : MonoBehaviour {
 
     //Public vars
     public float m_updateInterval = 0.5f;
-    public Text m_Text;
+    Text m_Text;
 
     //Frames vars
     float m_accum = 0.0f;
@@ -15,6 +15,8 @@ public class FramesPerSecond : MonoBehaviour {
 
 	void Start ()
     {
+        m_Text = GameObject.Find("FpsText").GetComponent<Text>();
+
         //If no text is selected
         if (!m_Text)
         {
