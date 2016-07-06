@@ -5411,6 +5411,7 @@ MonoBehaviour:
   m_BlinkCD: 3
   m_MovementSpeed: 15
   m_MaxSpeed: 18
+  m_AccelMultiplier: 1
   m_JumpForce: 80
   m_FallThreshold: 1
   m_BlinkMask:
@@ -6112,7 +6113,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2134646537}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05367fc875ffe8141b8242fc958f5fc8, type: 3}
   m_Name: 
@@ -6210,3 +6211,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cfc7c07198a1e742881c48e0fc0b556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_yOffset: 1.4

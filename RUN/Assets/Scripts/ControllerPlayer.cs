@@ -289,13 +289,38 @@ public class ControllerPlayer : MonoBehaviour
     
     bool RaycastDir(Vector3 direction)
     {
-        Vector3 v = new Vector3(m_Collider.bounds.center.x, m_Collider.bounds.min.y, m_Collider.bounds.center.z);
+        Vector3 v = new Vector3(transform.position.x, m_Collider.bounds.min.y, transform.position.z);
 
-        Ray ray = new Ray(v, direction);
+        Vector3 tempV = Vector3.zero;
 
-        if (Physics.Raycast(ray, 1f, m_JumpMask))
+        Ray ray = new Ray();
+
+        for (int i = 0; i < 4; i++)
         {
-            return true;
+            switch (i)
+            {
+                case (0):
+                    tempV = new Vector3(transform.forward.x, 0, transform.forward.z);
+                    break;
+                case (1):
+                    tempV = -tempV;
+                    break;
+                case (2):
+                    tempV = new Vector3(transform.right.x, 0, transform.right.z);
+                    break;
+                case (3):
+                    tempV = -tempV;
+                    break;
+                default:
+                    break;
+            }
+
+            ray = new Ray(tempV + v, direction);
+
+            if (Physics.Raycast(ray, 1f, m_JumpMask))
+            {
+                return true;
+            }
         }
 
         return false;
@@ -368,32 +393,41 @@ public class ControllerPlayer : MonoBehaviour
             {
                 m_BlinkTimer = m_BlinkTime + 1;
             }*/
+            Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_BlinkTimer / m_BlinkTime);
         }
         else
         {
             //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            if (m_CurBlinkCD > 2 && m_CurBlinkCD != m_BlinkCD) { 
+                Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_CurBlinkCD - 2);
+                Debug.Log("Shrinking");
+            }
 
-            m_BlinkTimer = 0.0f;
-        }
+            else
+                Camera.main.fieldOfView = 70;
 
-        /*if (m_BlinkTimer > m_BlinkTime)
-        {
-            m_Rigidbody.velocity = m_ForwardDir * m_PlayerVel.magnitude;
-            ToggleGravity(true);
-            m_IsBlinking = false;
-        }*/
 
-        //Blink cooldown
-        if (m_IsBlinkCD)
-        {
-            m_CurBlinkCD -= Time.deltaTime;
-            if (m_CurBlinkCD <= 0.0f)
+                m_BlinkTimer = 0.0f;
+            }
+
+            /*if (m_BlinkTimer > m_BlinkTime)
             {
-                m_CurBlinkCD = m_BlinkCD;
-                m_IsBlinkCD = false;
+                m_Rigidbody.velocity = m_ForwardDir * m_PlayerVel.magnitude;
+                ToggleGravity(true);
+                m_IsBlinking = false;
+            }*/
+
+            //Blink cooldown
+            if (m_IsBlinkCD)
+            {
+                m_CurBlinkCD -= Time.deltaTime;
+                if (m_CurBlinkCD <= 0.0f)
+                {
+                    m_CurBlinkCD = m_BlinkCD;
+                    m_IsBlinkCD = false;
+                }
             }
         }
-    }
 
     void BlinkReset()
     {
