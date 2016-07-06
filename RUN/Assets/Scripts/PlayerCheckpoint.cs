@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerCheckpoint : MonoBehaviour {
 
@@ -70,6 +71,12 @@ public class PlayerCheckpoint : MonoBehaviour {
         {
             Debug.Log("Depth reset");
             SetToLastCheckpoint();
+        }
+
+        //Get and reload current scene
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         TextUpdate();
