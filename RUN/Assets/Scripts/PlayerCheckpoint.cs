@@ -29,6 +29,8 @@ public class PlayerCheckpoint : MonoBehaviour
     SimpleSmoothMouseLook m_Camera;
     Text m_ElapsedText;
     Text m_PromptText;
+    Text m_HighscoreText;
+    GameObject m_UI;
 
     float m_FTemp = 0.0f;
     string m_SaveString = "";
@@ -40,6 +42,8 @@ public class PlayerCheckpoint : MonoBehaviour
 
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
         m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
+        m_HighscoreText = GameObject.Find("HighscoreText").GetComponent<Text>();
+        m_UI = GameObject.Find("Canvas");
 
         //Find checkpoints
         var checkPoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -67,8 +71,8 @@ public class PlayerCheckpoint : MonoBehaviour
             }
         }
 	}
-	
-	void Update ()
+
+    void Update ()
     {
         if (Input.GetKeyDown(KeyCode.F12))
         {
@@ -145,6 +149,7 @@ public class PlayerCheckpoint : MonoBehaviour
 
                 if (!m_HasSetScore)
                 {
+                    m_UI.SendMessage("ToggleScoreScreen");
                     SetHighscore(m_ElapsedTime);
                     m_HasSetScore = true;
                 }
@@ -184,6 +189,17 @@ public class PlayerCheckpoint : MonoBehaviour
         {
             m_ReachedCheckpoint = false;
             m_PromptTimer = 0.0f;
+        }
+
+        if (m_HighscoreText)
+        {
+            string s = "";
+            for (int i = 0; i < m_HighScores.Count; i++)
+            {
+                s += i + 1 + ": " + m_HighScores[i] + "\n";
+            }
+            m_HighscoreText.text = "Your best times:\n" + s;
+
         }
     }
 

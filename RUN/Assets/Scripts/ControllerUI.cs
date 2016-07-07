@@ -7,12 +7,14 @@ public class ControllerUI : MonoBehaviour {
     Text m_BlinkText;
     ControllerPlayer m_Player;
     PausePanelFuncs m_PausePanel;
+    GameObject m_ScorePanel;
 
     public AudioClip StartMenuMusic;
 
     bool m_Init = false;
     bool m_Paused = false;
     bool m_MusicStarted = false;
+    bool m_IsScoreScreen = false;
 
 	void Start () {
         m_Init = false;
@@ -25,6 +27,10 @@ public class ControllerUI : MonoBehaviour {
             m_Player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControllerPlayer>();
         if (transform.FindChild("PausePanel"))
             m_PausePanel = transform.FindChild("PausePanel").GetComponent<PausePanelFuncs>();
+        if (transform.FindChild("EndPanel"))
+            m_ScorePanel = transform.FindChild("EndPanel").gameObject;
+
+        m_ScorePanel.SetActive(false);
 
         PauseUpdate();
 
@@ -34,8 +40,15 @@ public class ControllerUI : MonoBehaviour {
     }
 
     void Update () {
-        PauseUpdate();
-        BlinkUpdate();
+        if (!m_IsScoreScreen)
+        {
+            PauseUpdate();
+            BlinkUpdate();
+        }
+        else
+        {
+            ScoreScreenUpdate();
+        }
     }
 
     void PauseUpdate()
@@ -67,6 +80,26 @@ public class ControllerUI : MonoBehaviour {
         }
     }
 
+    void ScoreScreenUpdate()
+    {
+        m_Player.ToggleControls(false);
+        Time.timeScale = 0;
+
+        Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = false;
+        Cursor.lockState = CursorLockMode.None;
+        Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = false;
+        Cursor.visible = true;
+
+        if (m_PausePanel.gameObject.activeSelf)
+        {
+            m_PausePanel.gameObject.SetActive(false);
+        }
+        if (!m_ScorePanel.activeSelf)
+        {
+            m_ScorePanel.SetActive(true);
+        }
+    }
+
     void BlinkUpdate()
     {
         float [] cdValues = m_Player.GetUIValues();
@@ -83,5 +116,10 @@ public class ControllerUI : MonoBehaviour {
             m_BlinkText.text = cdValues[0].ToString("F1");
             m_BlinkText.color = Color.red;
         }
+    }
+
+    void ToggleScoreScreen()
+    {
+        m_IsScoreScreen = !m_IsScoreScreen;
     }
 }
