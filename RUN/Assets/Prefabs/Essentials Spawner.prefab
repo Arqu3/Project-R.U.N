@@ -8,6 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 418862}
+  - 114: {fileID: 11453120}
   m_Layer: 0
   m_Name: Essentials Spawner
   m_TagString: Untagged
@@ -27,13 +28,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &11453120
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 115196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85de07f21bccec84aa926ceb5524897e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 101736, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
+  m_Canvas: {fileID: 129908, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+  m_Player: {fileID: 123604, guid: 015b8ce6b8fbae1448b25ab1067430c8, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_Canvas
+      value: 
+      objectReference: {fileID: 129908, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 101736, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Player
+      value: 
+      objectReference: {fileID: 123604, guid: 015b8ce6b8fbae1448b25ab1067430c8, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 115196}
