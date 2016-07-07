@@ -1,29 +1,36 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PlayerCheckpoint : MonoBehaviour {
-
+public class PlayerCheckpoint : MonoBehaviour
+{
     //Public vars
     public float m_ResetDepth = 0.0f;
     public float m_PromptTime = 1.0f;
     public static int m_LastPassed = 0;
     public Transform[] m_CheckPoints;
-    Text m_ElapsedText;
-    Text m_PromptText;
+    public List<float> m_HighScores;
 
     //Other vars
     Transform m_Temp;
     bool m_IsColliding = false;
+
     float m_ElapsedTime = 0.0f;
     float m_PromptTimer = 0.0f;
     bool m_ReachedCheckpoint = false;
+    bool m_HasReachedLast = false;
+    bool m_HasSetScore = false;
+
     ControllerPlayer m_CPlayer;
     SimpleSmoothMouseLook m_Camera;
-    bool m_HasReachedLast = false;
+    Text m_ElapsedText;
+    Text m_PromptText;
 
-	void Start ()
+    float m_FTemp = 0.0f;
+
+    void Start ()
     {
         m_CPlayer = GetComponent<ControllerPlayer>();
         m_Camera = GameObject.Find("Main Camera").GetComponent<SimpleSmoothMouseLook>();
@@ -60,6 +67,17 @@ public class PlayerCheckpoint : MonoBehaviour {
 	
 	void Update ()
     {
+        if (Input.GetKeyDown(KeyCode.F12))
+        {
+            PlayerPrefs.DeleteAll();
+            Debug.Log("Deleted all playerprefs");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F11))
+        {
+            Debug.Log(PlayerPrefs.GetFloat("HighScore", Mathf.Infinity));
+        }
+
         m_IsColliding = false;
 
         if (Input.GetKeyDown(KeyCode.R))
@@ -121,6 +139,12 @@ public class PlayerCheckpoint : MonoBehaviour {
             {
                 m_HasReachedLast = true;
                 Debug.Log("Reached last checkpoint");
+
+                if (!m_HasSetScore)
+                {
+                    SetHighscore(m_ElapsedTime);
+                    m_HasSetScore = true;
+                }
             }
         }
 
@@ -137,8 +161,12 @@ public class PlayerCheckpoint : MonoBehaviour {
         if (!m_HasReachedLast)
         {
             m_ElapsedTime += Time.deltaTime;
+            m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
         }
-        m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
+        else
+        {
+            m_ElapsedText.text = "Your best time: " + PlayerPrefs.GetFloat("HighScore", Mathf.Infinity).ToString("F1");
+        }
 
         if (m_ReachedCheckpoint)
         {
@@ -153,6 +181,42 @@ public class PlayerCheckpoint : MonoBehaviour {
         {
             m_ReachedCheckpoint = false;
             m_PromptTimer = 0.0f;
+        }
+    }
+
+    void SetHighscore(float score)
+    {
+        float oldHighScore = PlayerPrefs.GetFloat("HighScore", Mathf.Infinity);
+        Debug.Log(oldHighScore);
+        Debug.Log(score);
+
+        if (score < oldHighScore)
+        {
+            Debug.Log("New best time!");
+            PlayerPrefs.SetFloat("HighScore", score);
+            PlayerPrefs.Save();
+        }
+
+        m_HighScores.Add(score);
+        for(int i = 0; i < m_HighScores.Count; i++)
+        {
+            Debug.Log(m_HighScores[i]);
+        }
+    }
+
+    void SortHighScore()
+    {
+        for (int write = 0; write < m_HighScores.Count; write++)
+        {
+            for (int sort = 0; sort < m_HighScores.Count - 1; sort++)
+            {
+                if (m_HighScores[sort] > m_HighScores[sort + 1])
+                {
+                    m_FTemp = m_HighScores[sort + 1];
+                    m_HighScores[sort + 1] = m_HighScores[sort];
+                    m_HighScores[sort] = m_FTemp;
+                }
+            }
         }
     }
 }

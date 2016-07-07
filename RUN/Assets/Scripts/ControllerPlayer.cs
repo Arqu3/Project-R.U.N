@@ -346,8 +346,6 @@ public class ControllerPlayer : MonoBehaviour
 
         if (!m_IsBlinking)
         {
-            //m_Rigidbody.AddForce(m_ForwardDir * m_BlinkVelocity * 10, ForceMode.Impulse);
-
             ToggleGravity(false);
             m_IsBlinking = true;
         }
@@ -388,14 +386,6 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_BlinkTimer += Time.deltaTime;
             Blink();
-
-            /*m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-
-            m_Ray = new Ray(transform.position, m_ForwardDir);
-            if (!Physics.Raycast(m_Ray, out m_Hit, 20.0f, m_LayerMask) || m_Hit.distance > 1.5f)
-            {
-                m_BlinkTimer = m_BlinkTime + 1;
-            }*/
             Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_BlinkTimer / m_BlinkTime);
         }
         else
@@ -411,13 +401,6 @@ public class ControllerPlayer : MonoBehaviour
 
                 m_BlinkTimer = 0.0f;
             }
-
-            /*if (m_BlinkTimer > m_BlinkTime)
-            {
-                m_Rigidbody.velocity = m_ForwardDir * m_PlayerVel.magnitude;
-                ToggleGravity(true);
-                m_IsBlinking = false;
-            }*/
 
             //Blink cooldown
             if (m_IsBlinkCD)
@@ -479,9 +462,8 @@ public class ControllerPlayer : MonoBehaviour
             m_IsClimbing = true;
             m_IsColliderActive = false;
 
-            m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.2f, ForceMode.Impulse);
-            Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
-            m_Rigidbody.AddForce(temp * m_MovementSpeed, ForceMode.Impulse);
+            Vector3 temp = new Vector3(transform.forward.x, 1 * 0.4f, transform.forward.z);
+            m_Rigidbody.AddForce(temp, ForceMode.Impulse);
 
             Debug.Log("Feetclimb");
         }
