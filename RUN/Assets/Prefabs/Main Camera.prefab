@@ -17,6 +17,7 @@ GameObject:
   - 114: {fileID: 11418668}
   - 82: {fileID: 8258588}
   - 114: {fileID: 11400348}
+  - 114: {fileID: 11473736}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -32,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 101736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 18, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -83,7 +84,7 @@ AudioSource:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 101736}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
@@ -204,6 +205,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_yOffset: 1.4
+--- !u!114 &11473736
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 101736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d04319c538f8f8f42a1fe4cbee023336, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClips:
+  - {fileID: 8300000, guid: 866db7e8bf54a5446b1b5005e151871a, type: 3}
+  - {fileID: 8300000, guid: 884e1e99782dd8744a0fa2106b49b41e, type: 3}
+  m_Volume: 0
 --- !u!114 &11476934
 MonoBehaviour:
   m_ObjectHideFlags: 1

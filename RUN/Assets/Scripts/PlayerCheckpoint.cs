@@ -30,6 +30,7 @@ public class PlayerCheckpoint : MonoBehaviour
     Text m_ElapsedText;
     Text m_PromptText;
     Text m_HighscoreText;
+    Text m_EndText;
     GameObject m_UI;
 
     float m_FTemp = 0.0f;
@@ -43,6 +44,7 @@ public class PlayerCheckpoint : MonoBehaviour
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
         m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
         m_HighscoreText = GameObject.Find("HighscoreText").GetComponent<Text>();
+        m_EndText = GameObject.Find("EndText").GetComponent<Text>();
         m_UI = GameObject.Find("Canvas");
 
         //Find checkpoints
@@ -151,6 +153,10 @@ public class PlayerCheckpoint : MonoBehaviour
                 {
                     m_UI.SendMessage("ToggleScoreScreen");
                     SetHighscore(m_ElapsedTime);
+                    if (m_EndText)
+                    {
+                        m_EndText.text = "Level Complete!\nTime: " + m_ElapsedTime.ToString("F1");
+                    }
                     m_HasSetScore = true;
                 }
             }
@@ -169,12 +175,8 @@ public class PlayerCheckpoint : MonoBehaviour
         if (!m_HasReachedLast)
         {
             m_ElapsedTime += Time.deltaTime;
-            m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
         }
-        else
-        {
-            m_ElapsedText.text = "Your best time: " + PlayerPrefs.GetFloat("HighScore", Mathf.Infinity).ToString("F1");
-        }
+        m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
 
         if (m_ReachedCheckpoint)
         {
@@ -193,8 +195,17 @@ public class PlayerCheckpoint : MonoBehaviour
 
         if (m_HighscoreText)
         {
+            int t = 0;
+            if (m_HighScores.Count < 10)
+            {
+                t = m_HighScores.Count;
+            }
+            else
+            {
+                t = 10;
+            }
             string s = "";
-            for (int i = 0; i < m_HighScores.Count; i++)
+            for (int i = 0; i < t; i++)
             {
                 s += i + 1 + ": " + m_HighScores[i] + "\n";
             }

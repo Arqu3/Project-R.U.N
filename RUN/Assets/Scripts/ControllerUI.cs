@@ -85,7 +85,6 @@ public class ControllerUI : MonoBehaviour {
         m_Player.ToggleControls(false);
         Time.timeScale = 0;
 
-        Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = false;
         Cursor.lockState = CursorLockMode.None;
         Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = false;
         Cursor.visible = true;

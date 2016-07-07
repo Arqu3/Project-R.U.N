@@ -2564,19 +2564,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 472102, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
       propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8258588, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
-      propertyPath: m_PlayOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8258588, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
-      propertyPath: m_audioClip
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8258588, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
-      propertyPath: m_Enabled
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
@@ -3064,25 +3052,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
---- !u!1 &698340885 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 101736, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
-  m_PrefabInternal: {fileID: 602149646}
---- !u!114 &698340895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 698340885}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d04319c538f8f8f42a1fe4cbee023336, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_audioClips:
-  - {fileID: 8300000, guid: 866db7e8bf54a5446b1b5005e151871a, type: 3}
-  - {fileID: 8300000, guid: 884e1e99782dd8744a0fa2106b49b41e, type: 3}
-  m_Volume: 0
 --- !u!1 &704206860
 GameObject:
   m_ObjectHideFlags: 0
@@ -3687,6 +3656,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22445364, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11462794, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_FontData.m_Alignment
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
