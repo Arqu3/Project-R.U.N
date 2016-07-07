@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -29,6 +31,7 @@ public class PlayerCheckpoint : MonoBehaviour
     Text m_PromptText;
 
     float m_FTemp = 0.0f;
+    string m_SaveString = "";
 
     void Start ()
     {
@@ -187,8 +190,6 @@ public class PlayerCheckpoint : MonoBehaviour
     void SetHighscore(float score)
     {
         float oldHighScore = PlayerPrefs.GetFloat("HighScore", Mathf.Infinity);
-        Debug.Log(oldHighScore);
-        Debug.Log(score);
 
         if (score < oldHighScore)
         {
@@ -197,11 +198,24 @@ public class PlayerCheckpoint : MonoBehaviour
             PlayerPrefs.Save();
         }
 
-        m_HighScores.Add(score);
-        for(int i = 0; i < m_HighScores.Count; i++)
+        //Save current score to string, add that to the total score string
+        m_SaveString = score.ToString("F1", CultureInfo.InvariantCulture.NumberFormat) + " ";
+        string temp = PlayerPrefs.GetString("Time", "");
+        temp += m_SaveString;
+        PlayerPrefs.SetString("Time", temp);
+
+        //Get total score string and split it at every " "
+        char[] splits = { ' ' };
+        string[] elements = PlayerPrefs.GetString("Time", "").Split(splits);
+
+        //Parse every score string in elements
+        for (int i = 0; i < elements.Length - 1; i++)
         {
-            Debug.Log(m_HighScores[i]);
+            float t = (float)double.Parse(elements[i], System.Globalization.NumberStyles.AllowDecimalPoint);
+            m_HighScores.Add(t);
         }
+
+        SortHighScore();
     }
 
     void SortHighScore()
