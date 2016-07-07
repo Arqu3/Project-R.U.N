@@ -32,6 +32,8 @@ public class ControllerPlayer : MonoBehaviour
     Vector3 m_PlayerVel;
     Vector3 m_hMovement;
     float m_AccelPercent = 0;
+    bool m_OnGround;
+    bool m_ControlsActive = true;
 
     //Component vars
     Rigidbody m_Rigidbody;
@@ -49,7 +51,6 @@ public class ControllerPlayer : MonoBehaviour
     RaycastHit m_Hit;
     Ray m_Ray;
     Vector3 m_BPlayerVel;
-    Text m_BlinkCDText;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -86,15 +87,15 @@ public class ControllerPlayer : MonoBehaviour
         m_MySides = GetComponentInChildren<Sides>();
         m_Collider = GetComponent<Collider>();
         m_Rigidbody = GetComponent<Rigidbody>();
-
+ 
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
-        m_BlinkCDText = GameObject.Find("BlinkText").GetComponent<Text>();
         m_CurBlinkCD = m_BlinkCD;
     }
 
     void Update()
     {
+        if (m_ControlsActive) { 
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
 
         DampeningUpdate();
@@ -110,8 +111,6 @@ public class ControllerPlayer : MonoBehaviour
         FallUpdate();
 
         CheckWallrun();
-
-        TextUpdate();
 
         if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
         {
@@ -142,9 +141,8 @@ public class ControllerPlayer : MonoBehaviour
                 JumpUpdate();
             }
         }
-
-        Debug.DrawRay(transform.position, m_ForwardDir, Color.red);
-    }
+        }
+        }
     
     public MovementState GetState()
     {
@@ -162,6 +160,7 @@ public class ControllerPlayer : MonoBehaviour
                 //Checks if player is in air
                 if (!RaycastDir(Vector3.down))
                 {
+                    m_OnGround = false;
 
                     if (m_Rigidbody.velocity.y > 0f) { 
                         m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
@@ -182,6 +181,7 @@ public class ControllerPlayer : MonoBehaviour
                 //If player is not in air then only following states are possible
                 else
                 {
+                    m_OnGround = true;
                     if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
                     {
                         m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
@@ -196,18 +196,21 @@ public class ControllerPlayer : MonoBehaviour
             }
             else
             {
+                m_OnGround = false;
                 m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
                 m_MoveState = MovementState.Wallrunning;
             }
         }
         else
         {
+            m_OnGround = false;
             m_MoveState = MovementState.Blinking;
         }
 
         //Checks if player is currently climbing
         if (m_IsClimbing)
         {
+            m_OnGround = false;
             m_MoveState = MovementState.Climbing;
         }
 
@@ -271,7 +274,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void JumpUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && (RaycastDir(Vector3.down) || m_MoveState.Equals(MovementState.Wallrunning)))
+        if (Input.GetKeyDown(KeyCode.Space) && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
         {
             if (m_MoveState.Equals(MovementState.Wallrunning)){
                 m_WallrunInterrupted = true;
@@ -400,7 +403,6 @@ public class ControllerPlayer : MonoBehaviour
             //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             if (m_CurBlinkCD > 2 && m_CurBlinkCD != m_BlinkCD) { 
                 Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_CurBlinkCD - 2);
-                Debug.Log("Shrinking");
             }
 
             else
@@ -524,22 +526,6 @@ public class ControllerPlayer : MonoBehaviour
         }   
     }
 
-    void TextUpdate()
-    {
-        if (!m_IsBlinkCD)
-        {
-            //Set text to display blink is ready
-            m_BlinkCDText.text = "Blink Ready";
-            m_BlinkCDText.color = Color.green;
-        }
-        else
-        {
-            //Set text to current CD
-            m_BlinkCDText.text = m_CurBlinkCD.ToString("F1");
-            m_BlinkCDText.color = Color.red;
-        }
-    }
-
     void DampeningUpdate()
     {
         if (m_Dampening && m_DampeningTimer < m_DampeningTime)
@@ -564,7 +550,7 @@ public class ControllerPlayer : MonoBehaviour
             m_FallTimer = 0.0f;
         }
 
-        if (RaycastDir(Vector3.down))
+        if (m_OnGround)
         {
             if (m_RequireDampening && !m_Dampened)
             {
@@ -633,7 +619,7 @@ public class ControllerPlayer : MonoBehaviour
             }
         }
 
-        if (m_MySides.WallrunObjectChanged || RaycastDir(Vector3.down))
+        if (m_MySides.WallrunObjectChanged || m_OnGround)
         {
             m_CanWallrun = true;
         }
@@ -697,5 +683,22 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_isMovingFromInput = false;
         }
+    }
+    /// <summary>
+    /// Returns UI values from the player in an array in order: (Current Blink CD, Blink CD)
+    /// </summary>
+    /// <returns></returns>
+    public float[] GetUIValues()
+    {
+        return new float[2] { m_CurBlinkCD, m_BlinkCD };
+    }
+
+    /// <summary>
+    /// Toggles all player movement controls.
+    /// </summary>
+    /// <param name="active">If true then input is received.</param>
+    public void ToggleControls(bool active)
+    {
+        m_ControlsActive = active;
     }
 }
