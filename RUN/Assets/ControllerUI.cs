@@ -8,10 +8,17 @@ public class ControllerUI : MonoBehaviour {
     ControllerPlayer m_Player;
     PausePanelFuncs m_PausePanel;
 
+    public AudioClip StartMenuMusic;
+
     bool m_Init = false;
     bool m_Paused = false;
+    bool m_MusicStarted = false;
 
 	void Start () {
+        m_Init = false;
+        m_Paused = false;
+        m_MusicStarted = false;
+
         if (transform.FindChild("BlinkText"))
             m_BlinkText = transform.FindChild("BlinkText").GetComponent<Text>();
         if (GameObject.FindGameObjectWithTag("Player"))
@@ -21,6 +28,8 @@ public class ControllerUI : MonoBehaviour {
 
         PauseUpdate();
 
+        Cursor.lockState = CursorLockMode.None;
+        Camera.main.GetComponent<MusicSystem>().PlayClip(0);
         m_Init = true;
     }
 
@@ -48,6 +57,13 @@ public class ControllerUI : MonoBehaviour {
             m_PausePanel.gameObject.SetActive(m_Paused);
             Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = !m_Paused;
             Cursor.visible = m_Paused;
+
+            if (!m_MusicStarted && m_Init)
+            {
+                Debug.Log("CHANGED");
+                m_MusicStarted = true;
+                Camera.main.GetComponent<MusicSystem>().PlayClip(1);
+            }
         }
     }
 

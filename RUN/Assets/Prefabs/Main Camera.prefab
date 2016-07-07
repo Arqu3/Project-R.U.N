@@ -16,6 +16,7 @@ GameObject:
   - 114: {fileID: 11476934}
   - 114: {fileID: 11418668}
   - 82: {fileID: 8258588}
+  - 114: {fileID: 11400348}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -85,8 +86,8 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 884e1e99782dd8744a0fa2106b49b41e, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1.35
   Loop: 0
@@ -157,6 +158,21 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 101736}
   m_Enabled: 1
+--- !u!114 &11400348
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 101736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d04319c538f8f8f42a1fe4cbee023336, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_audioClips:
+  - {fileID: 8300000, guid: 866db7e8bf54a5446b1b5005e151871a, type: 3}
+  - {fileID: 8300000, guid: 884e1e99782dd8744a0fa2106b49b41e, type: 3}
+  m_Volume: 1
 --- !u!114 &11403648
 MonoBehaviour:
   m_ObjectHideFlags: 1
