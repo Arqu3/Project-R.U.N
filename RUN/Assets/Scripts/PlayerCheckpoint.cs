@@ -117,8 +117,9 @@ public class PlayerCheckpoint : MonoBehaviour
         //Set position
         transform.position = m_CheckPoints[m_LastPassed].position;
 
-        //Reset blink CD
+        //Reset blink CD and fall time
         m_CPlayer.SendMessage("BlinkReset");
+        m_CPlayer.SendMessage("FallTimerReset");
 
         //Set rotation to corresponding checkpoint
         m_Camera._mouseAbsolute.x = m_CheckPoints[m_LastPassed].localEulerAngles.y;

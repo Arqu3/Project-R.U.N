@@ -577,6 +577,11 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
+    void FallTimerReset()
+    {
+        m_FallTimer = 0.0f;
+    }
+
     void CheckWallrun()
     {
         if (m_MySides.m_CanWallrun && m_MoveState.Equals(MovementState.Jumping) && m_CanWallrun)
