@@ -11,7 +11,7 @@ public class PlayerCheckpoint : MonoBehaviour
     //Public vars
     public float m_ResetDepth = 0.0f;
     public float m_PromptTime = 1.0f;
-    public static int m_LastPassed = 0;
+    public static int m_LastPassed;
     public Transform[] m_CheckPoints;
     public List<float> m_HighScores;
     public Text m_HighscoreText;
@@ -38,6 +38,7 @@ public class PlayerCheckpoint : MonoBehaviour
 
     void Start ()
     {
+        m_LastPassed = 0;
         m_CPlayer = GetComponent<ControllerPlayer>();
         m_Camera = GameObject.Find("Main Camera").GetComponent<SimpleSmoothMouseLook>();
 
