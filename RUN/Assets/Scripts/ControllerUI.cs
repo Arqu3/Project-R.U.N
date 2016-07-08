@@ -63,17 +63,17 @@ public class ControllerUI : MonoBehaviour {
             }
 
             m_Player.ToggleControls(!m_Paused);
-            Time.timeScale = timeInt;
-            Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = !m_Paused;
-
             m_PausePanel.m_Unpause = false;
             m_PausePanel.gameObject.SetActive(m_Paused);
             Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = !m_Paused;
+			Cursor.lockState = CursorLockMode.None;
+			Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = !m_Paused;
             Cursor.visible = m_Paused;
+
+			Time.timeScale = timeInt;
 
             if (!m_MusicStarted && m_Init)
             {
-                Debug.Log("CHANGED");
                 m_MusicStarted = true;
                 Camera.main.GetComponent<MusicSystem>().PlayClip(1);
             }

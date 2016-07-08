@@ -39,7 +39,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
         }
         else
         {
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         // Allow the script to clamp based on a desired target value.
