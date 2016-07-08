@@ -14031,11 +14031,49 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22499766, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -551
+      value: -593
       objectReference: {fileID: 0}
     - target: {fileID: 22499766, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 311
+      value: 338.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 132314, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11468680, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_Text
+      value: 'Jump, Wall jump & Ledge climb:
+
+        - Space'
+      objectReference: {fileID: 0}
+    - target: {fileID: 22426536, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 168170, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11468680, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_FontData.m_Alignment
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11493368, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_FontData.m_Alignment
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11415306, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_FontData.m_Alignment
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 11464176, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_FontData.m_Alignment
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 22481278, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
