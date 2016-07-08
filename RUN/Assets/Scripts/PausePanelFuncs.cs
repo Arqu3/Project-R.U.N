@@ -3,7 +3,27 @@ using System.Collections;
 
 public class PausePanelFuncs : MonoBehaviour {
 
-    public bool m_Unpause;
+    bool m_Unpause;
+    bool m_ToggleSound = false;
+
+    public bool ToggleSound
+    {
+        get
+        {
+            return m_ToggleSound;
+        }
+    }
+    public bool UnPause
+    {
+        get
+        {
+            return m_Unpause;
+        }
+        set
+        {
+            m_Unpause = value;
+        }
+    }
 
     public void ButtonUnpause()
     {
@@ -13,5 +33,10 @@ public class PausePanelFuncs : MonoBehaviour {
     public void ButtonExit()
     {
         Application.Quit();
+    }
+
+    public void ButtonSound()
+    {
+        m_ToggleSound = !m_ToggleSound;
     }
 }

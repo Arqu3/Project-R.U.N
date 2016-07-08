@@ -227,8 +227,6 @@ public class ControllerPlayer : MonoBehaviour
         }
         else
         {
-            if (m_WallrunInterrupted)
-                Debug.Log("Interrupt");
             Vector3 forward = Camera.main.transform.forward;
             forward.y = 0;
 

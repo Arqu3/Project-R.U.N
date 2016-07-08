@@ -1,31 +1,33 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
-#if UNITY_EDITOR
 using UnityEditor;
 
 public class SpawnRandom : MonoBehaviour {
 
+    public string m_ParentName;
     public string m_TagToFind;
-    public bool m_Spawn = false;
     public GameObject[] m_ObjectsToSpawn;
     public int m_Amount;
+    public bool m_Spawn = false;
+
     Collider m_Collider;
     Transform m_ParentObject;
 
-    bool m_Spawned = false;
-
     void OnValidate()
     {
+
         if (m_Spawn)
         {
-            if (!transform.Find("Decoration"))
+            
+
+            if (!GameObject.Find(m_ParentName))
             {
-                m_ParentObject = Instantiate(new GameObject("Decoration")).transform;
-                m_ParentObject.name = "Decoration";
+                m_ParentObject = new GameObject(m_ParentName).transform;
             }
             else
             {
-                m_ParentObject = transform.Find("Decoration");
+                m_ParentObject = GameObject.Find(m_ParentName).transform;
             }
 
             GameObject[] objectsWithTag = null;

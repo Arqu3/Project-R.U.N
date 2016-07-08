@@ -39,20 +39,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b84f3474b2a4bd646b44640abd867a6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ParentName: Decoration
   m_TagToFind: Ground
-  m_Spawn: 0
   m_ObjectsToSpawn:
   - {fileID: 138612, guid: cd23b6c9f5f70d342afd1cf558f6a2b1, type: 2}
   - {fileID: 100592, guid: 0f64078eba1b2b748a5818830eeefaf0, type: 2}
   - {fileID: 188574, guid: 15a19e34ac9b0c447aac0261452713c6, type: 2}
   m_Amount: 5
+  m_Spawn: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_ParentName
+      value: Decoration
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 131030}
