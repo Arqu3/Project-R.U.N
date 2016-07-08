@@ -8,6 +8,7 @@ public class ControllerUI : MonoBehaviour {
     ControllerPlayer m_Player;
     PausePanelFuncs m_PausePanel;
     GameObject m_ScorePanel;
+    TutorialPanelFuncs m_TutorialPanel;
 
     public AudioClip StartMenuMusic;
 
@@ -29,17 +30,36 @@ public class ControllerUI : MonoBehaviour {
             m_PausePanel = transform.FindChild("PausePanel").GetComponent<PausePanelFuncs>();
         if (transform.FindChild("EndPanel"))
             m_ScorePanel = transform.FindChild("EndPanel").gameObject;
+        if (transform.FindChild("TutorialPanel"))
+            m_TutorialPanel = transform.FindChild("TutorialPanel").GetComponent<TutorialPanelFuncs>();
 
-        m_ScorePanel.SetActive(false);
+        if (PlayerPrefs.GetInt("Restart", 0) != 1)
+        {
+            m_ScorePanel.SetActive(false);
+            m_TutorialPanel.gameObject.SetActive(false);
 
-        PauseUpdate();
+            PauseUpdate();
 
-        Cursor.lockState = CursorLockMode.None;
-        Camera.main.GetComponent<MusicSystem>().PlayClip(0);
-        m_Init = true;
+            Cursor.lockState = CursorLockMode.None;
+            Camera.main.GetComponent<MusicSystem>().PlayClip(0);
+            m_Init = true;
+        }
+        else
+        {
+            m_Init = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            m_PausePanel.gameObject.SetActive(false);
+            m_TutorialPanel.gameObject.SetActive(false);
+            m_ScorePanel.SetActive(false);
+            m_Player.ToggleControls(true);
+            Time.timeScale = 1;
+            PlayerPrefs.SetInt("Restart", 0);
+        }
     }
 
     void Update () {
+        m_TutorialPanel.gameObject.SetActive(m_TutorialPanel.m_Tutorial);
         if (!m_IsScoreScreen)
         {
             PauseUpdate();
