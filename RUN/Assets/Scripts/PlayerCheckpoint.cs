@@ -14,6 +14,8 @@ public class PlayerCheckpoint : MonoBehaviour
     public static int m_LastPassed = 0;
     public Transform[] m_CheckPoints;
     public List<float> m_HighScores;
+    public Text m_HighscoreText;
+    public Text m_EndText;
 
     //Other vars
     Transform m_Temp;
@@ -29,8 +31,6 @@ public class PlayerCheckpoint : MonoBehaviour
     SimpleSmoothMouseLook m_Camera;
     Text m_ElapsedText;
     Text m_PromptText;
-    Text m_HighscoreText;
-    Text m_EndText;
     GameObject m_UI;
 
     float m_FTemp = 0.0f;
@@ -43,8 +43,8 @@ public class PlayerCheckpoint : MonoBehaviour
 
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
         m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
-        m_HighscoreText = GameObject.Find("HighscoreText").GetComponent<Text>();
-        m_EndText = GameObject.Find("EndText").GetComponent<Text>();
+        //m_HighscoreText = GameObject.Find("HighscoreText").GetComponent<Text>();
+        //m_EndText = GameObject.Find("EndText").GetComponent<Text>();
         m_UI = GameObject.Find("Canvas");
 
         //Find checkpoints
