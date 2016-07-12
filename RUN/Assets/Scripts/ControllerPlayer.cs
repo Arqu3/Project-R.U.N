@@ -592,7 +592,7 @@ public class ControllerPlayer : MonoBehaviour
         
         if (!m_MySides.m_CanWallrun || m_WallrunInterrupted || !m_CanWallrun)
         {
-            Debug.Log(!m_MySides.m_CanWallrun);
+            //Debug.Log(!m_MySides.m_CanWallrun);
 
             m_IsWallrunning = false;
             m_WallrunDirSet = false;

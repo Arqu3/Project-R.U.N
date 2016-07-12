@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class PlayerCheckpoint : MonoBehaviour
 {
     //Public vars
+    public int m_SetToCheckPoint = 0;
     public float m_ResetDepth = 0.0f;
     public float m_PromptTime = 1.0f;
     public static int m_LastPassed;
@@ -92,13 +93,32 @@ public class PlayerCheckpoint : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SetToLastCheckpoint();
+            SetToCheckpoint(m_LastPassed);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (m_SetToCheckPoint < 0)
+            {
+                Debug.Log("ERROR, SetToCheckPoint is negative");
+            }
+            else
+            {
+                if (m_SetToCheckPoint > m_CheckPoints.Length - 1)
+                {
+                    Debug.Log("ERROR, SetToCheckPoint is greater than amount of checkpoints");
+                }
+                else
+                {
+                    SetToCheckpoint(m_SetToCheckPoint);
+                }
+            }
         }
 
         if (transform.localPosition.y < m_ResetDepth)
         {
             Debug.Log("Depth reset");
-            SetToLastCheckpoint();
+            SetToCheckpoint(m_LastPassed);
         }
 
         //Get and reload current scene
@@ -110,21 +130,21 @@ public class PlayerCheckpoint : MonoBehaviour
         TextUpdate();
 	}
 
-    void SetToLastCheckpoint()
+    void SetToCheckpoint(int num)
     {
         //Reset player velocity
         GetComponent<Rigidbody>().velocity = Vector3.zero;
         
         //Set position
-        transform.position = m_CheckPoints[m_LastPassed].position;
+        transform.position = m_CheckPoints[num].position;
 
         //Reset blink CD and fall time
         m_CPlayer.SendMessage("BlinkReset");
         m_CPlayer.SendMessage("FallTimerReset");
 
         //Set rotation to corresponding checkpoint
-        m_Camera._mouseAbsolute.x = m_CheckPoints[m_LastPassed].localEulerAngles.y;
-        m_Camera._mouseAbsolute.y = m_CheckPoints[m_LastPassed].localEulerAngles.x;
+        m_Camera._mouseAbsolute.x = m_CheckPoints[num].localEulerAngles.y;
+        m_Camera._mouseAbsolute.y = m_CheckPoints[num].localEulerAngles.x;
     }
 
     void OnTriggerEnter(Collider col)
@@ -168,7 +188,7 @@ public class PlayerCheckpoint : MonoBehaviour
         if (col.gameObject.tag == "KillBox")
         {
             Debug.Log("Killbox reset");
-            SetToLastCheckpoint();
+            SetToCheckpoint(m_LastPassed);
         }
     }
 
