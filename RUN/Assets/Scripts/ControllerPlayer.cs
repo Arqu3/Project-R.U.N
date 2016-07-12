@@ -96,6 +96,7 @@ public class ControllerPlayer : MonoBehaviour
     void Update()
     {
         if (m_ControlsActive) { 
+        if (!m_MoveState.Equals(MovementState.Wallrunning))
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
 
         DampeningUpdate();
@@ -264,7 +265,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Wallrunning)) {
             gravityBool = false;
-            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -10f + movementVector.z * 9.5f + m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, - 1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
         }
 
         ToggleGravity(gravityBool);
@@ -591,6 +592,8 @@ public class ControllerPlayer : MonoBehaviour
         
         if (!m_MySides.m_CanWallrun || m_WallrunInterrupted || !m_CanWallrun)
         {
+            Debug.Log(!m_MySides.m_CanWallrun);
+
             m_IsWallrunning = false;
             m_WallrunDirSet = false;
         }
@@ -608,6 +611,8 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_CanWallrun = true;
         }
+        
+
     }
 
     void StartWallrun()
@@ -619,23 +624,21 @@ public class ControllerPlayer : MonoBehaviour
 
             Vector3[] tempV = m_MySides.GetColliderInfo();
 
+            //Debug.Log(tempV);
+
             Vector3 forward = new Vector3(transform.forward.x, 0, transform.forward.z);
             
             for (int t = 0; t < 2; t++) {  
                 for (int i = 0; i < 4; i++){
                     if (Vector3.Angle(t * 2 * -tempV[i] +tempV[i], forward) < m_WallrunAngle)
                     {
+                        
                         m_WallrunDir = (t * 2 * -tempV[i] + tempV[i]).normalized;
                         t = 2;
                         i = 4;
                     }
                 }
             }
-
-            //transform.localRotation.SetFromToRotation(transform.forward, m_WallrunDir);
-
-            //Camera.main.GetComponent<SimpleSmoothMouseLook>().targetDirection = new Vector2(m_WallrunDir.x, m_WallrunDir.z);
-           // Camera.main.GetComponent<SimpleSmoothMouseLook>().clampInDegrees = new Vector2(180, 180);
         }
     }
 
@@ -652,23 +655,25 @@ public class ControllerPlayer : MonoBehaviour
             m_isMovingFromInput = true;
         }
 
-        if (movementDelta.magnitude > 0.2f)
+        if (movementDelta.magnitude > 0.1)
         {
             m_isMovingFromInput = true;
             m_NotMovingCount = 0;
         }
+
+        m_NotMovingCount = Mathf.Clamp(m_NotMovingCount, 0, 3);
+
         else
         {
             m_NotMovingCount++;            
         }
-
-        Mathf.Clamp(m_NotMovingCount, 0, 3);
 
         if (m_NotMovingCount == 3)
         {
             m_isMovingFromInput = false;
         }
     }
+
     /// <summary>
     /// Returns UI values from the player in an array in order: (Current Blink CD, Blink CD)
     /// </summary>

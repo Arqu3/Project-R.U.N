@@ -132,17 +132,10 @@ public class Sides : MonoBehaviour {
 
         Vector3[] returnVector = new Vector3[4];
 
-        returnVector[0] = transform.forward;
-        returnVector[1] = -transform.forward;
-        returnVector[2] = transform.right;
-        returnVector[3] = -transform.right;
-
-        /*
-        returnVector[0] = b.min - new Vector3(b.max.x, 0, b.min.z);
-        returnVector[1] = new Vector3(b.max.x, 0, b.min.z) - b.max;
-        returnVector[2] = b.max - new Vector3(b.min.x, 0,b.max.z);
-        returnVector[3] = new Vector3(b.max.y, 0,b.min.z) - b.min;
-        */
+        returnVector[0] = m_ParkourObject.transform.forward;
+        returnVector[1] = -m_ParkourObject.transform.forward;
+        returnVector[2] = m_ParkourObject.transform.right;
+        returnVector[3] = -m_ParkourObject.transform.right;
 
         for (int i = 0; i < 4; i++)
         {

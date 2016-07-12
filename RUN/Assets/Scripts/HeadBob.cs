@@ -11,14 +11,12 @@ public class HeadBob : MonoBehaviour {
     Vector3 m_PositionOffset;
     ControllerPlayer m_Player;
     const float m_CameraOffset = 1.4f;
-
+    float m_MoveToCenterTimer = 0f;
 
     void Start()
     {
         m_Player = FindObjectOfType<ControllerPlayer>();
         m_OriginalPosition = m_Player.transform.position;
-
-
     }
 
 	void Update () {
@@ -58,6 +56,12 @@ public class HeadBob : MonoBehaviour {
         if (positionDelta > 0.1f || positionDelta < -0.1)
         {
             m_PositionOffset += Vector3.up * Mathf.Sign(positionDelta) * Time.deltaTime;
+            m_MoveToCenterTimer = 0;
+        }
+        else
+        {
+            m_MoveToCenterTimer += Time.deltaTime;
+            Vector3.Lerp(m_PositionOffset, Vector3.zero, m_MoveToCenterTimer);
         }
     }
 }
