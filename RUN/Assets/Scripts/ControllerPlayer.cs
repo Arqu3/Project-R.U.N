@@ -661,11 +661,10 @@ public class ControllerPlayer : MonoBehaviour
             m_NotMovingCount = 0;
         }
 
-        m_NotMovingCount = Mathf.Clamp(m_NotMovingCount, 0, 3);
-
         else
         {
-            m_NotMovingCount++;            
+            m_NotMovingCount++;
+            m_NotMovingCount = Mathf.Clamp(m_NotMovingCount, 0, 3);
         }
 
         if (m_NotMovingCount == 3)
