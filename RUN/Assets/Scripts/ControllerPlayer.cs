@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public enum MovementState
 {
-    Idle, Moving, Jumping, Falling, Wallrunning, Grabbing, Blinking, Climbing
+    Idle, Moving, Jumping, Falling, Wallrunning, Grabbing, Blinking, Climbing, VerticalClimbing
 }
 
 public class ControllerPlayer : MonoBehaviour
@@ -26,6 +26,7 @@ public class ControllerPlayer : MonoBehaviour
     public float m_SlowMultiplier = 0.5f;
     public float m_SlowTime = 0.5f;
     public float m_DampeningTime = 0.4f;
+    public float m_VerticalClimbTimer = 1.5f;
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -77,6 +78,10 @@ public class ControllerPlayer : MonoBehaviour
     Vector3 m_WallrunDir;
     const float m_WallrunAngle = 45;
 
+    //Vertical climb vars
+    bool m_IsVerticalClimb = false;
+    float m_VClimbTimer;
+
     bool m_isMovingFromInput;
     Vector3 m_lastPosition;
     int m_NotMovingCount = 0;
@@ -91,6 +96,7 @@ public class ControllerPlayer : MonoBehaviour
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
+        m_VClimbTimer = m_VerticalClimbTimer;
     }
 
     void Update()
@@ -115,7 +121,9 @@ public class ControllerPlayer : MonoBehaviour
 
         CheckWallrun();
 
-        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
+        VerticalClimbUpdate();
+
+        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
         {
             if (!m_IsAirControl)
             {
@@ -215,6 +223,11 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_OnGround = false;
             m_MoveState = MovementState.Climbing;
+        }
+        else if (m_IsVerticalClimb)
+        {
+            m_OnGround = false;
+            m_MoveState = MovementState.VerticalClimbing;
         }
 
         m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);
@@ -437,7 +450,7 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
-    void IsGrabbed(bool state)
+    public void IsGrabbed(bool state)
     {
         m_IsGrabbed = state;
     }
@@ -641,6 +654,32 @@ public class ControllerPlayer : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public void SetVerticalClimb(bool state)
+    {
+        m_IsVerticalClimb = state;
+    }
+
+    void VerticalClimbUpdate()
+    {
+        if (m_MoveState.Equals(MovementState.VerticalClimbing))
+        {
+            m_Rigidbody.useGravity = false;
+            if (m_VClimbTimer > 0 && Input.GetKey(KeyCode.W))
+            {
+                m_VClimbTimer -= Time.deltaTime;
+                m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_VClimbTimer * 10, m_Rigidbody.velocity.z);
+            }
+            else
+            {
+                SetVerticalClimb(false);
+            }
+        }
+        else
+        {
+            m_VClimbTimer = m_VerticalClimbTimer;
         }
     }
 
