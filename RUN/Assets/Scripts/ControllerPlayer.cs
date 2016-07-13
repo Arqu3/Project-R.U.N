@@ -95,10 +95,12 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive) { 
-        if (!m_MoveState.Equals(MovementState.Wallrunning))
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
-
+        if (m_ControlsActive) {
+            if (!m_MoveState.Equals(MovementState.Wallrunning))
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
+            else {
+                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, m_WallrunDir, 0.05f, 0f));
+            }
         DampeningUpdate();
 
         CheckNotMovingFromInput();
