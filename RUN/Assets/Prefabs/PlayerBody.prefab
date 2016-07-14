@@ -347,8 +347,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.99, y: 5.1, z: 2.6}
-  m_Center: {x: 0, y: -0.53, z: 0.19}
+  m_Size: {x: 0.99, y: 3.07, z: 2.6}
+  m_Center: {x: 0, y: -2.12, z: 0.19}
 --- !u!65 &6570366
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -384,7 +384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b82ab6ebd6729d446a3192573058d4c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SetToCheckPoint: 0
+  m_SetToCheckPoint: 3
   m_ResetDepth: -30
   m_PromptTime: 1
   m_CheckPoints: []
@@ -446,7 +446,7 @@ MonoBehaviour:
   m_SlowMultiplier: 0.5
   m_SlowTime: 0.5
   m_DampeningTime: 0.4
-  m_VerticalClimbTimer: 1
+  m_VerticalClimbTimer: 1.5
 --- !u!114 &11496464
 MonoBehaviour:
   m_ObjectHideFlags: 1
