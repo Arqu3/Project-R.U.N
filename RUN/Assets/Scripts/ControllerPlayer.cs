@@ -188,6 +188,11 @@ public class ControllerPlayer : MonoBehaviour
                         m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
                         m_MoveState = MovementState.Grabbing;
                     }
+                    else if (m_IsVerticalClimb)
+                    {
+                        m_OnGround = false;
+                        m_MoveState = MovementState.VerticalClimbing;
+                    }
                 }
                 //If player is not in air then only following states are possible
                 else
@@ -223,11 +228,6 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_OnGround = false;
             m_MoveState = MovementState.Climbing;
-        }
-        else if (m_IsVerticalClimb)
-        {
-            m_OnGround = false;
-            m_MoveState = MovementState.VerticalClimbing;
         }
 
         m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);
@@ -455,17 +455,17 @@ public class ControllerPlayer : MonoBehaviour
         m_IsGrabbed = state;
     }
 
-    void FastClimb()
+    void HandClimb()
     {
         m_IsClimbing = true;
         m_IsColliderActive = false;
 
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
         //Only get forward in X and Z
         Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
         m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
+        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
 
-        Debug.Log("Fastclimb");
+        Debug.Log("HandClimb");
     }
 
     void FeetClimb()
@@ -515,7 +515,7 @@ public class ControllerPlayer : MonoBehaviour
             m_ColliderTimer = 0.0f;
         }
 
-        if (m_ColliderTimer > 0.2f)
+        if (m_ColliderTimer > 0.4f)
         {
             m_IsColliderActive = true;
         }
