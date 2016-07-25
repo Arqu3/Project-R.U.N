@@ -1,4 +1,4 @@
-﻿
+﻿using System.Collections;
 using UnityEngine;
 
 // Very simple smooth mouselook modifier for the MainCamera in Unity
@@ -17,12 +17,20 @@ public class SimpleSmoothMouseLook : MonoBehaviour
     public Vector2 targetDirection;
     public Vector2 targetCharacterDirection;
 
+    float m_ClampX;
+    float m_ClampXMax;
+    float m_ClampXMin;
+
+    float m_initialAngle;
+
     // Assign this if there's a parent object controlling motion, such as a Character Controller.
     // Yaw rotation will affect this object instead of the camera if set.
     public GameObject characterBody;
 
     void Start()
     {
+        m_initialAngle = Vector3.Angle(transform.forward, Vector3.right);
+
         // Set target direction to the camera's initial orientation.
         targetDirection = transform.localRotation.eulerAngles;
 
@@ -59,9 +67,25 @@ public class SimpleSmoothMouseLook : MonoBehaviour
         // Find the absolute mouse movement value from point zero.
         _mouseAbsolute += _smoothMouse;
 
+        /*
+        if (_mouseAbsolute.x < 0)
+        {
+            _mouseAbsolute.x = _mouseAbsolute.x + 360;
+        }
+        _mouseAbsolute.x = _mouseAbsolute.x % 360;
+        */
+
         // Clamp and apply the local x value first, so as not to be affected by world transforms.
-        if (clampInDegrees.x < 360)
-            _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x, -clampInDegrees.x * 0.5f, clampInDegrees.x * 0.5f);
+        if (_mouseAbsolute.x < 0)
+        {
+            _mouseAbsolute.x = 720 + _mouseAbsolute.x;
+        }
+
+        if (m_ClampX < 360) { 
+            _mouseAbsolute.x = Mathf.Clamp(_mouseAbsolute.x,m_ClampXMin,m_ClampXMax);
+        }
+
+       // _mouseAbsolute.x = _mouseAbsolute.x % 360;
 
         var xRotation = Quaternion.AngleAxis(-_mouseAbsolute.y, targetOrientation * Vector3.right);
         transform.localRotation = xRotation;
@@ -84,6 +108,63 @@ public class SimpleSmoothMouseLook : MonoBehaviour
         {
             var yRotation = Quaternion.AngleAxis(_mouseAbsolute.x, transform.InverseTransformDirection(Vector3.up));
             transform.localRotation *= yRotation;
+        }
+
+    }
+
+    public void ClampMouseX(Vector3 dir, float amount)
+    {
+        m_ClampX = amount;
+
+        dir = Quaternion.AngleAxis(m_initialAngle, Vector3.up) * dir;
+
+        float orientation = -Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+
+        float x = -Mathf.Atan2(dir.z, dir.x);
+        
+        x = (x > 0 ? x : (2 * Mathf.PI + x)) * 360 / (2 * Mathf.PI);
+        x = (x) % 360;
+
+        orientation = x;
+
+        if (amount < 360)
+        {
+            float tempMouseAbs = _mouseAbsolute.x;
+            int positive = 1;
+            int mult = 0;
+
+            if (tempMouseAbs < 0)
+            {
+                positive = -1;
+                tempMouseAbs = Mathf.Abs(tempMouseAbs);
+            }
+
+            while(tempMouseAbs > 360) { 
+                tempMouseAbs -= 360;
+                mult++;
+            }
+
+            float round = 0;
+
+            if (Mathf.Abs(tempMouseAbs - orientation) > Mathf.Abs(tempMouseAbs - 360 - orientation))
+                round = 360;
+            
+            m_ClampXMax = (float)((orientation + amount * 0.5) + mult * 360 + round) * positive;
+            m_ClampXMin = (float)((orientation - amount * 0.5) + mult * 360 + round) * positive;
+
+            if (m_ClampXMax < 0 || m_ClampXMin < 0)
+            {
+                m_ClampXMax += 360;
+                m_ClampXMin += 360;
+                _mouseAbsolute.x += 360;
+            }
+
+            if (m_ClampXMax < m_ClampXMin)
+            {
+                float temp = m_ClampXMax;
+                m_ClampXMax = m_ClampXMin;
+                m_ClampXMin = temp;
+            }
         }
     }
 }
