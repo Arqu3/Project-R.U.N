@@ -77,6 +77,8 @@ public class ControllerPlayer : MonoBehaviour
     bool m_WallrunRight;
     Vector3 m_WallrunDir;
     const float m_WallrunAngle = 45;
+    public float m_WallrunGraceTime;
+    float m_WallrunGraceTimer = 0f;
 
     //Vertical climb vars
     bool m_IsVerticalClimb = false;
@@ -101,10 +103,12 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive)
-        {
-            if (m_MoveState.Equals(MovementState.Wallrunning))
-            {
+        if (m_ControlsActive) {
+            if (!m_MoveState.Equals(MovementState.Wallrunning)) { 
+                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
+                Camera.main.GetComponent<SimpleSmoothMouseLook>().ClampMouseX(transform.forward, 360);
+            }
+            else {
                 transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, m_WallrunDir, 0.05f, 0f));
             }
 
@@ -296,12 +300,18 @@ public class ControllerPlayer : MonoBehaviour
                 m_CanWallrun = false;
             }
 
+            m_WallrunGraceTimer = 0f;
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
         }
 
-        if (m_MoveState.Equals(MovementState.Falling) && !m_isMovingFromInput)
+        if (m_MoveState.Equals(MovementState.Falling))
         {
-            m_hMovement = Vector3.zero;
+            m_WallrunGraceTimer += Time.deltaTime;
+
+                if (!m_isMovingFromInput)
+                {
+                    m_hMovement = Vector3.zero;
+                }
         }
     }
     
@@ -586,7 +596,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckWallrun()
     {
-        if (m_MySides.m_CanWallrun && m_MoveState.Equals(MovementState.Jumping) && m_CanWallrun)
+        if (m_MySides.m_CanWallrun && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun )
         {
             m_IsWallrunning = true;
 
@@ -595,8 +605,6 @@ public class ControllerPlayer : MonoBehaviour
         
         if (!m_MySides.m_CanWallrun || m_WallrunInterrupted || !m_CanWallrun)
         {
-            //Debug.Log(!m_MySides.m_CanWallrun);
-
             m_IsWallrunning = false;
             m_WallrunDirSet = false;
         }
@@ -614,7 +622,6 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_CanWallrun = true;
         }
-        
 
     }
 
@@ -626,8 +633,6 @@ public class ControllerPlayer : MonoBehaviour
             m_WallrunDirSet = true;
 
             Vector3[] tempV = m_MySides.GetColliderInfo();
-
-            //Debug.Log(tempV);
 
             Vector3 forward = new Vector3(transform.forward.x, 0, transform.forward.z);
             
@@ -642,6 +647,9 @@ public class ControllerPlayer : MonoBehaviour
                     }
                 }
             }
+            m_WallrunDir = Vector3.ClampMagnitude(m_WallrunDir, 1f);
+
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().ClampMouseX(m_WallrunDir, 200);
         }
     }
 
@@ -684,12 +692,12 @@ public class ControllerPlayer : MonoBehaviour
             m_isMovingFromInput = true;
         }
 
-        if (movementDelta.magnitude > 0.1)
+        if (movementDelta.magnitude > 0.075f)
         {
             m_isMovingFromInput = true;
             m_NotMovingCount = 0;
         }
-
+        
         else
         {
             m_NotMovingCount++;
