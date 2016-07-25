@@ -4,66 +4,51 @@ using System.Collections;
 public class AnimationHandler : MonoBehaviour
 {
     Animator m_Animator;
+    ControllerPlayer m_CPlayer;
 
-    bool m_IsGrabbed = false;
-    bool m_IsClimbing = false;
+    public bool m_AnimationStarted;
+    public bool m_AnimationFinished;
 
-    bool m_AnimationStarted = true;
-    bool m_AnimationFinished = false;
+    bool m_IsClimbing;
 
 	void Start()
     {
+        m_CPlayer = GetComponentInChildren<ControllerPlayer>();
+
+        m_AnimationStarted = false;
+        m_AnimationFinished = true;
+        m_IsClimbing = false;
+
         m_Animator = GetComponent<Animator>();
 	}
 	
 	// Update is called once per frame
 	void Update()
     {
-        ClimbUpdate();
-	}
+    }
 
     void LateUpdate()
     {
-        if (m_AnimationFinished && m_AnimationStarted)
+        if (m_AnimationStarted && m_AnimationFinished)
         {
             m_AnimationStarted = false;
-
             transform.parent.position = transform.position;
             transform.localPosition = Vector3.zero;
         }
     }
 
-    void IsGrabbed(bool state)
+    public void ToggleClimb(bool state)
     {
-        m_IsGrabbed = state;
+        m_AnimationStarted = true;
+        m_AnimationFinished = false;
+
+        m_Animator.Play("Climb");
+        m_CPlayer.ToggleControls(false);
     }
 
-    void ClimbUpdate()
+    public void animationFinished()
     {
-        //Check if climbing or not
-        if (m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Climb"))
-        {
-            m_IsClimbing = true;
-        }
-        else
-        {
-            m_IsClimbing = false;
-        }
-
-        //Play climb animation if flag is set and not climbing
-        if (!m_IsClimbing && m_IsGrabbed)
-        {
-            m_AnimationStarted = true;
-            m_AnimationFinished = false;
-            m_Animator.SetBool("Climb", true);
-        }
-        else
-        {
-            if (!m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Climb"))
-            {
-                m_AnimationFinished = true;
-            }
-            m_Animator.SetBool("Climb", false);
-        }
+        m_AnimationFinished = true;
+        m_CPlayer.ToggleControls(true);
     }
 }

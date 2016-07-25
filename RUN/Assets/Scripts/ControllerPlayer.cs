@@ -91,7 +91,7 @@ public class ControllerPlayer : MonoBehaviour
         m_PlayerHands = GetComponentInChildren<Hands>();
         m_MySides = GetComponentInChildren<Sides>();
         m_Collider = GetComponent<Collider>();
-        m_Rigidbody = GetComponent<Rigidbody>();
+        m_Rigidbody = GetComponentInParent<Rigidbody>();
  
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
@@ -101,59 +101,60 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive) {
-            if (!m_MoveState.Equals(MovementState.Wallrunning))
-                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
-            else {
+        if (m_ControlsActive)
+        {
+            if (m_MoveState.Equals(MovementState.Wallrunning))
+            {
                 transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, m_WallrunDir, 0.05f, 0f));
             }
-        DampeningUpdate();
 
-        CheckNotMovingFromInput();
+            DampeningUpdate();
 
-        CheckState();
+            CheckNotMovingFromInput();
 
-        BlinkUpdate();
+            CheckState();
 
-        ClimbUpdate();
+            BlinkUpdate();
 
-        FallUpdate();
+            ClimbUpdate();
 
-        CheckWallrun();
+            FallUpdate();
 
-        VerticalClimbUpdate();
+            CheckWallrun();
 
-        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
-        {
-            if (!m_IsAirControl)
+            VerticalClimbUpdate();
+
+            if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
-                JumpUpdate();
-                CheckState();
-                CalculateFriction(m_hMovement);
-                
-                //Disable horizontal movement while in air
-                if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                if (!m_IsAirControl)
                 {
+                    JumpUpdate();
+                    CheckState();
+                    CalculateFriction(m_hMovement);
+                
+                    //Disable horizontal movement while in air
+                    if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                    {
+                        m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                        HorizontalMovement(m_hMovement);
+                    }
+
+                    if (m_WallrunInterrupted)
+                    {
+                        m_WallrunInterrupted = false;
+                    }
+                }
+                else
+                {
+                    //Horizontal movement is enabled while in air
                     m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
                     HorizontalMovement(m_hMovement);
-                }
-
-                if (m_WallrunInterrupted)
-                {
-                    m_WallrunInterrupted = false;
+                    CalculateFriction(m_hMovement);
+                    JumpUpdate();
                 }
             }
-            else
-            {
-                //Horizontal movement is enabled while in air
-                m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-                HorizontalMovement(m_hMovement);
-                CalculateFriction(m_hMovement);
-                JumpUpdate();
-            }
         }
-        }
-        }
+    }
     
     public MovementState GetState()
     {
@@ -455,19 +456,6 @@ public class ControllerPlayer : MonoBehaviour
         m_IsGrabbed = state;
     }
 
-    void HandClimb()
-    {
-        m_IsClimbing = true;
-        m_IsColliderActive = false;
-
-        //Only get forward in X and Z
-        Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
-        m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
-
-        Debug.Log("HandClimb");
-    }
-
     void FeetClimb()
     {
         //Safety check
@@ -485,40 +473,40 @@ public class ControllerPlayer : MonoBehaviour
 
     void ClimbUpdate()
     {
-        if (!m_MoveState.Equals(MovementState.Jumping )) { 
+        if (!m_MoveState.Equals(MovementState.Jumping ))
+        { 
+            //Climbing
+            if (m_IsClimbing)
+            {
+                m_ClimbTimer += Time.deltaTime;
+            }
+            else
+            {
+                m_ClimbTimer = 0.0f;
+            }
 
-        //Climbing
-        if (m_IsClimbing)
-        {
-            m_ClimbTimer += Time.deltaTime;
-        }
-        else
-        {
-            m_ClimbTimer = 0.0f;
-        }
+            //Climb timer
+            if (m_IsClimbing && m_ClimbTimer > 0.4f)
+            {
+                m_IsClimbing = false;
+            }
 
-        //Climb timer
-        if (m_IsClimbing && m_ClimbTimer > 0.4f)
-        {
-            m_IsClimbing = false;
-        }
+            //Set mesh collider to trigger when climbing
+            if (!m_IsColliderActive)
+            {
+                m_ColliderTimer += Time.deltaTime;
+                m_MeshCol.isTrigger = true;
+            }
+            else
+            {
+                m_MeshCol.isTrigger = false;
+                m_ColliderTimer = 0.0f;
+            }
 
-        //Set mesh collider to trigger when climbing
-        if (!m_IsColliderActive)
-        {
-            m_ColliderTimer += Time.deltaTime;
-            m_MeshCol.isTrigger = true;
-        }
-        else
-        {
-            m_MeshCol.isTrigger = false;
-            m_ColliderTimer = 0.0f;
-        }
-
-        if (m_ColliderTimer > 0.4f)
-        {
-            m_IsColliderActive = true;
-        }
+            if (m_ColliderTimer > 0.3f)
+            {
+                m_IsColliderActive = true;
+            }
         }   
     }
 
@@ -730,5 +718,10 @@ public class ControllerPlayer : MonoBehaviour
     public void ToggleControls(bool active)
     {
         m_ControlsActive = active;
+    }
+
+    public bool GetIsControls()
+    {
+        return m_ControlsActive;
     }
 }

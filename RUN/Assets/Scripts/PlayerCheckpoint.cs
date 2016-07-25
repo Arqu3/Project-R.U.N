@@ -40,7 +40,7 @@ public class PlayerCheckpoint : MonoBehaviour
     void Start ()
     {
         m_LastPassed = 0;
-        m_CPlayer = GetComponent<ControllerPlayer>();
+        m_CPlayer = GetComponentInChildren<ControllerPlayer>();
         m_Camera = GameObject.Find("Main Camera").GetComponent<SimpleSmoothMouseLook>();
 
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
@@ -134,9 +134,9 @@ public class PlayerCheckpoint : MonoBehaviour
     {
         //Reset player velocity
         GetComponent<Rigidbody>().velocity = Vector3.zero;
-        
+
         //Set position
-        transform.position = m_CheckPoints[num].position;
+        transform.position = new Vector3(m_CheckPoints[num].position.x, m_CheckPoints[num].position.y - 18.0f, m_CheckPoints[num].position.z);
 
         //Reset blink CD and fall time
         m_CPlayer.SendMessage("BlinkReset");
