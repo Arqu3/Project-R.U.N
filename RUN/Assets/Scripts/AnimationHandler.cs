@@ -4,6 +4,7 @@ using System.Collections;
 public class AnimationHandler : MonoBehaviour
 {
     Animator m_Animator;
+    Animation m_Animation;
     ControllerPlayer m_CPlayer;
 
     public bool m_AnimationStarted;
@@ -29,6 +30,7 @@ public class AnimationHandler : MonoBehaviour
 
     void LateUpdate()
     {
+        //Reset local position when animation is finished
         if (m_AnimationStarted && m_AnimationFinished)
         {
             m_AnimationStarted = false;
@@ -37,12 +39,32 @@ public class AnimationHandler : MonoBehaviour
         }
     }
 
-    public void ToggleClimb(bool state)
+    public void PlayAnimation(string name)
     {
         m_AnimationStarted = true;
         m_AnimationFinished = false;
 
-        m_Animator.Play("Climb");
+        int temp = Animator.StringToHash(name);
+
+        if (m_Animator.HasState(0, temp))
+        {
+            m_Animator.Play(name);
+        }
+        else
+        {
+            Debug.Log("Could not find animation with name: " + name);
+            return;
+        }
+
+        m_CPlayer.ToggleControls(false);
+    }
+
+    public void PlayAnimation(int id)
+    {
+        m_AnimationStarted = true;
+        m_AnimationFinished = false;
+
+        m_Animator.Play(id);
         m_CPlayer.ToggleControls(false);
     }
 

@@ -103,15 +103,8 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive) {
-            if (!m_MoveState.Equals(MovementState.Wallrunning)) { 
-                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
-                Camera.main.GetComponent<SimpleSmoothMouseLook>().ClampMouseX(transform.forward, 360);
-            }
-            else {
-                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, m_WallrunDir, 0.05f, 0f));
-            }
-
+        if (m_ControlsActive)
+        {
             DampeningUpdate();
 
             CheckNotMovingFromInput();
@@ -476,8 +469,6 @@ public class ControllerPlayer : MonoBehaviour
 
             Vector3 temp = new Vector3(transform.forward.x, 1 * 0.4f, transform.forward.z);
             m_Rigidbody.AddForce(temp, ForceMode.Impulse);
-
-            Debug.Log("Feetclimb");
         }
     }
 
@@ -513,7 +504,7 @@ public class ControllerPlayer : MonoBehaviour
                 m_ColliderTimer = 0.0f;
             }
 
-            if (m_ColliderTimer > 0.3f)
+            if (m_ColliderTimer > 0.1f)
             {
                 m_IsColliderActive = true;
             }
@@ -731,5 +722,10 @@ public class ControllerPlayer : MonoBehaviour
     public bool GetIsControls()
     {
         return m_ControlsActive;
+    }
+
+    public Vector3 GetWallrunDir()
+    {
+        return m_WallrunDir;
     }
 }
