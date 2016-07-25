@@ -15,7 +15,6 @@ public class Sides : MonoBehaviour {
             return m_WallrunObjectChanged;
         }
     }
-
     int m_lastWallrunObject = 0;
     Object m_WallrunObject;
 
@@ -34,10 +33,6 @@ public class Sides : MonoBehaviour {
 
             m_lastWallrunObject = m_WallrunObject.GetInstanceID();
         }
-        
-
-
-        //Debug.Log(m_WallrunObject.GetInstanceID() - m_lastWallrunObject.GetInstanceID());
     }
 
     void OnTriggerEnter(Collider col)
@@ -59,7 +54,6 @@ public class Sides : MonoBehaviour {
         {
             if (col.GetComponent<ParkourObject>().m_Wallrunnable)
             {
-                //CheckWallrunObjectChanged(col);
                 m_ParkourObject = col.GetComponent<ParkourObject>();
                 m_CanWallrun = true;
 
@@ -71,8 +65,6 @@ public class Sides : MonoBehaviour {
 
     void OnCollisionStay(Collision col)
     {
-        Debug.Log("Colliding");
-
         if (m_CanWallrun) {
 
             Vector3 colVector = col.contacts[0].point - transform.position;
@@ -87,8 +79,6 @@ public class Sides : MonoBehaviour {
             {
                 m_WallrunSideRight = false;
             }
-
-
         }
     }
 
