@@ -103,11 +103,6 @@ public class ControllerPlayer : MonoBehaviour
     {
         if (m_ControlsActive)
         {
-            if (m_MoveState.Equals(MovementState.Wallrunning))
-            {
-                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, m_WallrunDir, 0.05f, 0f));
-            }
-
             DampeningUpdate();
 
             CheckNotMovingFromInput();
@@ -466,8 +461,6 @@ public class ControllerPlayer : MonoBehaviour
 
             Vector3 temp = new Vector3(transform.forward.x, 1 * 0.4f, transform.forward.z);
             m_Rigidbody.AddForce(temp, ForceMode.Impulse);
-
-            Debug.Log("Feetclimb");
         }
     }
 
@@ -503,7 +496,7 @@ public class ControllerPlayer : MonoBehaviour
                 m_ColliderTimer = 0.0f;
             }
 
-            if (m_ColliderTimer > 0.3f)
+            if (m_ColliderTimer > 0.1f)
             {
                 m_IsColliderActive = true;
             }
@@ -723,5 +716,10 @@ public class ControllerPlayer : MonoBehaviour
     public bool GetIsControls()
     {
         return m_ControlsActive;
+    }
+
+    public Vector3 GetWallrunDir()
+    {
+        return m_WallrunDir;
     }
 }

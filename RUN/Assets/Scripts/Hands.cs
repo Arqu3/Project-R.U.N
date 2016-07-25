@@ -29,7 +29,7 @@ public class Hands : MonoBehaviour {
             {
                 if (!m_HasSentMsg)
                 {
-                    m_AnimHandler.ToggleClimb(true);
+                    m_AnimHandler.PlayAnimation("Climb");
                     m_HasSentMsg = true;
                 }
             }

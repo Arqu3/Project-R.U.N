@@ -18,6 +18,10 @@ public class PlayerRotationHandler : MonoBehaviour {
             {
                 transform.eulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
             }
+            else
+            {
+                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, m_Player.GetWallrunDir(), 0.05f, 0f));
+            }
         }
 	}
 }
