@@ -42,6 +42,7 @@ public class ControllerPlayer : MonoBehaviour
     Collider m_MeshCol;
     Hands m_PlayerHands;
     Sides m_MySides;
+    SoundEmitter m_FootStepEmitter;
 
     //Blink vars
     bool m_IsBlinking = false;
@@ -84,9 +85,15 @@ public class ControllerPlayer : MonoBehaviour
     bool m_IsVerticalClimb = false;
     float m_VClimbTimer;
 
+    //MovingFromInput vars
     bool m_isMovingFromInput;
     Vector3 m_lastPosition;
     int m_NotMovingCount = 0;
+
+    //AudioVars
+    float m_StepTime = 0.4f;
+    float m_CurrentStepTime;
+    MovementState m_lastState;
 
     void Start()
     {
@@ -94,7 +101,8 @@ public class ControllerPlayer : MonoBehaviour
         m_MySides = GetComponentInChildren<Sides>();
         m_Collider = GetComponent<Collider>();
         m_Rigidbody = GetComponentInParent<Rigidbody>();
- 
+        m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
+
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
@@ -120,6 +128,8 @@ public class ControllerPlayer : MonoBehaviour
             CheckWallrun();
 
             VerticalClimbUpdate();
+
+            CheckSound();
 
             if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
@@ -258,6 +268,37 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
+    void CheckSound()
+    {
+        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Wallrunning))
+        {
+            if (m_lastState.Equals(MovementState.Falling))
+            {
+                m_FootStepEmitter.PlayClip(Mathf.RoundToInt(Random.Range(0, 2)));
+                m_CurrentStepTime = 0;
+            }
+
+            else if (m_CurrentStepTime > m_StepTime)
+            { 
+                m_FootStepEmitter.PlayRandomClip(2);
+                m_CurrentStepTime -= m_StepTime;
+            }
+
+            else
+            {
+                m_CurrentStepTime += Time.deltaTime;
+            }
+        }
+
+        if (m_lastState.Equals(MovementState.Falling) && m_MoveState.Equals(MovementState.Idle))
+        {
+            m_FootStepEmitter.PlayClip(Mathf.RoundToInt(Random.Range(0, 1)));
+            m_CurrentStepTime = 0;
+        }
+
+        m_lastState = m_MoveState;
+    }
+
     void CalculateFriction(Vector3 movementVector)
     {
         bool gravityBool = true;
@@ -295,6 +336,7 @@ public class ControllerPlayer : MonoBehaviour
 
             m_WallrunGraceTimer = 0f;
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
+            m_FootStepEmitter.PlayRandomClip(2, 4);
         }
 
         if (m_MoveState.Equals(MovementState.Falling))
