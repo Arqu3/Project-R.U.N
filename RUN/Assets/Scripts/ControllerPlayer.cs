@@ -42,6 +42,7 @@ public class ControllerPlayer : MonoBehaviour
     Collider m_MeshCol;
     Hands m_PlayerHands;
     Sides m_MySides;
+    SoundEmitter m_FootStepEmitter;
 
     //Blink vars
     bool m_IsBlinking = false;
@@ -77,22 +78,31 @@ public class ControllerPlayer : MonoBehaviour
     bool m_WallrunRight;
     Vector3 m_WallrunDir;
     const float m_WallrunAngle = 45;
+    public float m_WallrunGraceTime;
+    float m_WallrunGraceTimer = 0f;
 
     //Vertical climb vars
     bool m_IsVerticalClimb = false;
     float m_VClimbTimer;
 
+    //MovingFromInput vars
     bool m_isMovingFromInput;
     Vector3 m_lastPosition;
     int m_NotMovingCount = 0;
+
+    //AudioVars
+    float m_StepTime = 0.4f;
+    float m_CurrentStepTime;
+    MovementState m_lastState;
 
     void Start()
     {
         m_PlayerHands = GetComponentInChildren<Hands>();
         m_MySides = GetComponentInChildren<Sides>();
         m_Collider = GetComponent<Collider>();
-        m_Rigidbody = GetComponent<Rigidbody>();
- 
+        m_Rigidbody = GetComponentInParent<Rigidbody>();
+        m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
+
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
@@ -101,59 +111,57 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive) {
-            if (!m_MoveState.Equals(MovementState.Wallrunning))
-                transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
-            else {
-                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, m_WallrunDir, 0.05f, 0f));
-            }
-        DampeningUpdate();
-
-        CheckNotMovingFromInput();
-
-        CheckState();
-
-        BlinkUpdate();
-
-        ClimbUpdate();
-
-        FallUpdate();
-
-        CheckWallrun();
-
-        VerticalClimbUpdate();
-
-        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
+        if (m_ControlsActive)
         {
-            if (!m_IsAirControl)
+            DampeningUpdate();
+
+            CheckNotMovingFromInput();
+
+            CheckState();
+
+            BlinkUpdate();
+
+            ClimbUpdate();
+
+            FallUpdate();
+
+            CheckWallrun();
+
+            VerticalClimbUpdate();
+
+            CheckSound();
+
+            if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
-                JumpUpdate();
-                CheckState();
-                CalculateFriction(m_hMovement);
-                
-                //Disable horizontal movement while in air
-                if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                if (!m_IsAirControl)
                 {
+                    JumpUpdate();
+                    CheckState();
+                    CalculateFriction(m_hMovement);
+                
+                    //Disable horizontal movement while in air
+                    if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                    {
+                        m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                        HorizontalMovement(m_hMovement);
+                    }
+
+                    if (m_WallrunInterrupted)
+                    {
+                        m_WallrunInterrupted = false;
+                    }
+                }
+                else
+                {
+                    //Horizontal movement is enabled while in air
                     m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
                     HorizontalMovement(m_hMovement);
-                }
-
-                if (m_WallrunInterrupted)
-                {
-                    m_WallrunInterrupted = false;
+                    CalculateFriction(m_hMovement);
+                    JumpUpdate();
                 }
             }
-            else
-            {
-                //Horizontal movement is enabled while in air
-                m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-                HorizontalMovement(m_hMovement);
-                CalculateFriction(m_hMovement);
-                JumpUpdate();
-            }
         }
-        }
-        }
+    }
     
     public MovementState GetState()
     {
@@ -260,6 +268,37 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
+    void CheckSound()
+    {
+        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Wallrunning))
+        {
+            if (m_lastState.Equals(MovementState.Falling))
+            {
+                m_FootStepEmitter.PlayClip(Mathf.RoundToInt(Random.Range(0, 2)));
+                m_CurrentStepTime = 0;
+            }
+
+            else if (m_CurrentStepTime > m_StepTime)
+            { 
+                m_FootStepEmitter.PlayRandomClip(2);
+                m_CurrentStepTime -= m_StepTime;
+            }
+
+            else
+            {
+                m_CurrentStepTime += Time.deltaTime;
+            }
+        }
+
+        if (m_lastState.Equals(MovementState.Falling) && m_MoveState.Equals(MovementState.Idle))
+        {
+            m_FootStepEmitter.PlayClip(Mathf.RoundToInt(Random.Range(0, 1)));
+            m_CurrentStepTime = 0;
+        }
+
+        m_lastState = m_MoveState;
+    }
+
     void CalculateFriction(Vector3 movementVector)
     {
         bool gravityBool = true;
@@ -295,12 +334,19 @@ public class ControllerPlayer : MonoBehaviour
                 m_CanWallrun = false;
             }
 
+            m_WallrunGraceTimer = 0f;
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
+            m_FootStepEmitter.PlayRandomClip(2, 4);
         }
 
-        if (m_MoveState.Equals(MovementState.Falling) && !m_isMovingFromInput)
+        if (m_MoveState.Equals(MovementState.Falling))
         {
-            m_hMovement = Vector3.zero;
+            m_WallrunGraceTimer += Time.deltaTime;
+
+                if (!m_isMovingFromInput)
+                {
+                    m_hMovement = Vector3.zero;
+                }
         }
     }
     
@@ -455,19 +501,6 @@ public class ControllerPlayer : MonoBehaviour
         m_IsGrabbed = state;
     }
 
-    void HandClimb()
-    {
-        m_IsClimbing = true;
-        m_IsColliderActive = false;
-
-        //Only get forward in X and Z
-        Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
-        m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
-
-        Debug.Log("HandClimb");
-    }
-
     void FeetClimb()
     {
         //Safety check
@@ -478,47 +511,45 @@ public class ControllerPlayer : MonoBehaviour
 
             Vector3 temp = new Vector3(transform.forward.x, 1 * 0.4f, transform.forward.z);
             m_Rigidbody.AddForce(temp, ForceMode.Impulse);
-
-            Debug.Log("Feetclimb");
         }
     }
 
     void ClimbUpdate()
     {
-        if (!m_MoveState.Equals(MovementState.Jumping )) { 
+        if (!m_MoveState.Equals(MovementState.Jumping ))
+        { 
+            //Climbing
+            if (m_IsClimbing)
+            {
+                m_ClimbTimer += Time.deltaTime;
+            }
+            else
+            {
+                m_ClimbTimer = 0.0f;
+            }
 
-        //Climbing
-        if (m_IsClimbing)
-        {
-            m_ClimbTimer += Time.deltaTime;
-        }
-        else
-        {
-            m_ClimbTimer = 0.0f;
-        }
+            //Climb timer
+            if (m_IsClimbing && m_ClimbTimer > 0.4f)
+            {
+                m_IsClimbing = false;
+            }
 
-        //Climb timer
-        if (m_IsClimbing && m_ClimbTimer > 0.4f)
-        {
-            m_IsClimbing = false;
-        }
+            //Set mesh collider to trigger when climbing
+            if (!m_IsColliderActive)
+            {
+                m_ColliderTimer += Time.deltaTime;
+                m_MeshCol.isTrigger = true;
+            }
+            else
+            {
+                m_MeshCol.isTrigger = false;
+                m_ColliderTimer = 0.0f;
+            }
 
-        //Set mesh collider to trigger when climbing
-        if (!m_IsColliderActive)
-        {
-            m_ColliderTimer += Time.deltaTime;
-            m_MeshCol.isTrigger = true;
-        }
-        else
-        {
-            m_MeshCol.isTrigger = false;
-            m_ColliderTimer = 0.0f;
-        }
-
-        if (m_ColliderTimer > 0.4f)
-        {
-            m_IsColliderActive = true;
-        }
+            if (m_ColliderTimer > 0.1f)
+            {
+                m_IsColliderActive = true;
+            }
         }   
     }
 
@@ -598,7 +629,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckWallrun()
     {
-        if (m_MySides.m_CanWallrun && m_MoveState.Equals(MovementState.Jumping) && m_CanWallrun)
+        if (m_MySides.m_CanWallrun && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun )
         {
             m_IsWallrunning = true;
 
@@ -607,8 +638,6 @@ public class ControllerPlayer : MonoBehaviour
         
         if (!m_MySides.m_CanWallrun || m_WallrunInterrupted || !m_CanWallrun)
         {
-            //Debug.Log(!m_MySides.m_CanWallrun);
-
             m_IsWallrunning = false;
             m_WallrunDirSet = false;
         }
@@ -626,7 +655,6 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_CanWallrun = true;
         }
-        
 
     }
 
@@ -638,8 +666,6 @@ public class ControllerPlayer : MonoBehaviour
             m_WallrunDirSet = true;
 
             Vector3[] tempV = m_MySides.GetColliderInfo();
-
-            //Debug.Log(tempV);
 
             Vector3 forward = new Vector3(transform.forward.x, 0, transform.forward.z);
             
@@ -654,6 +680,9 @@ public class ControllerPlayer : MonoBehaviour
                     }
                 }
             }
+            m_WallrunDir = Vector3.ClampMagnitude(m_WallrunDir, 1f);
+
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().ClampMouseX(m_WallrunDir, 200);
         }
     }
 
@@ -696,12 +725,12 @@ public class ControllerPlayer : MonoBehaviour
             m_isMovingFromInput = true;
         }
 
-        if (movementDelta.magnitude > 0.1)
+        if (movementDelta.magnitude > 0.075f)
         {
             m_isMovingFromInput = true;
             m_NotMovingCount = 0;
         }
-
+        
         else
         {
             m_NotMovingCount++;
@@ -730,5 +759,15 @@ public class ControllerPlayer : MonoBehaviour
     public void ToggleControls(bool active)
     {
         m_ControlsActive = active;
+    }
+
+    public bool GetIsControls()
+    {
+        return m_ControlsActive;
+    }
+
+    public Vector3 GetWallrunDir()
+    {
+        return m_WallrunDir;
     }
 }

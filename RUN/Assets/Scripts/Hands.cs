@@ -29,11 +29,9 @@ public class Hands : MonoBehaviour {
             {
                 if (!m_HasSentMsg)
                 {
-                    m_CPlayer.SendMessage("HandClimb");
+                    m_AnimHandler.PlayAnimation("Climb");
                     m_HasSentMsg = true;
                 }
-
-                m_CPlayer.SendMessage("IsGrabbed", false);
             }
 
         }
@@ -50,8 +48,10 @@ public class Hands : MonoBehaviour {
             if (col.GetComponent<ParkourObject>().m_Climbable)
             {
                 m_Rigidbody.useGravity = false;
-                m_Rigidbody.velocity = Vector3.zero;
-
+                if (!m_CanClimb)
+                {
+                    m_Rigidbody.velocity = Vector3.zero;
+                }
                 m_CanClimb = true;
                 m_CPlayer.IsGrabbed(true);
                 Debug.Log("Grabbed");
