@@ -111,6 +111,8 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
+        RaycastDir(Vector3.down);
+
         if (m_ControlsActive)
         {
             DampeningUpdate();
@@ -173,56 +175,52 @@ public class ControllerPlayer : MonoBehaviour
         //AccelPercent is incremented/decremented here
 
         //Blink is a special state and is checked first before all others
-        if (!m_IsBlinking) {
-            if (!m_IsWallrunning) {  
-
-                //Checks if player is in air
-                if (!RaycastDir(Vector3.down))
-                {
-                    m_OnGround = false;
-
-                    if (m_Rigidbody.velocity.y > 0f) { 
-                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Jumping;
-                    }
-                    else
-                    {
-                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 10 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Falling;
-                    }
-                    
-                    if (m_IsGrabbed)
-                    {
-                        m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Grabbing;
-                    }
-                    else if (m_IsVerticalClimb)
-                    {
-                        m_OnGround = false;
-                        m_MoveState = MovementState.VerticalClimbing;
-                    }
-                }
-                //If player is not in air then only following states are possible
-                else
-                {
-                    m_OnGround = true;
-                    if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
-                    {
-                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Moving;
-                    }
-                    else
-                    {
-                        m_AccelPercent = m_AccelPercent - Time.deltaTime * 150 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Idle;
-                    }
-                }
-            }
-            else
+        if (!m_IsBlinking)
+        {
+            //Checks if player is in air
+            if (!RaycastDir(Vector3.down))
             {
                 m_OnGround = false;
-                m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
-                m_MoveState = MovementState.Wallrunning;
+
+                if (m_Rigidbody.velocity.y > 0f) { 
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Jumping;
+                }
+                else
+                {
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 10 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Falling;
+                }
+                    
+                if (m_IsGrabbed)
+                {
+                    m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Grabbing;
+                }
+                else if (m_IsVerticalClimb)
+                {
+                    m_MoveState = MovementState.VerticalClimbing;
+                }
+                else if (m_IsWallrunning)
+                {
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Wallrunning;
+                }
+            }
+            //If player is not in air then only following states are possible
+            else
+            {
+                m_OnGround = true;
+                if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
+                {
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Moving;
+                }
+                else
+                {
+                    m_AccelPercent = m_AccelPercent - Time.deltaTime * 150 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Idle;
+                }
             }
         }
         else
@@ -357,19 +355,20 @@ public class ControllerPlayer : MonoBehaviour
         Vector3 tempV = Vector3.zero;
 
         Ray ray = new Ray();
+        float offset = 0.4f;
 
         for (int i = 0; i < 4; i++)
         {
             switch (i)
             {
                 case (0):
-                    tempV = new Vector3(transform.forward.x, 0, transform.forward.z);
+                    tempV = new Vector3(transform.forward.x * offset, 0, transform.forward.z * offset);
                     break;
                 case (1):
                     tempV = -tempV;
                     break;
                 case (2):
-                    tempV = new Vector3(transform.right.x, 0, transform.right.z);
+                    tempV = new Vector3(transform.right.x * offset, 0, transform.right.z * offset);
                     break;
                 case (3):
                     tempV = -tempV;
@@ -379,6 +378,7 @@ public class ControllerPlayer : MonoBehaviour
             }
 
             ray = new Ray(tempV + v, direction);
+            Debug.DrawRay(tempV + v, direction);
 
             if (Physics.Raycast(ray, 1f, m_JumpMask))
             {
