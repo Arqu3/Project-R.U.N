@@ -8,13 +8,15 @@ public class MainMenuHandler : MonoBehaviour
     {
         Main,
         LevelSelect,
-        Options
+        Options,
+        Instructions
     };
 
     //Public vars
     public Button[] m_LevelSelectButtons;
 
     public State m_State;
+    public State m_OldState;
 
     //Other vars
     Button m_Temp;
@@ -64,16 +66,27 @@ public class MainMenuHandler : MonoBehaviour
 
             case State.Options:
                 break;
+
+            case State.Instructions:
+                break;
         }
 
         TextUpdate();
 	}
 
+    void LateUpdate()
+    {
+        m_OldState = m_State;
+    }
+
     void TextUpdate()
     {
-        for (int i = 0; i < m_LevelSelectButtons.Length; i++)
+        if (m_State.Equals(State.LevelSelect))
         {
-            m_LevelSelectButtons[i].GetComponentInChildren<Text>().text = "Level: " + (i + 1);
+            for (int i = 0; i < m_LevelSelectButtons.Length; i++)
+            {
+                m_LevelSelectButtons[i].GetComponentInChildren<Text>().text = "Level: " + (i + 1);
+            }
         }
     }
 
@@ -85,5 +98,10 @@ public class MainMenuHandler : MonoBehaviour
     public State GetState()
     {
         return m_State;
+    }
+
+    public State GetOldState()
+    {
+        return m_OldState;
     }
 }
