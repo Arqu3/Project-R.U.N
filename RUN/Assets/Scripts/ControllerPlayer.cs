@@ -26,6 +26,9 @@ public class ControllerPlayer : MonoBehaviour
     public float m_SlowMultiplier = 0.5f;
     public float m_SlowTime = 0.5f;
     public float m_DampeningTime = 0.4f;
+    public float m_BoostTime = 2.0f;
+    public float m_BoostAmount = 10.0f;
+    public float m_BoostDecayAmount = 4.0f;
     public float m_VerticalClimbTimer = 1.5f;
 
     //Basic movement vars
@@ -69,6 +72,9 @@ public class ControllerPlayer : MonoBehaviour
     float m_SlowedTimer = 0.0f;
     float m_FallTimer = 0.0f;
     float m_DampeningTimer = 0.0f;
+    float m_CurrentBoostAmount = 0.0f;
+    float m_BoostTimer;
+    bool m_IsBoosted = false;
 
     //Wallrun vars
     bool m_IsWallrunning;
@@ -107,6 +113,7 @@ public class ControllerPlayer : MonoBehaviour
 
         m_CurBlinkCD = m_BlinkCD;
         m_VClimbTimer = m_VerticalClimbTimer;
+        m_BoostTimer = m_BoostTime;
     }
 
     void Update()
@@ -132,6 +139,8 @@ public class ControllerPlayer : MonoBehaviour
             VerticalClimbUpdate();
 
             CheckSound();
+
+            BoostUpdate();
 
             if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
@@ -241,7 +250,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void HorizontalMovement(Vector3 movementVector)
     {
-        float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed, m_AccelPercent * 0.01f);
+        float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed + m_CurrentBoostAmount, m_AccelPercent * 0.01f);
 
         if (m_MoveState.Equals(MovementState.Wallrunning) && !m_WallrunInterrupted)
         {
@@ -615,10 +624,37 @@ public class ControllerPlayer : MonoBehaviour
         if (m_RequireDampening && m_Dampening)
         {
             m_Dampened = true;
+            m_IsBoosted = true;
         }
         else
         {
             m_Dampened = false;
+        }
+    }
+
+    void BoostUpdate()
+    {
+        if (m_IsBoosted)
+        {
+            m_BoostTimer -= Time.deltaTime;
+            m_CurrentBoostAmount = m_BoostAmount;
+
+            if (m_BoostTimer <= 0.0f)
+            {
+                m_BoostTimer = m_BoostTime;
+                m_IsBoosted = false;
+            }
+        }
+        else
+        {
+            if (m_CurrentBoostAmount > 0.0f)
+            {
+                m_CurrentBoostAmount -= m_BoostDecayAmount * Time.deltaTime;
+            }
+            else
+            {
+                m_CurrentBoostAmount = 0.0f;
+            }
         }
     }
 

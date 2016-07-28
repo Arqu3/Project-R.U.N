@@ -20,10 +20,12 @@ public class MainMenuHandler : MonoBehaviour
 
     //Other vars
     Button m_Temp;
+    GameObject m_NewGameButton;
 
 	void Start ()
     {
         m_State = State.Main;
+        m_NewGameButton = GameObject.Find("ButtonStart");
 
         //Find buttons
         var levelSelectButtons = GameObject.FindGameObjectsWithTag("LevelSelectButton");
@@ -87,6 +89,15 @@ public class MainMenuHandler : MonoBehaviour
             {
                 m_LevelSelectButtons[i].GetComponentInChildren<Text>().text = "Level: " + (i + 1);
             }
+        }
+
+        if (PlayerPrefs.GetInt("CurrentLevel", 0) == 0)
+        {
+            m_NewGameButton.GetComponentInChildren<Text>().text = "New Game";
+        }
+        else
+        {
+            m_NewGameButton.GetComponentInChildren<Text>().text = "Continue";
         }
     }
 

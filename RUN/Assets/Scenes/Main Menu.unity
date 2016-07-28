@@ -563,7 +563,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Start
+  m_Text: Start Text Here
 --- !u!222 &601659255
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2317,6 +2317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_LevelSelectButtons: []
   m_State: 0
+  m_OldState: 0
 --- !u!114 &1644739972
 MonoBehaviour:
   m_ObjectHideFlags: 0

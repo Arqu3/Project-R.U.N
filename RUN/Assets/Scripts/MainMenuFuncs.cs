@@ -38,7 +38,15 @@ public class MainMenuFuncs : MonoBehaviour
 
     public void OnPlayButton()
     {
-        SceneManager.LoadScene(1);
+        if (PlayerPrefs.GetInt("CurrentLevel", 0) == 0)
+        {
+            PlayerPrefs.SetInt("CurrentLevel", 1);
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
+        }
+        else
+        {
+            SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
+        }
     }
 
     public void OnLevelSelectButton()
@@ -68,6 +76,7 @@ public class MainMenuFuncs : MonoBehaviour
     //Checks what current animation state that should be set
     public void OnMenuButton()
     {
+        //Only performs check if menu changes state
         if (!m_Handler.GetOldState().Equals(m_Handler.GetState()))
         {
             if (m_State.Equals(State.IsOut))
