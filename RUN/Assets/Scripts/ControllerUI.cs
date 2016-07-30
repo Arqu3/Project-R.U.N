@@ -24,8 +24,8 @@ public class ControllerUI : MonoBehaviour {
 
         if (transform.FindChild("BlinkText"))
             m_BlinkText = transform.FindChild("BlinkText").GetComponent<Text>();
-        if (GameObject.FindGameObjectWithTag("Player"))
-            m_Player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControllerPlayer>();
+        if (GameObject.Find("PlayerBody"))
+            m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
         if (transform.FindChild("PausePanel"))
             m_PausePanel = transform.FindChild("PausePanel").GetComponent<PausePanelFuncs>();
         if (transform.FindChild("EndPanel"))
