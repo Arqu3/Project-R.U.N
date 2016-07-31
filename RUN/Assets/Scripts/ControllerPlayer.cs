@@ -572,8 +572,8 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             m_DampeningTimer = 0.0f;
-            m_Dampening = Input.GetButtonDown("FallDampening");
-            if (Input.GetAxisRaw("FallDampening") != 0)
+            m_Dampening = Input.GetButton("FallDampening");
+            if (Input.GetAxisRaw("FallDampening") == 1)
             {
                 if (!m_rightTriggerInUse)
                 {
@@ -604,6 +604,7 @@ public class ControllerPlayer : MonoBehaviour
             if (m_RequireDampening && !m_Dampened)
             {
                 m_Slowed = true;
+                Debug.Log("Dampening failed");
             }
             else if (m_RequireDampening && m_Dampened)
             {
@@ -638,6 +639,7 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_Dampened = true;
             m_IsBoosted = true;
+            Debug.Log("Dampening successful");
         }
         else
         {
