@@ -92,7 +92,7 @@ public class ControllerUI : MonoBehaviour {
 
     void PauseUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) || !m_Init || m_PausePanel.UnPause){
+        if (Input.GetButtonDown("Pause") || !m_Init || m_PausePanel.UnPause){
             int timeInt = 0;
             m_Paused = !m_Paused;
 

@@ -75,6 +75,7 @@ public class ControllerPlayer : MonoBehaviour
     float m_CurrentBoostAmount = 0.0f;
     float m_BoostTimer;
     bool m_IsBoosted = false;
+    bool m_rightTriggerInUse = false;
 
     //Wallrun vars
     bool m_IsWallrunning;
@@ -334,7 +335,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void JumpUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
+        if (Input.GetButtonDown("Jump") && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
         {
             if (m_MoveState.Equals(MovementState.Wallrunning)){
                 m_WallrunInterrupted = true;
@@ -444,7 +445,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void BlinkUpdate()
     {
-        if (!m_IsBlinkCD && Input.GetMouseButtonDown(0))
+        if (!m_IsBlinkCD && Input.GetButtonDown("Blink"))
         {
             m_IsBlinkCD = true;
             ToggleBlink();
@@ -571,7 +572,19 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             m_DampeningTimer = 0.0f;
-            m_Dampening = Input.GetKeyDown("left ctrl");
+            m_Dampening = Input.GetButtonDown("FallDampening");
+            if (Input.GetAxisRaw("FallDampening") != 0)
+            {
+                if (!m_rightTriggerInUse)
+                {
+                    m_rightTriggerInUse = true;
+                    m_Dampening = true;
+                }
+            }
+            if (Input.GetAxisRaw("FallDampening") == 0)
+            {
+                m_rightTriggerInUse = false;
+            }
         }
     }
 
@@ -680,7 +693,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_IsWallrunning) {
 
-            if (Input.GetKeyDown(KeyCode.Space) || !m_isMovingFromInput)
+            if (Input.GetButtonDown("Jump") || !m_isMovingFromInput)
             {
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
@@ -732,7 +745,12 @@ public class ControllerPlayer : MonoBehaviour
         if (m_MoveState.Equals(MovementState.VerticalClimbing))
         {
             m_Rigidbody.useGravity = false;
-            if (m_VClimbTimer > 0 && Input.GetKey(KeyCode.W))
+            bool controllerVertical = false;
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                controllerVertical = true;
+            }
+            if (m_VClimbTimer > 0 && Input.GetButton("Vertical") || controllerVertical)
             {
                 m_VClimbTimer -= Time.deltaTime;
                 m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_VClimbTimer * 10, m_Rigidbody.velocity.z);
