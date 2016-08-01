@@ -75,7 +75,6 @@ public class MovingPlatform : MonoBehaviour
         //Set percentage offset position
         m_PercentageOffset = Mathf.Clamp01(m_PercentageOffset);
         transform.position += m_VDirection * m_Distance * m_PercentageOffset;
-        Debug.Log(transform.position);
     }
 	
 	void Update ()

@@ -150,7 +150,7 @@ public class ControllerPlayer : MonoBehaviour
                     JumpUpdate();
                     CheckState();
                     CalculateFriction(m_hMovement);
-                
+
                     //Disable horizontal movement while in air
                     if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
                     {
@@ -671,6 +671,13 @@ public class ControllerPlayer : MonoBehaviour
                 m_CurrentBoostAmount = 0.0f;
             }
         }
+    }
+
+    void BoostReset()
+    {
+        m_IsBoosted = false;
+        m_CurrentBoostAmount = 0.0f;
+        m_BoostTimer = m_BoostTime;
     }
 
     void FallTimerReset()
