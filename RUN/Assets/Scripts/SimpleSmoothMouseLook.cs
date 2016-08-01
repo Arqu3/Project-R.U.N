@@ -22,6 +22,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
     float m_ClampXMin;
 
     float m_initialAngle;
+    float m_ControllerSens;
 
     Vector2[] inputs = new Vector2[2];
 
@@ -31,6 +32,10 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 
     void Start()
     {
+        m_ControllerSens = PlayerPrefs.GetFloat("Controller Sensitivity", 1.0f);
+
+        sensitivity = new Vector2(m_ControllerSens, m_ControllerSens);
+
         m_initialAngle = Vector3.Angle(transform.forward, Vector3.right);
 
         // Set target direction to the camera's initial orientation.
