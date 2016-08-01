@@ -41,7 +41,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Camera: {fileID: 101736, guid: 749cb8326a6b4424fb076762cf022ce0, type: 2}
   m_Canvas: {fileID: 129908, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
-  m_Player: {fileID: 123604, guid: 015b8ce6b8fbae1448b25ab1067430c8, type: 2}
+  m_Player: {fileID: 102892, guid: 86fc152ce79924948a6eca49de8b35ed, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -60,7 +60,7 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Player
       value: 
-      objectReference: {fileID: 123604, guid: 015b8ce6b8fbae1448b25ab1067430c8, type: 2}
+      objectReference: {fileID: 102892, guid: 86fc152ce79924948a6eca49de8b35ed, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 115196}

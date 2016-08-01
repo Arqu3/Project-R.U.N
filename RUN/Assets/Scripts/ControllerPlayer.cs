@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public enum MovementState
 {
-    Idle, Moving, Jumping, Falling, Wallrunning, Grabbing, Blinking, Climbing
+    Idle, Moving, Jumping, Falling, Wallrunning, Grabbing, Blinking, Climbing, VerticalClimbing
 }
 
 public class ControllerPlayer : MonoBehaviour
@@ -26,6 +26,10 @@ public class ControllerPlayer : MonoBehaviour
     public float m_SlowMultiplier = 0.5f;
     public float m_SlowTime = 0.5f;
     public float m_DampeningTime = 0.4f;
+    public float m_BoostTime = 2.0f;
+    public float m_BoostAmount = 10.0f;
+    public float m_BoostDecayAmount = 4.0f;
+    public float m_VerticalClimbTimer = 1.5f;
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -41,6 +45,7 @@ public class ControllerPlayer : MonoBehaviour
     Collider m_MeshCol;
     Hands m_PlayerHands;
     Sides m_MySides;
+    SoundEmitter m_FootStepEmitter;
 
     //Blink vars
     bool m_IsBlinking = false;
@@ -67,6 +72,10 @@ public class ControllerPlayer : MonoBehaviour
     float m_SlowedTimer = 0.0f;
     float m_FallTimer = 0.0f;
     float m_DampeningTimer = 0.0f;
+    float m_CurrentBoostAmount = 0.0f;
+    float m_BoostTimer;
+    bool m_IsBoosted = false;
+    bool m_rightTriggerInUse = false;
 
     //Wallrun vars
     bool m_IsWallrunning;
@@ -76,73 +85,95 @@ public class ControllerPlayer : MonoBehaviour
     bool m_WallrunRight;
     Vector3 m_WallrunDir;
     const float m_WallrunAngle = 45;
+    public float m_WallrunGraceTime;
+    float m_WallrunGraceTimer = 0f;
 
+    //Vertical climb vars
+    bool m_IsVerticalClimb = false;
+    float m_VClimbTimer;
+
+    //MovingFromInput vars
     bool m_isMovingFromInput;
     Vector3 m_lastPosition;
     int m_NotMovingCount = 0;
+
+    //AudioVars
+    float m_StepTime = 0.4f;
+    float m_CurrentStepTime;
+    MovementState m_lastState;
 
     void Start()
     {
         m_PlayerHands = GetComponentInChildren<Hands>();
         m_MySides = GetComponentInChildren<Sides>();
         m_Collider = GetComponent<Collider>();
-        m_Rigidbody = GetComponent<Rigidbody>();
- 
+        m_Rigidbody = GetComponentInParent<Rigidbody>();
+        m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
+
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
+        m_VClimbTimer = m_VerticalClimbTimer;
+        m_BoostTimer = m_BoostTime;
     }
 
     void Update()
     {
-        if (m_ControlsActive) { 
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, Camera.main.transform.localEulerAngles.y, transform.localEulerAngles.z);
+        RaycastDir(Vector3.down);
 
-        DampeningUpdate();
-
-        CheckNotMovingFromInput();
-
-        CheckState();
-
-        BlinkUpdate();
-
-        ClimbUpdate();
-
-        FallUpdate();
-
-        CheckWallrun();
-
-        if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing))
+        if (m_ControlsActive)
         {
-            if (!m_IsAirControl)
+            DampeningUpdate();
+
+            CheckNotMovingFromInput();
+
+            CheckState();
+
+            BlinkUpdate();
+
+            ClimbUpdate();
+
+            FallUpdate();
+
+            CheckWallrun();
+
+            VerticalClimbUpdate();
+
+            CheckSound();
+
+            BoostUpdate();
+
+            if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
-                JumpUpdate();
-                CheckState();
-                CalculateFriction(m_hMovement);
-                
-                //Disable horizontal movement while in air
-                if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                if (!m_IsAirControl)
                 {
+                    JumpUpdate();
+                    CheckState();
+                    CalculateFriction(m_hMovement);
+                
+                    //Disable horizontal movement while in air
+                    if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
+                    {
+                        m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                        HorizontalMovement(m_hMovement);
+                    }
+
+                    if (m_WallrunInterrupted)
+                    {
+                        m_WallrunInterrupted = false;
+                    }
+                }
+                else
+                {
+                    //Horizontal movement is enabled while in air
                     m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
                     HorizontalMovement(m_hMovement);
-                }
-
-                if (m_WallrunInterrupted)
-                {
-                    m_WallrunInterrupted = false;
+                    CalculateFriction(m_hMovement);
+                    JumpUpdate();
                 }
             }
-            else
-            {
-                //Horizontal movement is enabled while in air
-                m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-                HorizontalMovement(m_hMovement);
-                CalculateFriction(m_hMovement);
-                JumpUpdate();
-            }
         }
-        }
-        }
+    }
     
     public MovementState GetState()
     {
@@ -154,51 +185,52 @@ public class ControllerPlayer : MonoBehaviour
         //AccelPercent is incremented/decremented here
 
         //Blink is a special state and is checked first before all others
-        if (!m_IsBlinking) {
-            if (!m_IsWallrunning) {  
-
-                //Checks if player is in air
-                if (!RaycastDir(Vector3.down))
-                {
-                    m_OnGround = false;
-
-                    if (m_Rigidbody.velocity.y > 0f) { 
-                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Jumping;
-                    }
-                    else
-                    {
-                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 10 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Falling;
-                    }
-                    
-                    if (m_IsGrabbed)
-                    {
-                        m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Grabbing;
-                    }
-                }
-                //If player is not in air then only following states are possible
-                else
-                {
-                    m_OnGround = true;
-                    if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
-                    {
-                        m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Moving;
-                    }
-                    else
-                    {
-                        m_AccelPercent = m_AccelPercent - Time.deltaTime * 150 * m_AccelMultiplier;
-                        m_MoveState = MovementState.Idle;
-                    }
-                }
-            }
-            else
+        if (!m_IsBlinking)
+        {
+            //Checks if player is in air
+            if (!RaycastDir(Vector3.down))
             {
                 m_OnGround = false;
-                m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
-                m_MoveState = MovementState.Wallrunning;
+
+                if (m_Rigidbody.velocity.y > 0f) { 
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Jumping;
+                }
+                else
+                {
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 10 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Falling;
+                }
+                    
+                if (m_IsGrabbed)
+                {
+                    m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Grabbing;
+                }
+                else if (m_IsVerticalClimb)
+                {
+                    m_MoveState = MovementState.VerticalClimbing;
+                }
+                else if (m_IsWallrunning)
+                {
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Wallrunning;
+                }
+            }
+            //If player is not in air then only following states are possible
+            else
+            {
+                m_OnGround = true;
+                if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
+                {
+                    m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Moving;
+                }
+                else
+                {
+                    m_AccelPercent = m_AccelPercent - Time.deltaTime * 150 * m_AccelMultiplier;
+                    m_MoveState = MovementState.Idle;
+                }
             }
         }
         else
@@ -219,7 +251,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void HorizontalMovement(Vector3 movementVector)
     {
-        float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed, m_AccelPercent * 0.01f);
+        float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed + m_CurrentBoostAmount, m_AccelPercent * 0.01f);
 
         if (m_MoveState.Equals(MovementState.Wallrunning) && !m_WallrunInterrupted)
         {
@@ -244,6 +276,37 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
+    void CheckSound()
+    {
+        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Wallrunning))
+        {
+            if (m_lastState.Equals(MovementState.Falling))
+            {
+                m_FootStepEmitter.PlayClip(Mathf.RoundToInt(Random.Range(0, 2)));
+                m_CurrentStepTime = 0;
+            }
+
+            else if (m_CurrentStepTime > m_StepTime)
+            { 
+                m_FootStepEmitter.PlayRandomClip(2);
+                m_CurrentStepTime -= m_StepTime;
+            }
+
+            else
+            {
+                m_CurrentStepTime += Time.deltaTime;
+            }
+        }
+
+        if (m_lastState.Equals(MovementState.Falling) && m_MoveState.Equals(MovementState.Idle))
+        {
+            m_FootStepEmitter.PlayClip(Mathf.RoundToInt(Random.Range(0, 1)));
+            m_CurrentStepTime = 0;
+        }
+
+        m_lastState = m_MoveState;
+    }
+
     void CalculateFriction(Vector3 movementVector)
     {
         bool gravityBool = true;
@@ -264,7 +327,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Wallrunning)) {
             gravityBool = false;
-            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -10f + movementVector.z * 9.5f + m_Rigidbody.velocity.y, m_Rigidbody.velocity.z);
+            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, - 1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
         }
 
         ToggleGravity(gravityBool);
@@ -272,19 +335,26 @@ public class ControllerPlayer : MonoBehaviour
 
     void JumpUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
+        if (Input.GetButtonDown("Jump") && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
         {
             if (m_MoveState.Equals(MovementState.Wallrunning)){
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
             }
 
+            m_WallrunGraceTimer = 0f;
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
+            m_FootStepEmitter.PlayRandomClip(2, 4);
         }
 
-        if (m_MoveState.Equals(MovementState.Falling) && !m_isMovingFromInput)
+        if (m_MoveState.Equals(MovementState.Falling))
         {
-            m_hMovement = Vector3.zero;
+            m_WallrunGraceTimer += Time.deltaTime;
+
+                if (!m_isMovingFromInput)
+                {
+                    m_hMovement = Vector3.zero;
+                }
         }
     }
     
@@ -295,19 +365,20 @@ public class ControllerPlayer : MonoBehaviour
         Vector3 tempV = Vector3.zero;
 
         Ray ray = new Ray();
+        float offset = 0.4f;
 
         for (int i = 0; i < 4; i++)
         {
             switch (i)
             {
                 case (0):
-                    tempV = new Vector3(transform.forward.x, 0, transform.forward.z);
+                    tempV = new Vector3(transform.forward.x * offset, 0, transform.forward.z * offset);
                     break;
                 case (1):
                     tempV = -tempV;
                     break;
                 case (2):
-                    tempV = new Vector3(transform.right.x, 0, transform.right.z);
+                    tempV = new Vector3(transform.right.x * offset, 0, transform.right.z * offset);
                     break;
                 case (3):
                     tempV = -tempV;
@@ -317,6 +388,7 @@ public class ControllerPlayer : MonoBehaviour
             }
 
             ray = new Ray(tempV + v, direction);
+            Debug.DrawRay(tempV + v, direction);
 
             if (Physics.Raycast(ray, 1f, m_JumpMask))
             {
@@ -373,7 +445,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void BlinkUpdate()
     {
-        if (!m_IsBlinkCD && Input.GetMouseButtonDown(0))
+        if (!m_IsBlinkCD && Input.GetButtonDown("Blink"))
         {
             m_IsBlinkCD = true;
             ToggleBlink();
@@ -434,22 +506,9 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
-    void IsGrabbed(bool state)
+    public void IsGrabbed(bool state)
     {
         m_IsGrabbed = state;
-    }
-
-    void FastClimb()
-    {
-        m_IsClimbing = true;
-        m_IsColliderActive = false;
-
-        m_Rigidbody.AddForce(Vector3.up * m_JumpForce * 0.6f, ForceMode.Impulse);
-        //Only get forward in X and Z
-        Vector3 temp = new Vector3(transform.forward.x, 0.0f, transform.forward.z);
-        m_Rigidbody.AddForce(temp * m_MovementSpeed * 4, ForceMode.Impulse);
-
-        Debug.Log("Fastclimb");
     }
 
     void FeetClimb()
@@ -462,47 +521,45 @@ public class ControllerPlayer : MonoBehaviour
 
             Vector3 temp = new Vector3(transform.forward.x, 1 * 0.4f, transform.forward.z);
             m_Rigidbody.AddForce(temp, ForceMode.Impulse);
-
-            Debug.Log("Feetclimb");
         }
     }
 
     void ClimbUpdate()
     {
-        if (!m_MoveState.Equals(MovementState.Jumping )) { 
+        if (!m_MoveState.Equals(MovementState.Jumping ))
+        { 
+            //Climbing
+            if (m_IsClimbing)
+            {
+                m_ClimbTimer += Time.deltaTime;
+            }
+            else
+            {
+                m_ClimbTimer = 0.0f;
+            }
 
-        //Climbing
-        if (m_IsClimbing)
-        {
-            m_ClimbTimer += Time.deltaTime;
-        }
-        else
-        {
-            m_ClimbTimer = 0.0f;
-        }
+            //Climb timer
+            if (m_IsClimbing && m_ClimbTimer > 0.4f)
+            {
+                m_IsClimbing = false;
+            }
 
-        //Climb timer
-        if (m_IsClimbing && m_ClimbTimer > 0.4f)
-        {
-            m_IsClimbing = false;
-        }
+            //Set mesh collider to trigger when climbing
+            if (!m_IsColliderActive)
+            {
+                m_ColliderTimer += Time.deltaTime;
+                m_MeshCol.isTrigger = true;
+            }
+            else
+            {
+                m_MeshCol.isTrigger = false;
+                m_ColliderTimer = 0.0f;
+            }
 
-        //Set mesh collider to trigger when climbing
-        if (!m_IsColliderActive)
-        {
-            m_ColliderTimer += Time.deltaTime;
-            m_MeshCol.isTrigger = true;
-        }
-        else
-        {
-            m_MeshCol.isTrigger = false;
-            m_ColliderTimer = 0.0f;
-        }
-
-        if (m_ColliderTimer > 0.2f)
-        {
-            m_IsColliderActive = true;
-        }
+            if (m_ColliderTimer > 0.1f)
+            {
+                m_IsColliderActive = true;
+            }
         }   
     }
 
@@ -515,7 +572,19 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             m_DampeningTimer = 0.0f;
-            m_Dampening = Input.GetKeyDown("left ctrl");
+            m_Dampening = Input.GetButton("FallDampening");
+            if (Input.GetAxisRaw("FallDampening") == 1)
+            {
+                if (!m_rightTriggerInUse)
+                {
+                    m_rightTriggerInUse = true;
+                    m_Dampening = true;
+                }
+            }
+            if (Input.GetAxisRaw("FallDampening") == 0)
+            {
+                m_rightTriggerInUse = false;
+            }
         }
     }
 
@@ -535,6 +604,7 @@ public class ControllerPlayer : MonoBehaviour
             if (m_RequireDampening && !m_Dampened)
             {
                 m_Slowed = true;
+                Debug.Log("Dampening failed");
             }
             else if (m_RequireDampening && m_Dampened)
             {
@@ -568,10 +638,38 @@ public class ControllerPlayer : MonoBehaviour
         if (m_RequireDampening && m_Dampening)
         {
             m_Dampened = true;
+            m_IsBoosted = true;
+            Debug.Log("Dampening successful");
         }
         else
         {
             m_Dampened = false;
+        }
+    }
+
+    void BoostUpdate()
+    {
+        if (m_IsBoosted)
+        {
+            m_BoostTimer -= Time.deltaTime;
+            m_CurrentBoostAmount = m_BoostAmount;
+
+            if (m_BoostTimer <= 0.0f)
+            {
+                m_BoostTimer = m_BoostTime;
+                m_IsBoosted = false;
+            }
+        }
+        else
+        {
+            if (m_CurrentBoostAmount > 0.0f)
+            {
+                m_CurrentBoostAmount -= m_BoostDecayAmount * Time.deltaTime;
+            }
+            else
+            {
+                m_CurrentBoostAmount = 0.0f;
+            }
         }
     }
 
@@ -582,7 +680,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckWallrun()
     {
-        if (m_MySides.m_CanWallrun && m_MoveState.Equals(MovementState.Jumping) && m_CanWallrun)
+        if (m_MySides.m_CanWallrun && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun )
         {
             m_IsWallrunning = true;
 
@@ -597,7 +695,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_IsWallrunning) {
 
-            if (Input.GetKeyDown(KeyCode.Space) || !m_isMovingFromInput)
+            if (Input.GetButtonDown("Jump") || !m_isMovingFromInput)
             {
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
@@ -608,6 +706,7 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_CanWallrun = true;
         }
+
     }
 
     void StartWallrun()
@@ -625,17 +724,47 @@ public class ControllerPlayer : MonoBehaviour
                 for (int i = 0; i < 4; i++){
                     if (Vector3.Angle(t * 2 * -tempV[i] +tempV[i], forward) < m_WallrunAngle)
                     {
+                        
                         m_WallrunDir = (t * 2 * -tempV[i] + tempV[i]).normalized;
                         t = 2;
                         i = 4;
                     }
                 }
             }
+            m_WallrunDir = Vector3.ClampMagnitude(m_WallrunDir, 1f);
 
-            //transform.localRotation.SetFromToRotation(transform.forward, m_WallrunDir);
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().ClampMouseX(m_WallrunDir, 200);
+        }
+    }
 
-            //Camera.main.GetComponent<SimpleSmoothMouseLook>().targetDirection = new Vector2(m_WallrunDir.x, m_WallrunDir.z);
-           // Camera.main.GetComponent<SimpleSmoothMouseLook>().clampInDegrees = new Vector2(180, 180);
+    public void SetVerticalClimb(bool state)
+    {
+        m_IsVerticalClimb = state;
+    }
+
+    void VerticalClimbUpdate()
+    {
+        if (m_MoveState.Equals(MovementState.VerticalClimbing))
+        {
+            m_Rigidbody.useGravity = false;
+            bool controllerVertical = false;
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                controllerVertical = true;
+            }
+            if (m_VClimbTimer > 0 && Input.GetButton("Vertical") || controllerVertical)
+            {
+                m_VClimbTimer -= Time.deltaTime;
+                m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_VClimbTimer * 10, m_Rigidbody.velocity.z);
+            }
+            else
+            {
+                SetVerticalClimb(false);
+            }
+        }
+        else
+        {
+            m_VClimbTimer = m_VerticalClimbTimer;
         }
     }
 
@@ -652,23 +781,24 @@ public class ControllerPlayer : MonoBehaviour
             m_isMovingFromInput = true;
         }
 
-        if (movementDelta.magnitude > 0.2f)
+        if (movementDelta.magnitude > 0.075f)
         {
             m_isMovingFromInput = true;
             m_NotMovingCount = 0;
         }
+        
         else
         {
-            m_NotMovingCount++;            
+            m_NotMovingCount++;
+            m_NotMovingCount = Mathf.Clamp(m_NotMovingCount, 0, 3);
         }
-
-        Mathf.Clamp(m_NotMovingCount, 0, 3);
 
         if (m_NotMovingCount == 3)
         {
             m_isMovingFromInput = false;
         }
     }
+
     /// <summary>
     /// Returns UI values from the player in an array in order: (Current Blink CD, Blink CD)
     /// </summary>
@@ -685,5 +815,15 @@ public class ControllerPlayer : MonoBehaviour
     public void ToggleControls(bool active)
     {
         m_ControlsActive = active;
+    }
+
+    public bool GetIsControls()
+    {
+        return m_ControlsActive;
+    }
+
+    public Vector3 GetWallrunDir()
+    {
+        return m_WallrunDir;
     }
 }

@@ -4,12 +4,14 @@ using System.Collections;
 public class Feet : MonoBehaviour
 {
     ControllerPlayer m_Player;
+    AnimationHandler m_AnimHandler;
     bool m_HasSentMsg = false;
 
 	// Use this for initialization
 	void Start ()
     {
         m_Player = GetComponentInParent<ControllerPlayer>();
+        m_AnimHandler = GetComponentInParent<AnimationHandler>();
 	}
 	
 	// Update is called once per frame
@@ -26,8 +28,11 @@ public class Feet : MonoBehaviour
             {
                 if (!m_HasSentMsg)
                 {
+                    //m_AnimHandler.PlayAnimation("FeetClimb");
                     m_Player.SendMessage("FeetClimb");
                     m_HasSentMsg = true;
+
+                    Debug.Log("Feetclimb");
                 }
             }
         }
