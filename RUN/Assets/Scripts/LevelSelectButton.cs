@@ -20,9 +20,9 @@ public class LevelSelectButton : MonoBehaviour
     {
         if (m_ID >= 0)
         {
-            if (m_ID < SceneManager.sceneCount)
+            if (m_ID <= SceneManager.sceneCount)
             {
-                Debug.Log("Loaded level:" + (m_ID + 1));
+                Debug.Log("Loaded level:" + m_ID);
                 SceneManager.LoadScene(m_ID);
             }
             else
