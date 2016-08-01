@@ -115,7 +115,7 @@ public class PlayerCheckpoint : MonoBehaviour
             }
         }
 
-        if (transform.localPosition.y < m_ResetDepth)
+        if (transform.position.y < m_ResetDepth)
         {
             Debug.Log("Depth reset");
             SetToCheckpoint(m_LastPassed);
@@ -142,6 +142,7 @@ public class PlayerCheckpoint : MonoBehaviour
         //Reset blink CD and fall time
         m_CPlayer.SendMessage("BlinkReset");
         m_CPlayer.SendMessage("FallTimerReset");
+        m_CPlayer.SendMessage("BoostReset");
 
         //Set rotation to corresponding checkpoint
         m_Camera._mouseAbsolute.x = m_CheckPoints[num].localEulerAngles.y;
