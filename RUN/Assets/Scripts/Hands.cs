@@ -25,7 +25,7 @@ public class Hands : MonoBehaviour {
         if (m_CanClimb)
         {
             //Climb if pressing space
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetButton("Jump"))
             {
                 if (!m_HasSentMsg)
                 {

@@ -8,20 +8,24 @@ public class MainMenuHandler : MonoBehaviour
     {
         Main,
         LevelSelect,
-        Options
+        Options,
+        Instructions
     };
 
     //Public vars
     public Button[] m_LevelSelectButtons;
 
     public State m_State;
+    public State m_OldState;
 
     //Other vars
     Button m_Temp;
+    GameObject m_NewGameButton;
 
 	void Start ()
     {
         m_State = State.Main;
+        m_NewGameButton = GameObject.Find("ButtonStart");
 
         //Find buttons
         var levelSelectButtons = GameObject.FindGameObjectsWithTag("LevelSelectButton");
@@ -64,16 +68,36 @@ public class MainMenuHandler : MonoBehaviour
 
             case State.Options:
                 break;
+
+            case State.Instructions:
+                break;
         }
 
         TextUpdate();
 	}
 
+    void LateUpdate()
+    {
+        m_OldState = m_State;
+    }
+
     void TextUpdate()
     {
-        for (int i = 0; i < m_LevelSelectButtons.Length; i++)
+        if (m_State.Equals(State.LevelSelect))
         {
-            m_LevelSelectButtons[i].GetComponentInChildren<Text>().text = "Level: " + (i + 1);
+            for (int i = 0; i < m_LevelSelectButtons.Length; i++)
+            {
+                m_LevelSelectButtons[i].GetComponentInChildren<Text>().text = "Level: " + (i + 1);
+            }
+        }
+
+        if (PlayerPrefs.GetInt("CurrentLevel", 0) == 0)
+        {
+            m_NewGameButton.GetComponentInChildren<Text>().text = "New Game";
+        }
+        else
+        {
+            m_NewGameButton.GetComponentInChildren<Text>().text = "Continue";
         }
     }
 
@@ -85,5 +109,10 @@ public class MainMenuHandler : MonoBehaviour
     public State GetState()
     {
         return m_State;
+    }
+
+    public State GetOldState()
+    {
+        return m_OldState;
     }
 }

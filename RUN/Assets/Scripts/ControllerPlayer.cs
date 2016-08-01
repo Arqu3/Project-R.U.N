@@ -26,6 +26,9 @@ public class ControllerPlayer : MonoBehaviour
     public float m_SlowMultiplier = 0.5f;
     public float m_SlowTime = 0.5f;
     public float m_DampeningTime = 0.4f;
+    public float m_BoostTime = 2.0f;
+    public float m_BoostAmount = 10.0f;
+    public float m_BoostDecayAmount = 4.0f;
     public float m_VerticalClimbTimer = 1.5f;
 
     //Basic movement vars
@@ -69,6 +72,10 @@ public class ControllerPlayer : MonoBehaviour
     float m_SlowedTimer = 0.0f;
     float m_FallTimer = 0.0f;
     float m_DampeningTimer = 0.0f;
+    float m_CurrentBoostAmount = 0.0f;
+    float m_BoostTimer;
+    bool m_IsBoosted = false;
+    bool m_rightTriggerInUse = false;
 
     //Wallrun vars
     bool m_IsWallrunning;
@@ -107,6 +114,7 @@ public class ControllerPlayer : MonoBehaviour
 
         m_CurBlinkCD = m_BlinkCD;
         m_VClimbTimer = m_VerticalClimbTimer;
+        m_BoostTimer = m_BoostTime;
     }
 
     void Update()
@@ -132,6 +140,8 @@ public class ControllerPlayer : MonoBehaviour
             VerticalClimbUpdate();
 
             CheckSound();
+
+            BoostUpdate();
 
             if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
@@ -241,7 +251,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void HorizontalMovement(Vector3 movementVector)
     {
-        float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed, m_AccelPercent * 0.01f);
+        float currentMoveSpeed = Mathf.Lerp(m_MovementSpeed, m_MaxSpeed + m_CurrentBoostAmount, m_AccelPercent * 0.01f);
 
         if (m_MoveState.Equals(MovementState.Wallrunning) && !m_WallrunInterrupted)
         {
@@ -325,7 +335,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void JumpUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
+        if (Input.GetButtonDown("Jump") && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
         {
             if (m_MoveState.Equals(MovementState.Wallrunning)){
                 m_WallrunInterrupted = true;
@@ -435,7 +445,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void BlinkUpdate()
     {
-        if (!m_IsBlinkCD && Input.GetMouseButtonDown(0))
+        if (!m_IsBlinkCD && Input.GetButtonDown("Blink"))
         {
             m_IsBlinkCD = true;
             ToggleBlink();
@@ -562,7 +572,19 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             m_DampeningTimer = 0.0f;
-            m_Dampening = Input.GetKeyDown("left ctrl");
+            m_Dampening = Input.GetButton("FallDampening");
+            if (Input.GetAxisRaw("FallDampening") == 1)
+            {
+                if (!m_rightTriggerInUse)
+                {
+                    m_rightTriggerInUse = true;
+                    m_Dampening = true;
+                }
+            }
+            if (Input.GetAxisRaw("FallDampening") == 0)
+            {
+                m_rightTriggerInUse = false;
+            }
         }
     }
 
@@ -582,6 +604,7 @@ public class ControllerPlayer : MonoBehaviour
             if (m_RequireDampening && !m_Dampened)
             {
                 m_Slowed = true;
+                Debug.Log("Dampening failed");
             }
             else if (m_RequireDampening && m_Dampened)
             {
@@ -615,10 +638,38 @@ public class ControllerPlayer : MonoBehaviour
         if (m_RequireDampening && m_Dampening)
         {
             m_Dampened = true;
+            m_IsBoosted = true;
+            Debug.Log("Dampening successful");
         }
         else
         {
             m_Dampened = false;
+        }
+    }
+
+    void BoostUpdate()
+    {
+        if (m_IsBoosted)
+        {
+            m_BoostTimer -= Time.deltaTime;
+            m_CurrentBoostAmount = m_BoostAmount;
+
+            if (m_BoostTimer <= 0.0f)
+            {
+                m_BoostTimer = m_BoostTime;
+                m_IsBoosted = false;
+            }
+        }
+        else
+        {
+            if (m_CurrentBoostAmount > 0.0f)
+            {
+                m_CurrentBoostAmount -= m_BoostDecayAmount * Time.deltaTime;
+            }
+            else
+            {
+                m_CurrentBoostAmount = 0.0f;
+            }
         }
     }
 
@@ -644,7 +695,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_IsWallrunning) {
 
-            if (Input.GetKeyDown(KeyCode.Space) || !m_isMovingFromInput)
+            if (Input.GetButtonDown("Jump") || !m_isMovingFromInput)
             {
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
@@ -696,7 +747,12 @@ public class ControllerPlayer : MonoBehaviour
         if (m_MoveState.Equals(MovementState.VerticalClimbing))
         {
             m_Rigidbody.useGravity = false;
-            if (m_VClimbTimer > 0 && Input.GetKey(KeyCode.W))
+            bool controllerVertical = false;
+            if (Input.GetAxis("Vertical") > 0)
+            {
+                controllerVertical = true;
+            }
+            if (m_VClimbTimer > 0 && Input.GetButton("Vertical") || controllerVertical)
             {
                 m_VClimbTimer -= Time.deltaTime;
                 m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_VClimbTimer * 10, m_Rigidbody.velocity.z);
