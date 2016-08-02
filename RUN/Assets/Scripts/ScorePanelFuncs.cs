@@ -16,6 +16,6 @@ public class ScorePanelFuncs : MonoBehaviour
 
     public void Exit()
     {
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
 }
