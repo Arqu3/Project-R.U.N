@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PausePanelFuncs : MonoBehaviour {
 
@@ -32,7 +33,7 @@ public class PausePanelFuncs : MonoBehaviour {
 
     public void ButtonExit()
     {
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
 
     public void ButtonSound()
