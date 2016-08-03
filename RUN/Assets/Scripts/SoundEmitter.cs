@@ -4,11 +4,15 @@ using System.Collections.Generic;
 
 public class SoundEmitter : MonoBehaviour {
 
+    public float m_Volume = 0.1f;
     public AudioClip[] m_AudioClips;
     AudioSource m_AudioSource;
     
 	void Start () {
         m_AudioSource = GetComponent<AudioSource>();
+        m_Volume = PlayerPrefs.GetFloat("Sound Volume", 0.5f);
+        m_Volume = Mathf.Clamp01(m_Volume);
+        m_AudioSource.volume = m_Volume;
 	}
 
     /// <summary>
@@ -41,5 +45,13 @@ public class SoundEmitter : MonoBehaviour {
             max = m_AudioClips.Length;
 
         PlayClip(Mathf.RoundToInt(Random.Range(min, max)));
+    }
+
+    public void SetVolume(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        PlayerPrefs.SetFloat("Sound Volume", volume);
+        m_Volume = volume;
+        m_AudioSource.volume = m_Volume;
     }
 }

@@ -34,7 +34,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
     {
         m_ControllerSens = PlayerPrefs.GetFloat("Controller Sensitivity", 1.0f);
 
-        sensitivity = new Vector2(m_ControllerSens, m_ControllerSens);
+        SetSensitivity(m_ControllerSens, m_ControllerSens);
 
         m_initialAngle = Vector3.Angle(transform.forward, Vector3.right);
 
@@ -181,5 +181,10 @@ public class SimpleSmoothMouseLook : MonoBehaviour
                 m_ClampXMin = temp;
             }
         }
+    }
+
+    public void SetSensitivity(float x, float y)
+    {
+        sensitivity = new Vector2(x, y);
     }
 }

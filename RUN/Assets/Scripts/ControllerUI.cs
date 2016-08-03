@@ -9,8 +9,7 @@ public class ControllerUI : MonoBehaviour {
     PausePanelFuncs m_PausePanel;
     GameObject m_ScorePanel;
     TutorialPanelFuncs m_TutorialPanel;
-
-    public AudioClip StartMenuMusic;
+    OptionsPanelFuncs m_OptionsPanel;
 
     bool m_Init = false;
     bool m_Paused = false;
@@ -32,6 +31,8 @@ public class ControllerUI : MonoBehaviour {
             m_ScorePanel = transform.FindChild("EndPanel").gameObject;
         if (transform.FindChild("TutorialPanel"))
             m_TutorialPanel = transform.FindChild("TutorialPanel").GetComponent<TutorialPanelFuncs>();
+        if (transform.FindChild("OptionsPanel"))
+            m_OptionsPanel = transform.FindChild("OptionsPanel").GetComponent<OptionsPanelFuncs>();
 
         if (PlayerPrefs.GetInt("Restart", 0) != 1)
         {
@@ -70,6 +71,7 @@ public class ControllerUI : MonoBehaviour {
 
     void Update () {
         m_TutorialPanel.gameObject.SetActive(m_TutorialPanel.m_Tutorial);
+        m_OptionsPanel.gameObject.SetActive(m_OptionsPanel.m_Options);
         if (!m_IsScoreScreen)
         {
             PauseUpdate();
@@ -136,6 +138,11 @@ public class ControllerUI : MonoBehaviour {
         {
             m_ScorePanel.SetActive(true);
         }
+    }
+
+    void OptionsUpdate()
+    {
+
     }
 
     void BlinkUpdate()

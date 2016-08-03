@@ -1,10 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class PausePanelFuncs : MonoBehaviour {
 
     bool m_Unpause;
     bool m_ToggleSound = false;
+
+    void Start()
+    {
+        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
+        {
+            m_ToggleSound = false;
+        }
+        else
+        {
+            m_ToggleSound = true;
+        }
+    }
 
     public bool ToggleSound
     {
@@ -32,7 +45,7 @@ public class PausePanelFuncs : MonoBehaviour {
 
     public void ButtonExit()
     {
-        Application.Quit();
+        SceneManager.LoadScene(0);
     }
 
     public void ButtonSound()

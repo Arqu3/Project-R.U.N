@@ -22,23 +22,8 @@ public class MainMenuHandler : MonoBehaviour
     Button m_Temp;
     GameObject m_NewGameButton;
 
-    //Options
-    Text m_ControllerSensText;
-    Slider m_ControllerSensSlider;
-    Text m_MouseSensText;
-    Slider m_MouseSensSlider;
-
 	void Start ()
     {
-        //Options
-        m_ControllerSensText = GameObject.Find("ControllerSensText").GetComponent<Text>();
-        m_ControllerSensSlider = GameObject.Find("ControllerSensSlider").GetComponent<Slider>();
-        m_ControllerSensSlider.value = PlayerPrefs.GetFloat("Controller Sensitivity", 1.0f) * 10.0f;
-
-        //m_MouseSensText = GameObject.Find("MouseSensText").GetComponent<Text>();
-        //m_MouseSensSlider = GameObject.Find("MouseSensSlider").GetComponent<Slider>();
-        //m_MouseSensSlider.value = PlayerPrefs.GetFloat("Mouse Sensitivity", 1.0f) * 10.0f;
-
         m_State = State.Main;
         m_NewGameButton = GameObject.Find("ButtonStart");
 
@@ -82,7 +67,6 @@ public class MainMenuHandler : MonoBehaviour
                 break;
 
             case State.Options:
-                OptionsUpdate();
                 break;
 
             case State.Instructions:
@@ -130,15 +114,5 @@ public class MainMenuHandler : MonoBehaviour
     public State GetOldState()
     {
         return m_OldState;
-    }
-
-    void OptionsUpdate()
-    {
-        m_ControllerSensText.text = "Look Sensitivity: " + m_ControllerSensSlider.value / 10;
-    }
-
-    public void OnControllerSensChange()
-    {
-        PlayerPrefs.SetFloat("Controller Sensitivity", m_ControllerSensSlider.value / 10);
     }
 }
