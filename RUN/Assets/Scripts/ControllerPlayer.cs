@@ -35,6 +35,7 @@ public class ControllerPlayer : MonoBehaviour
     Vector3 m_ForwardDir;
     Vector3 m_PlayerVel;
     Vector3 m_hMovement;
+    Vector3 m_StoredVel;
     float m_AccelPercent = 0;
     bool m_OnGround;
     bool m_ControlsActive = true;
@@ -330,21 +331,42 @@ public class ControllerPlayer : MonoBehaviour
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, - 1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
         }
 
+        if (m_MoveState.Equals(MovementState.Falling))
+        {
+            m_Rigidbody.AddForce(Vector3.down * 1f, ForceMode.Impulse);
+        }
+
         ToggleGravity(gravityBool);
+
+        Debug.Log(m_Rigidbody.velocity);
     }
 
     void JumpUpdate()
     {
         if (Input.GetButtonDown("Jump") && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
         {
+            m_StoredVel = m_Rigidbody.velocity;
+            m_StoredVel.y = 0f;
+
             if (m_MoveState.Equals(MovementState.Wallrunning)){
+                m_StoredVel = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up) * Vector3.forward * m_Rigidbody.velocity.magnitude;
+
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
             }
 
             m_WallrunGraceTimer = 0f;
+
+            m_Rigidbody.AddForce(m_JumpForce * 0.4f * transform.forward, ForceMode.Impulse);
             m_Rigidbody.AddForce(m_JumpForce * Vector3.up, ForceMode.Impulse);
             m_FootStepEmitter.PlayRandomClip(2, 4);
+        }
+
+        if ((m_MoveState.Equals(MovementState.Falling) || m_MoveState.Equals(MovementState.Jumping)) && m_isMovingFromInput)
+        {
+            Debug.Log("Retaining");
+
+            m_Rigidbody.velocity = new Vector3(m_StoredVel.x, m_Rigidbody.velocity.y, m_StoredVel.z);
         }
 
         if (m_MoveState.Equals(MovementState.Falling))
@@ -447,6 +469,8 @@ public class ControllerPlayer : MonoBehaviour
     {
         if (!m_IsBlinkCD && Input.GetButtonDown("Blink"))
         {
+            m_StoredVel = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up) * Vector3.forward * m_Rigidbody.velocity.magnitude;
+            
             m_IsBlinkCD = true;
             ToggleBlink();
         }
@@ -468,7 +492,6 @@ public class ControllerPlayer : MonoBehaviour
             else
                 Camera.main.fieldOfView = 70;
 
-
                 m_BlinkTimer = 0.0f;
             }
 
@@ -486,6 +509,8 @@ public class ControllerPlayer : MonoBehaviour
 
     void BlinkReset()
     {
+        m_StoredVel = Vector3.zero;
+
         m_IsBlinkCD = false;
         m_CurBlinkCD = m_BlinkCD;
     }
@@ -734,6 +759,8 @@ public class ControllerPlayer : MonoBehaviour
             m_WallrunDir = Vector3.ClampMagnitude(m_WallrunDir, 1f);
 
             Camera.main.GetComponent<SimpleSmoothMouseLook>().ClampMouseX(m_WallrunDir, 200);
+
+            m_StoredVel = m_WallrunDir * m_StoredVel.magnitude;
         }
     }
 
