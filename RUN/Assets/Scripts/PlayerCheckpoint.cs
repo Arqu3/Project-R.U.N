@@ -17,6 +17,7 @@ public class PlayerCheckpoint : MonoBehaviour
     public List<float> m_HighScores;
     public Text m_HighscoreText;
     public Text m_EndText;
+    public MovingPlatform[] m_MovingPlatforms;
 
     //Other vars
     Transform m_Temp;
@@ -72,6 +73,17 @@ public class PlayerCheckpoint : MonoBehaviour
                         m_CheckPoints[sort] = m_Temp;
                     }
                 }
+            }
+        }
+
+        //Find moving platforms
+        var movingPlatforms = GameObject.FindGameObjectsWithTag("MovingPlatform");
+        if (movingPlatforms.Length > 0)
+        {
+            m_MovingPlatforms = new MovingPlatform[movingPlatforms.Length];
+            for (int i = 0; i < movingPlatforms.Length; i++)
+            {
+                m_MovingPlatforms[i] = movingPlatforms[i].GetComponent<MovingPlatform>();
             }
         }
 	}
@@ -147,6 +159,11 @@ public class PlayerCheckpoint : MonoBehaviour
         //Set rotation to corresponding checkpoint
         m_Camera._mouseAbsolute.x = m_CheckPoints[num].localEulerAngles.y;
         m_Camera._mouseAbsolute.y = m_CheckPoints[num].localEulerAngles.x;
+
+        for (int i = 0; i < m_MovingPlatforms.Length; i++)
+        {
+            m_MovingPlatforms[i].Reset();
+        }
     }
 
     void OnTriggerEnter(Collider col)

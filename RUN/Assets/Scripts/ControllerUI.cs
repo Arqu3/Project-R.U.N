@@ -95,28 +95,31 @@ public class ControllerUI : MonoBehaviour {
     void PauseUpdate()
     {
         if (Input.GetButtonDown("Pause") || !m_Init || m_PausePanel.UnPause){
-            int timeInt = 0;
-            m_Paused = !m_Paused;
-
-            if (!m_Paused)
+            if (!m_TutorialPanel.m_Tutorial && !m_OptionsPanel.m_Options)
             {
-                timeInt = 1;
-            }
+                int timeInt = 0;
+                m_Paused = !m_Paused;
 
-            m_Player.ToggleControls(!m_Paused);
-            m_PausePanel.UnPause = false;
-            m_PausePanel.gameObject.SetActive(m_Paused);
-            Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = !m_Paused;
-			Cursor.lockState = CursorLockMode.None;
-			Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = !m_Paused;
-            Cursor.visible = m_Paused;
+                if (!m_Paused)
+                {
+                    timeInt = 1;
+                }
 
-			Time.timeScale = timeInt;
+                m_Player.ToggleControls(!m_Paused);
+                m_PausePanel.UnPause = false;
+                m_PausePanel.gameObject.SetActive(m_Paused);
+                Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = !m_Paused;
+                Cursor.lockState = CursorLockMode.None;
+                Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = !m_Paused;
+                Cursor.visible = m_Paused;
 
-            if (!m_MusicStarted && m_Init)
-            {
-                m_MusicStarted = true;
-                Camera.main.GetComponent<MusicSystem>().PlayClip(1);
+                Time.timeScale = timeInt;
+
+                if (!m_MusicStarted && m_Init)
+                {
+                    m_MusicStarted = true;
+                    Camera.main.GetComponent<MusicSystem>().PlayClip(1);
+                }
             }
         }
     }
@@ -138,11 +141,6 @@ public class ControllerUI : MonoBehaviour {
         {
             m_ScorePanel.SetActive(true);
         }
-    }
-
-    void OptionsUpdate()
-    {
-
     }
 
     void BlinkUpdate()
