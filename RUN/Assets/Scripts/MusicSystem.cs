@@ -9,8 +9,9 @@ public class MusicSystem : MonoBehaviour {
     bool m_AudioBusy;
 
 	void Start () {
+        m_Volume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
         m_Volume = Mathf.Clamp01(m_Volume);
-        m_AudioSource = Camera.main.GetComponent<AudioSource>();
+        m_AudioSource = GameObject.Find("Main Camera").GetComponent<AudioSource>();
 	}
 	
     public void PlayClip(int index)
@@ -23,6 +24,14 @@ public class MusicSystem : MonoBehaviour {
         if (volume != m_Volume && !m_AudioBusy) { 
             StartCoroutine(LerpVolume(volume));
         }
+    }
+
+    public void SetVolumeConst(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        PlayerPrefs.SetFloat("Music Volume", volume);
+        m_Volume = volume;
+        m_AudioSource.volume = volume;
     }
 
     IEnumerator LerpVolume(float toVolume)
@@ -39,7 +48,6 @@ public class MusicSystem : MonoBehaviour {
         }
 
         m_Volume = toVolume;
-
         m_AudioBusy = false;
 
     }

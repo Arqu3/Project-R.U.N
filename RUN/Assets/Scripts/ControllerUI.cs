@@ -11,8 +11,6 @@ public class ControllerUI : MonoBehaviour {
     TutorialPanelFuncs m_TutorialPanel;
     OptionsPanelFuncs m_OptionsPanel;
 
-    public AudioClip StartMenuMusic;
-
     bool m_Init = false;
     bool m_Paused = false;
     bool m_MusicStarted = false;

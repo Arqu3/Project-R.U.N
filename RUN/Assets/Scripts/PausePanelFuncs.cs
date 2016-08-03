@@ -7,6 +7,18 @@ public class PausePanelFuncs : MonoBehaviour {
     bool m_Unpause;
     bool m_ToggleSound = false;
 
+    void Start()
+    {
+        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
+        {
+            m_ToggleSound = false;
+        }
+        else
+        {
+            m_ToggleSound = true;
+        }
+    }
+
     public bool ToggleSound
     {
         get
