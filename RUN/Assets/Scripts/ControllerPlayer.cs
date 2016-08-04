@@ -59,6 +59,7 @@ public class ControllerPlayer : MonoBehaviour
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
+    float m_DisableTime = 0.3f;
     bool m_IsGrabbed = false;
     bool m_IsClimbing = false;
     float m_ClimbTimer = 0.0f;
@@ -329,6 +330,10 @@ public class ControllerPlayer : MonoBehaviour
             gravityBool = false;
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, - 1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
         }
+        if (m_MoveState.Equals(MovementState.Climbing))
+        {
+            gravityBool = false;
+        }
 
         ToggleGravity(gravityBool);
     }
@@ -498,10 +503,12 @@ public class ControllerPlayer : MonoBehaviour
 
         if (vel.z > 0)
         {
+            Debug.Log("Forward");
             return true;
         }
         else
         {
+            Debug.Log("Backward");
             return false;
         }
     }
@@ -514,13 +521,15 @@ public class ControllerPlayer : MonoBehaviour
     void FeetClimb()
     {
         //Safety check
-        if (IsMovingForward() && m_hMovement.magnitude > 0.4f && !m_IsClimbing && m_Rigidbody.velocity.y > 1.0f && !m_MoveState.Equals(MovementState.Blinking))
+        if (IsMovingForward() && !m_IsClimbing && !m_OnGround && !m_MoveState.Equals(MovementState.Blinking))
         {
             m_IsClimbing = true;
             m_IsColliderActive = false;
 
             Vector3 temp = new Vector3(transform.forward.x, 1 * 0.4f, transform.forward.z);
             m_Rigidbody.AddForce(temp, ForceMode.Impulse);
+
+            Debug.Log("Feetclimb");
         }
     }
 
@@ -556,11 +565,23 @@ public class ControllerPlayer : MonoBehaviour
                 m_ColliderTimer = 0.0f;
             }
 
-            if (m_ColliderTimer > 0.1f)
+            if (m_ColliderTimer > m_DisableTime)
             {
                 m_IsColliderActive = true;
+                m_DisableTime = 0.3f;
             }
         }   
+    }
+
+    public void DisableCollider(float time)
+    {
+        m_IsColliderActive = false;
+        m_DisableTime = time;
+    }
+
+    public void Climb()
+    {
+        m_IsClimbing = true;
     }
 
     void DampeningUpdate()

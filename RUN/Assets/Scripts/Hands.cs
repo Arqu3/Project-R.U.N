@@ -27,6 +27,7 @@ public class Hands : MonoBehaviour {
             //Climb if pressing space
             if (Input.GetButton("Jump"))
             {
+                m_CPlayer.Climb();
                 if (!m_HasSentMsg)
                 {
                     m_AnimHandler.PlayAnimation("Climb");
@@ -48,10 +49,7 @@ public class Hands : MonoBehaviour {
             if (col.GetComponent<ParkourObject>().m_Climbable)
             {
                 m_Rigidbody.useGravity = false;
-                if (!m_CanClimb)
-                {
-                    m_Rigidbody.velocity = Vector3.zero;
-                }
+                m_Rigidbody.velocity = Vector3.zero;
                 m_CanClimb = true;
                 m_CPlayer.IsGrabbed(true);
                 Debug.Log("Grabbed");

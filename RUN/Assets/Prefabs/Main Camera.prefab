@@ -33,6 +33,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 479072}
   - 82: {fileID: 8260864}
+  - 114: {fileID: 11442598}
   m_Layer: 8
   m_Name: Ambience
   m_TagString: Untagged
@@ -168,7 +169,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -288,7 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mouseAbsolute: {x: 0, y: 0}
-  clampInDegrees: {x: 360, y: 180}
+  clampInDegrees: {x: 360, y: 150}
   lockCursor: 0
   sensitivity: {x: 2, y: 2}
   smoothing: {x: 3, y: 3}
@@ -307,6 +308,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_yOffset: 1.4
+--- !u!114 &11442598
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 130648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4da16589031b8248a4646e7c6ab3a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Volume: 0
 --- !u!114 &11476934
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -31,8 +31,6 @@ public class Feet : MonoBehaviour
                     //m_AnimHandler.PlayAnimation("FeetClimb");
                     m_Player.SendMessage("FeetClimb");
                     m_HasSentMsg = true;
-
-                    Debug.Log("Feetclimb");
                 }
             }
         }
