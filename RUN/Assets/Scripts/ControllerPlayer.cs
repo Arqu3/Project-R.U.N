@@ -279,18 +279,30 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckSound()
     {
-        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Wallrunning))
+        if (m_MoveState.Equals(MovementState.Moving) || m_MoveState.Equals(MovementState.Wallrunning) || m_MoveState.Equals(MovementState.VerticalClimbing))
         {
+            float stepTime = m_StepTime;
+
+            if (m_MoveState.Equals(MovementState.Wallrunning))
+            {
+                stepTime = stepTime * 0.75f;
+            }
+            if (m_MoveState.Equals(MovementState.VerticalClimbing))
+            {
+                stepTime = stepTime * 0.60f;
+            }
+
+
             if (m_lastState.Equals(MovementState.Falling))
             {
                 m_FootStepEmitter.PlayClip(Mathf.RoundToInt(Random.Range(0, 2)));
                 m_CurrentStepTime = 0;
             }
 
-            else if (m_CurrentStepTime > m_StepTime)
+            else if (m_CurrentStepTime > stepTime)
             { 
                 m_FootStepEmitter.PlayRandomClip(2);
-                m_CurrentStepTime -= m_StepTime;
+                m_CurrentStepTime -= stepTime;
             }
 
             else
@@ -298,6 +310,8 @@ public class ControllerPlayer : MonoBehaviour
                 m_CurrentStepTime += Time.deltaTime;
             }
         }
+
+
 
         if (m_lastState.Equals(MovementState.Falling) && m_MoveState.Equals(MovementState.Idle))
         {
@@ -535,7 +549,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void ClimbUpdate()
     {
-        if (!m_MoveState.Equals(MovementState.Jumping ))
+        if (!m_MoveState.Equals(MovementState.Jumping))
         { 
             //Climbing
             if (m_IsClimbing)
