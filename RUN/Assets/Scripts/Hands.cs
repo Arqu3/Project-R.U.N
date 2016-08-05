@@ -6,6 +6,7 @@ public class Hands : MonoBehaviour {
     Rigidbody m_Rigidbody;
     ControllerPlayer m_CPlayer;
     AnimationHandler m_AnimHandler;
+    Vector3 m_PlayerVel;
 
     public bool m_CanClimb;
 
@@ -48,6 +49,7 @@ public class Hands : MonoBehaviour {
         {
             if (col.GetComponent<ParkourObject>().m_Climbable)
             {
+                m_PlayerVel = m_Rigidbody.velocity;
                 m_Rigidbody.useGravity = false;
                 m_Rigidbody.velocity = Vector3.zero;
                 m_CanClimb = true;
@@ -69,5 +71,17 @@ public class Hands : MonoBehaviour {
                 Debug.Log("Released");
             }
         }
+    }
+
+    public void SetVelocity()
+    {
+        m_PlayerVel.y = 0;
+        m_Rigidbody.velocity = transform.forward * m_PlayerVel.magnitude;
+        //Add a constant force if previous velocity was too low
+        if (m_PlayerVel.magnitude < 3.0f)
+        {
+            m_Rigidbody.AddForce(new Vector3(transform.forward.x, 0.0f, transform.forward.z) * 100.0f, ForceMode.Impulse);
+        }
+        Debug.Log("Velocity set");
     }
 }

@@ -147,7 +147,7 @@ public class ControllerUI : MonoBehaviour {
     {
         float [] cdValues = m_Player.GetUIValues();
 
-        if (cdValues[0] == cdValues[1])
+        if (cdValues[0] == cdValues[1] && m_Player.GetCanBlinkCD())
         {
             //Set text to display blink is ready
             m_BlinkText.text = "Blink Ready";
