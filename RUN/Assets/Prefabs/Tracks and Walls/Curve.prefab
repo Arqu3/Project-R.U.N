@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 444192}
   - 33: {fileID: 3367766}
-  - 23: {fileID: 2345898}
   - 64: {fileID: 6417974}
   m_Layer: 0
   m_Name: Curve
@@ -41,8 +40,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135690}
-  m_LocalRotation: {x: -0.58793783, y: -0.39284748, z: -0.39284757, w: 0.5879377}
-  m_LocalPosition: {x: 969.34, y: 261.3, z: 2114.71}
+  m_LocalRotation: {x: -0.39284745, y: -0.58793783, z: -0.58793795, w: 0.3928474}
+  m_LocalPosition: {x: 1120, y: 177, z: 1660}
   m_LocalScale: {x: 50, y: 50, z: 100}
   m_Children:
   - {fileID: 459536}
@@ -71,32 +70,6 @@ MeshRenderer:
   m_ReceiveShadows: 1
   m_Materials:
   - {fileID: 2100000, guid: 12778f6ce69078b48a34634c61d8e519, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!23 &2345898
-MeshRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 135690}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_Materials:
-  - {fileID: 2100000, guid: d7744f66f6691c44e9de76291cb55224, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1

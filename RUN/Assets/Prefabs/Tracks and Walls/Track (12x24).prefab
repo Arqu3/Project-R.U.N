@@ -198,7 +198,6 @@ GameObject:
   - 4: {fileID: 473230}
   - 33: {fileID: 3380030}
   - 65: {fileID: 6540804}
-  - 23: {fileID: 2320756}
   - 114: {fileID: 11468594}
   m_Layer: 0
   m_Name: Track (12x24)
@@ -418,7 +417,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 180088}
   m_LocalRotation: {x: 0, y: -0.38268346, z: 0, w: 0.9238795}
-  m_LocalPosition: {x: 948.13, y: 261.3, z: 2110.47}
+  m_LocalPosition: {x: 850.62, y: 267.3, z: 2237.69}
   m_LocalScale: {x: 12, y: 2, z: 12}
   m_Children:
   - {fileID: 493024}
@@ -480,32 +479,6 @@ Transform:
   - {fileID: 406460}
   m_Father: {fileID: 473230}
   m_RootOrder: 0
---- !u!23 &2320756
-MeshRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 180088}
-  m_Enabled: 0
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_Materials:
-  - {fileID: 2100000, guid: f2c63ae6abfb5fb4ca6a32fd79c8fa20, type: 2}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 1
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
 --- !u!23 &2335280
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -542,7 +515,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 12778f6ce69078b48a34634c61d8e519, type: 2}
+  - {fileID: 2100000, guid: d56a052213fc68243baa594b137c1d11, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -620,7 +593,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 12778f6ce69078b48a34634c61d8e519, type: 2}
+  - {fileID: 2100000, guid: d56a052213fc68243baa594b137c1d11, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
