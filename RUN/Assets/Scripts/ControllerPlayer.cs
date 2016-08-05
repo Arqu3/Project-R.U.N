@@ -59,6 +59,8 @@ public class ControllerPlayer : MonoBehaviour
     bool m_CanBlinkCD = true;
     float m_FOVTimer;
     bool m_IsFOVChange = false;
+    ParticleSystem m_BlinkParticles;
+    ParticleSystem m_ConstantParticles;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -115,6 +117,8 @@ public class ControllerPlayer : MonoBehaviour
         m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
 
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
+        m_BlinkParticles = Camera.main.transform.FindChild("BlinkParticles").GetComponent<ParticleSystem>();
+        m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
 
         m_CurBlinkCD = m_BlinkCD;
         m_FOVTimer = m_BlinkCD;
@@ -475,6 +479,9 @@ public class ControllerPlayer : MonoBehaviour
             m_IsFOVChange = true;
             m_IsBlinkCD = true;
             ToggleBlink();
+            m_FOVTimer = 0;
+
+            m_BlinkParticles.Play();
 
             if (RaycastDir(Vector3.down))
             {
@@ -489,20 +496,27 @@ public class ControllerPlayer : MonoBehaviour
         //Blinking
         if (m_IsBlinking)
         {
+
+            m_BlinkParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(0, 1, m_BlinkTimer / m_BlinkTime));
+            m_ConstantParticles.startColor = m_BlinkParticles.startColor;
             m_BlinkTimer += Time.deltaTime;
             Blink();
             Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_BlinkTimer / m_BlinkTime);
         }
         else
         {
+            Debug.Log(m_FOVTimer);
+
             //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-            if (m_FOVTimer > 2 && m_FOVTimer != m_BlinkCD) {
-                Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_FOVTimer - 2);
+            if (m_FOVTimer < 1) {
+                m_FOVTimer += Time.deltaTime;
+                Camera.main.fieldOfView = Mathf.Lerp(90, 70, m_FOVTimer / 1);
+                m_BlinkParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(1, 0, m_FOVTimer / 0.5f));
+                m_ConstantParticles.startColor = m_BlinkParticles.startColor;
             }
 
             else
                 Camera.main.fieldOfView = 70;
-
 
                 m_BlinkTimer = 0.0f;
             }
@@ -521,10 +535,10 @@ public class ControllerPlayer : MonoBehaviour
         //FOV timer
         if (m_IsBlinkCD && m_IsFOVChange)
         {
-            m_FOVTimer -= Time.deltaTime;
+            //m_FOVTimer += Time.deltaTime;
             if (m_FOVTimer <= 0.0f)
             {
-                m_FOVTimer = m_BlinkCD;
+               // m_FOVTimer = m_BlinkCD;
                 m_IsFOVChange = false;
             }
         }
