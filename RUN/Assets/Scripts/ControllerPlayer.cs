@@ -56,6 +56,9 @@ public class ControllerPlayer : MonoBehaviour
     RaycastHit m_Hit;
     Ray m_Ray;
     Vector3 m_BPlayerVel;
+    bool m_CanBlinkCD = true;
+    float m_FOVTimer;
+    bool m_IsFOVChange = false;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -114,6 +117,7 @@ public class ControllerPlayer : MonoBehaviour
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
+        m_FOVTimer = m_BlinkCD;
         m_VClimbTimer = m_VerticalClimbTimer;
         m_BoostTimer = m_BoostTime;
     }
@@ -143,6 +147,8 @@ public class ControllerPlayer : MonoBehaviour
             CheckSound();
 
             BoostUpdate();
+
+            CheckCanBlinkCD();
 
             if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
@@ -466,8 +472,18 @@ public class ControllerPlayer : MonoBehaviour
     {
         if (!m_IsBlinkCD && Input.GetButtonDown("Blink"))
         {
+            m_IsFOVChange = true;
             m_IsBlinkCD = true;
             ToggleBlink();
+
+            if (RaycastDir(Vector3.down))
+            {
+                m_CanBlinkCD = true;
+            }
+            else
+            {
+                m_CanBlinkCD = false;
+            }
         }
 
         //Blinking
@@ -480,8 +496,8 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-            if (m_CurBlinkCD > 2 && m_CurBlinkCD != m_BlinkCD) { 
-                Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_CurBlinkCD - 2);
+            if (m_FOVTimer > 2 && m_FOVTimer != m_BlinkCD) {
+                Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_FOVTimer - 2);
             }
 
             else
@@ -491,17 +507,41 @@ public class ControllerPlayer : MonoBehaviour
                 m_BlinkTimer = 0.0f;
             }
 
-            //Blink cooldown
-            if (m_IsBlinkCD)
+        //Blink cooldown
+        if (m_IsBlinkCD && m_CanBlinkCD)
+        {
+            m_CurBlinkCD -= Time.deltaTime;
+            if (m_CurBlinkCD <= 0.0f)
             {
-                m_CurBlinkCD -= Time.deltaTime;
-                if (m_CurBlinkCD <= 0.0f)
-                {
-                    m_CurBlinkCD = m_BlinkCD;
-                    m_IsBlinkCD = false;
-                }
+                m_CurBlinkCD = m_BlinkCD;
+                m_IsBlinkCD = false;
             }
         }
+
+        //FOV timer
+        if (m_IsBlinkCD && m_IsFOVChange)
+        {
+            m_FOVTimer -= Time.deltaTime;
+            if (m_FOVTimer <= 0.0f)
+            {
+                m_FOVTimer = m_BlinkCD;
+                m_IsFOVChange = false;
+            }
+        }
+    }
+
+    void CheckCanBlinkCD()
+    {
+        if (RaycastDir(Vector3.down))
+        {
+            m_CanBlinkCD = true;
+        }
+    }
+
+    public bool GetCanBlinkCD()
+    {
+        return m_CanBlinkCD;
+    }
 
     void BlinkReset()
     {

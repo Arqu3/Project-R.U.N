@@ -3,17 +3,22 @@ using System.Collections;
 
 public class AnimationHandler : MonoBehaviour
 {
-    Animator m_Animator;
-    ControllerPlayer m_CPlayer;
-
+    //Public vars
     public bool m_AnimationStarted;
     public bool m_AnimationFinished;
 
+    //Component vars
+    Animator m_Animator;
+    ControllerPlayer m_CPlayer;
+    Hands m_Hands;
+
+    //Other vars
     bool m_IsClimbing;
 
 	void Start()
     {
         m_CPlayer = GetComponentInChildren<ControllerPlayer>();
+        m_Hands = GetComponentInChildren<Hands>();
 
         m_AnimationStarted = false;
         m_AnimationFinished = true;
@@ -48,6 +53,11 @@ public class AnimationHandler : MonoBehaviour
         if (m_Animator.HasState(0, temp))
         {
             m_Animator.Play(name);
+
+            if (name == "Climb")
+            {
+                m_IsClimbing = true;
+            }
         }
         else
         {
@@ -68,5 +78,10 @@ public class AnimationHandler : MonoBehaviour
     public void animationFinished()
     {
         m_AnimationFinished = true;
+        if (m_IsClimbing)
+        {
+            m_Hands.SetVelocity();
+            m_IsClimbing = false;
+        }
     }
 }
