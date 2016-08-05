@@ -13,6 +13,7 @@ public class OptionsPanelFuncs : MonoBehaviour
     SimpleSmoothMouseLook m_Camera;
     MusicSystem m_Music;
     SoundEmitter m_Sounds;
+    AmbienceHandler m_Ambience;
 
     //Sensitivity
     Text m_ControllerSensText;
@@ -50,6 +51,10 @@ public class OptionsPanelFuncs : MonoBehaviour
             if (GameObject.Find("AudioEmitter").GetComponent<SoundEmitter>())
             {
                 m_Sounds = GameObject.Find("AudioEmitter").GetComponent<SoundEmitter>();
+            }
+            if (GameObject.Find("Ambience").GetComponent<AmbienceHandler>())
+            {
+                m_Ambience = GameObject.Find("Ambience").GetComponent<AmbienceHandler>();
             }
         }
 
@@ -113,6 +118,8 @@ public class OptionsPanelFuncs : MonoBehaviour
             PlayerPrefs.SetFloat("Sound Volume", m_SoundSlider.value / 100);
             if (m_Sounds)
                 m_Sounds.SetVolume(PlayerPrefs.GetFloat("Sound Volume", 0.5f));
+            if (m_Ambience)
+                m_Ambience.SetVolume(PlayerPrefs.GetFloat("Sound Volume", 0.5f));
         }
     }
 }

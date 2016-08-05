@@ -4,7 +4,6 @@ using System.Collections;
 public class AnimationHandler : MonoBehaviour
 {
     Animator m_Animator;
-    Animation m_Animation;
     ControllerPlayer m_CPlayer;
 
     public bool m_AnimationStarted;
@@ -55,8 +54,6 @@ public class AnimationHandler : MonoBehaviour
             Debug.Log("Could not find animation with name: " + name);
             return;
         }
-
-        m_CPlayer.ToggleControls(false);
     }
 
     public void PlayAnimation(int id)
@@ -71,6 +68,5 @@ public class AnimationHandler : MonoBehaviour
     public void animationFinished()
     {
         m_AnimationFinished = true;
-        m_CPlayer.ToggleControls(true);
     }
 }
