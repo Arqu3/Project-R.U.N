@@ -168,6 +168,10 @@ public class ControllerPlayer : MonoBehaviour
                         m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
                         HorizontalMovement(m_hMovement);
                     }
+                    else
+                    {
+                        m_Rigidbody.AddForce(transform.forward * Input.GetAxis("Vertical") * 0.5f + transform.right * Input.GetAxis("Horizontal") * 1, ForceMode.Impulse);
+                    }
 
                     if (m_WallrunInterrupted)
                     {
@@ -177,10 +181,19 @@ public class ControllerPlayer : MonoBehaviour
                 else
                 {
                     //Horizontal movement is enabled while in air
-                    m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-                    HorizontalMovement(m_hMovement);
-                    CalculateFriction(m_hMovement);
+
                     JumpUpdate();
+                    CalculateFriction(m_hMovement);
+
+                    m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.05f, 0, Input.GetAxis("Vertical") * 0.1f);
+                    HorizontalMovement(m_hMovement);
+
+
+                    if (m_WallrunInterrupted)
+                    {
+                        m_WallrunInterrupted = false;
+                    }
+
                 }
             }
         }
@@ -350,6 +363,12 @@ public class ControllerPlayer : MonoBehaviour
             }
         }
 
+        if (m_MoveState.Equals(MovementState.Falling) || m_MoveState.Equals(MovementState.Jumping))
+        {
+            m_Rigidbody.AddForce(Vector3.down * (2.5f - Mathf.Clamp01(m_Rigidbody.velocity.y) * 1.5f), ForceMode.Impulse);
+            Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
+        }
+
         if (m_MoveState.Equals(MovementState.Wallrunning)) {
             gravityBool = false;
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, - 1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
@@ -417,7 +436,7 @@ public class ControllerPlayer : MonoBehaviour
             }
 
             ray = new Ray(tempV + v, direction);
-            Debug.DrawRay(tempV + v, direction);
+            //Debug.DrawRay(tempV + v, direction);
 
             if (Physics.Raycast(ray, 1f, m_JumpMask))
             {
@@ -505,8 +524,6 @@ public class ControllerPlayer : MonoBehaviour
         }
         else
         {
-            Debug.Log(m_FOVTimer);
-
             //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
             if (m_FOVTimer < 1) {
                 m_FOVTimer += Time.deltaTime;
