@@ -65,7 +65,7 @@ GameObject:
   - 114: {fileID: 11468920}
   m_Layer: 0
   m_Name: MovingPlatform (12x12)
-  m_TagString: Untagged
+  m_TagString: MovingPlatform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -355,7 +355,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 126776}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 867.4, y: 267, z: 2188}
+  m_LocalPosition: {x: 1518, y: 276, z: 1698}
   m_LocalScale: {x: 12, y: 2, z: 12}
   m_Children:
   - {fileID: 460652}
@@ -709,7 +709,7 @@ MonoBehaviour:
   m_StayOnReachedEnd: 0
   m_ReturnOnExit: 0
   m_Speed: 5
-  m_Distance: 15
+  m_Distance: -15
   m_PercentageOffset: 0
 --- !u!114 &11457672
 MonoBehaviour:
@@ -2292,6 +2292,10 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 98bbbe2c673a1744d9e5678c5a312d8b, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_TagString
+      value: MovingPlatform
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 126776}
