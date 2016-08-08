@@ -294,11 +294,12 @@ public class MovingPlatform : MonoBehaviour
         //Set player parent to this platform
         if (col.gameObject.tag == "Player")
         {
-            if (!m_HasReachedEnd)
+            if (!m_HasReachedEnd || m_IsAtStart)
             {
                 if (!GetMode().Equals(Mode.Constant))
                 {
                     m_IsMoving = true;
+                    Debug.Log("Entered");
                 }
                 col.transform.parent = transform;
             }
@@ -331,11 +332,15 @@ public class MovingPlatform : MonoBehaviour
             {
                 m_IsMoving = false;
 
-                if (m_ReturnOnExit && m_HasReachedEnd && m_IsAtEnd)
+                if (m_ReturnOnExit)
                 {
                     m_IsMoving = true;
                     m_IsReturning = true;
                     m_HasReachedEnd = false;
+                    if (m_CurrentDir == 1)
+                        m_CurrentDir = -1;
+                    else
+                        m_CurrentDir = 1;
                 }
             }
             col.transform.parent = null;

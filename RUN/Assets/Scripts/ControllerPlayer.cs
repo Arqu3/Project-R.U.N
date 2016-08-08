@@ -115,10 +115,10 @@ public class ControllerPlayer : MonoBehaviour
         m_Collider = GetComponent<Collider>();
         m_Rigidbody = GetComponentInParent<Rigidbody>();
         m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
-
-        m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
         m_BlinkParticles = Camera.main.transform.FindChild("BlinkParticles").GetComponent<ParticleSystem>();
         m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
+
+        m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
         m_FOVTimer = m_BlinkCD;
@@ -231,10 +231,6 @@ public class ControllerPlayer : MonoBehaviour
                     m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
                     m_MoveState = MovementState.Grabbing;
                 }
-                else if (m_IsVerticalClimb)
-                {
-                    m_MoveState = MovementState.VerticalClimbing;
-                }
                 else if (m_IsWallrunning)
                 {
                     m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
@@ -268,6 +264,10 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_OnGround = false;
             m_MoveState = MovementState.Climbing;
+        }
+        else if (m_IsVerticalClimb && !m_IsWallrunning)
+        {
+            m_MoveState = MovementState.VerticalClimbing;
         }
 
         m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);
@@ -366,7 +366,7 @@ public class ControllerPlayer : MonoBehaviour
         if (m_MoveState.Equals(MovementState.Falling) || m_MoveState.Equals(MovementState.Jumping))
         {
             m_Rigidbody.AddForce(Vector3.down * (2.5f - Mathf.Clamp01(m_Rigidbody.velocity.y) * 1.5f), ForceMode.Impulse);
-            Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
+            //Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
         }
 
         if (m_MoveState.Equals(MovementState.Wallrunning)) {
@@ -859,7 +859,7 @@ public class ControllerPlayer : MonoBehaviour
     {
         if (m_MoveState.Equals(MovementState.VerticalClimbing))
         {
-            m_Rigidbody.useGravity = false;
+            ToggleGravity(false);
             bool controllerVertical = false;
             if (Input.GetAxis("Vertical") > 0)
             {
