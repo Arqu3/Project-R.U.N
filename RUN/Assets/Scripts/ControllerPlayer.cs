@@ -115,10 +115,10 @@ public class ControllerPlayer : MonoBehaviour
         m_Collider = GetComponent<Collider>();
         m_Rigidbody = GetComponentInParent<Rigidbody>();
         m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
-
-        m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
         m_BlinkParticles = Camera.main.transform.FindChild("BlinkParticles").GetComponent<ParticleSystem>();
         m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
+
+        m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
         m_CurBlinkCD = m_BlinkCD;
         m_FOVTimer = m_BlinkCD;
