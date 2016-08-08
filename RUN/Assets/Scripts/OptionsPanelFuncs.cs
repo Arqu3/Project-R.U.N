@@ -12,8 +12,10 @@ public class OptionsPanelFuncs : MonoBehaviour
     //Component vars
     SimpleSmoothMouseLook m_Camera;
     MusicSystem m_Music;
+    ControllerUI m_UI;
     SoundEmitter m_Sounds;
     AmbienceHandler m_Ambience;
+    PausePanelFuncs m_Pause;
 
     //Sensitivity
     Text m_ControllerSensText;
@@ -26,6 +28,9 @@ public class OptionsPanelFuncs : MonoBehaviour
     //Sounds
     Text m_SoundText;
     Slider m_SoundSlider;
+
+    bool m_ToggleSound;
+    Toggle m_Toggle;
 
     void Start()
     {
@@ -56,6 +61,14 @@ public class OptionsPanelFuncs : MonoBehaviour
             {
                 m_Ambience = GameObject.Find("Ambience").GetComponent<AmbienceHandler>();
             }
+            if (GameObject.Find("Canvas").GetComponent<ControllerUI>())
+            {
+                m_UI = GameObject.Find("Canvas").GetComponent<ControllerUI>();
+            }
+            if (GameObject.Find("PausePanel").GetComponent<PausePanelFuncs>())
+            {
+                m_Pause = GameObject.Find("PausePanel").GetComponent<PausePanelFuncs>();
+            }
         }
 
         m_ControllerSensText = transform.FindChild("ControllerSensText").GetComponent<Text>();
@@ -69,6 +82,18 @@ public class OptionsPanelFuncs : MonoBehaviour
         m_SoundText = transform.FindChild("SoundText").GetComponent<Text>();
         m_SoundSlider = transform.FindChild("SoundSlider").GetComponent<Slider>();
         m_SoundSlider.value = PlayerPrefs.GetFloat("Sound Volume") * 100.0f;
+
+        m_Toggle = transform.FindChild("Toggle").GetComponent<Toggle>();
+
+        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
+        {
+            m_ToggleSound = true;
+        }
+        else
+        {
+            m_ToggleSound = false;
+        }
+        m_Toggle.isOn = !m_ToggleSound;
     }
 
     void Update()
@@ -82,6 +107,8 @@ public class OptionsPanelFuncs : MonoBehaviour
             m_SoundText = transform.FindChild("SoundText").GetComponent<Text>();
         if (!m_SoundSlider)
             m_SoundSlider = transform.FindChild("SoundSlider").GetComponent<Slider>();
+        if (!m_Toggle)
+            m_Toggle = transform.FindChild("Toggle").GetComponent<Toggle>();
         m_MusicText.text = "Music Volume: " + m_MusicSlider.value;
         m_SoundText.text = "Sound Volume: " + m_SoundSlider.value;
     }
@@ -106,8 +133,8 @@ public class OptionsPanelFuncs : MonoBehaviour
         if (m_Options || m_IsMainMenu)
         {
             PlayerPrefs.SetFloat("Music Volume", m_MusicSlider.value / 100);
-            if (m_Music)
-                m_Music.SetVolumeConst(PlayerPrefs.GetFloat("Music Volume", 0.5f));
+            if (m_UI && m_Pause.m_ToggleSound)
+                m_UI.SetVolume(PlayerPrefs.GetFloat("Music Volume", 0.5f));
         }
     }
 
@@ -116,10 +143,23 @@ public class OptionsPanelFuncs : MonoBehaviour
         if (m_Options || m_IsMainMenu)
         {
             PlayerPrefs.SetFloat("Sound Volume", m_SoundSlider.value / 100);
-            if (m_Sounds)
+            if (m_Sounds && m_Pause.m_ToggleSound)
                 m_Sounds.SetVolume(PlayerPrefs.GetFloat("Sound Volume", 0.5f));
-            if (m_Ambience)
+            if (m_Ambience && m_Pause.ToggleSound)
                 m_Ambience.SetVolume(PlayerPrefs.GetFloat("Sound Volume", 0.5f));
+        }
+    }
+
+    public void ToggleSound()
+    {
+        m_ToggleSound = !m_ToggleSound;
+        if (m_ToggleSound)
+        {
+            PlayerPrefs.SetInt("Toggle Sound", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("Toggle Sound", 0);
         }
     }
 }

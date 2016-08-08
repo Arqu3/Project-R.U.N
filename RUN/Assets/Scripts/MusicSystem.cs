@@ -26,14 +26,6 @@ public class MusicSystem : MonoBehaviour {
         }
     }
 
-    public void SetVolumeConst(float volume)
-    {
-        volume = Mathf.Clamp01(volume);
-        PlayerPrefs.SetFloat("Music Volume", volume);
-        m_Volume = volume;
-        m_AudioSource.volume = volume;
-    }
-
     IEnumerator LerpVolume(float toVolume)
     {
         m_AudioBusy = true;

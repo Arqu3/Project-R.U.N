@@ -13,11 +13,12 @@ public class Front : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.GetComponent<ParkourObject>() && m_Player.GetState() == MovementState.Jumping)
+        if (col.gameObject.GetComponent<ParkourObject>() && m_Player.GetState() != MovementState.Falling)
         {
             if (!m_HasSentMsg)
             {
                 m_Player.SetVerticalClimb(true);
+                Debug.Log("Climb");
                 m_HasSentMsg = true;
             }
         }

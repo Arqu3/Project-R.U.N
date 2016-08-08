@@ -16,10 +16,14 @@ public class ControllerUI : MonoBehaviour {
     bool m_MusicStarted = false;
     bool m_IsScoreScreen = false;
 
+    float m_MusicVolume;
+
 	void Start () {
         m_Init = false;
         m_Paused = false;
         m_MusicStarted = false;
+
+        m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
 
         if (transform.FindChild("BlinkText"))
             m_BlinkText = transform.FindChild("BlinkText").GetComponent<Text>();
@@ -43,16 +47,14 @@ public class ControllerUI : MonoBehaviour {
 
             Cursor.lockState = CursorLockMode.None;
 
-            float volume = 1;
-
             if (!m_PausePanel.ToggleSound)
             {
-                volume = 0;
+                m_MusicVolume = 0;
             }
-
-            Camera.main.GetComponent<MusicSystem>().SetVolume(volume);
-
-            Camera.main.GetComponent<MusicSystem>().PlayClip(0);
+            else
+            {
+                m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
+            }
             m_Init = true;
         }
         else
@@ -67,6 +69,10 @@ public class ControllerUI : MonoBehaviour {
             Time.timeScale = 1;
             PlayerPrefs.SetInt("Restart", 0);
         }
+
+        Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
+
+        Camera.main.GetComponent<MusicSystem>().PlayClip(0);
     }
 
     void Update () {
@@ -82,14 +88,10 @@ public class ControllerUI : MonoBehaviour {
             ScoreScreenUpdate();
         }
 
-        float volume = 1;
-
-        if (!m_PausePanel.ToggleSound)
+        if (m_PausePanel.ToggleSound)
         {
-            volume = 0;
+            Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
         }
-
-        Camera.main.GetComponent<MusicSystem>().SetVolume(volume);
     }
 
     void PauseUpdate()
@@ -164,5 +166,13 @@ public class ControllerUI : MonoBehaviour {
     void ToggleScoreScreen()
     {
         m_IsScoreScreen = !m_IsScoreScreen;
+    }
+
+    public void SetVolume(float volume)
+    {
+        volume = Mathf.Clamp01(volume);
+        m_MusicVolume = volume;
+        PlayerPrefs.SetFloat("Music Volume", volume);
+        Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
     }
 }
