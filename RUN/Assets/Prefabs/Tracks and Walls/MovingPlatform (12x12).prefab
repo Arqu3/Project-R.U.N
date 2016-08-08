@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 427846}
   - 198: {fileID: 19832776}
   - 199: {fileID: 19905768}
+  - 114: {fileID: 11407060}
   m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
@@ -355,7 +356,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 126776}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1518, y: 276, z: 1698}
+  m_LocalPosition: {x: 1498, y: 276, z: 1715}
   m_LocalScale: {x: 12, y: 2, z: 12}
   m_Children:
   - {fileID: 460652}
@@ -693,6 +694,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.3, z: 0.05}
   m_Center: {x: 0, y: 0.5, z: -0.5}
+--- !u!114 &11407060
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 111890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa9e4cd70f20594594bc039b19ddb6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11425870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -709,7 +721,7 @@ MonoBehaviour:
   m_StayOnReachedEnd: 0
   m_ReturnOnExit: 0
   m_Speed: 5
-  m_Distance: -15
+  m_Distance: 15
   m_PercentageOffset: 0
 --- !u!114 &11457672
 MonoBehaviour:

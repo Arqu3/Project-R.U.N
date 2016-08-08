@@ -51,6 +51,7 @@ GameObject:
   - 4: {fileID: 463058}
   - 198: {fileID: 19806662}
   - 199: {fileID: 19952830}
+  - 114: {fileID: 11407014}
   m_Layer: 8
   m_Name: ConstantParticles
   m_TagString: Untagged
@@ -68,6 +69,7 @@ GameObject:
   - 4: {fileID: 480994}
   - 198: {fileID: 19810932}
   - 199: {fileID: 19908340}
+  - 114: {fileID: 11466384}
   m_Layer: 8
   m_Name: BlinkParticles
   m_TagString: Untagged
@@ -356,6 +358,17 @@ MonoBehaviour:
   targetDirection: {x: 0, y: 0}
   targetCharacterDirection: {x: 0, y: 0}
   characterBody: {fileID: 0}
+--- !u!114 &11407014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa9e4cd70f20594594bc039b19ddb6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11418668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -380,6 +393,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Volume: 0
+--- !u!114 &11466384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 164482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa9e4cd70f20594594bc039b19ddb6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11476934
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3405,7 +3429,7 @@ ParticleSystemRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 164482}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
