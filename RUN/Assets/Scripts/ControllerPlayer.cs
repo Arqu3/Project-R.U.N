@@ -231,10 +231,6 @@ public class ControllerPlayer : MonoBehaviour
                     m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
                     m_MoveState = MovementState.Grabbing;
                 }
-                else if (m_IsVerticalClimb)
-                {
-                    m_MoveState = MovementState.VerticalClimbing;
-                }
                 else if (m_IsWallrunning)
                 {
                     m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
@@ -268,6 +264,10 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_OnGround = false;
             m_MoveState = MovementState.Climbing;
+        }
+        else if (m_IsVerticalClimb && !m_IsWallrunning)
+        {
+            m_MoveState = MovementState.VerticalClimbing;
         }
 
         m_AccelPercent = Mathf.Clamp(m_AccelPercent, 0, 100);
@@ -366,7 +366,7 @@ public class ControllerPlayer : MonoBehaviour
         if (m_MoveState.Equals(MovementState.Falling) || m_MoveState.Equals(MovementState.Jumping))
         {
             m_Rigidbody.AddForce(Vector3.down * (2.5f - Mathf.Clamp01(m_Rigidbody.velocity.y) * 1.5f), ForceMode.Impulse);
-            Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
+            //Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
         }
 
         if (m_MoveState.Equals(MovementState.Wallrunning)) {

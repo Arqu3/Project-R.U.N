@@ -12,7 +12,7 @@ public class Hands : MonoBehaviour {
 
     bool m_HasSentMsg;
 
-    void Start ()
+    void Start()
     {
         m_HasSentMsg = false;
 
@@ -21,7 +21,7 @@ public class Hands : MonoBehaviour {
         m_AnimHandler = GetComponentInParent<AnimationHandler>();
 	}
 	
-	void Update ()
+	void Update()
     { 
         if (m_CanClimb)
         {
