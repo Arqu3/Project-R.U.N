@@ -59,6 +59,8 @@ public class ControllerPlayer : MonoBehaviour
     bool m_CanBlinkCD = true;
     float m_FOVTimer;
     bool m_IsFOVChange = false;
+    ParticleSystem m_BlinkParticles;
+    ParticleSystem m_ConstantParticles;
 
     //Ledgegrab vars
     bool m_IsColliderActive = true;
@@ -115,6 +117,8 @@ public class ControllerPlayer : MonoBehaviour
         m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
 
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
+        m_BlinkParticles = Camera.main.transform.FindChild("BlinkParticles").GetComponent<ParticleSystem>();
+        m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
 
         m_CurBlinkCD = m_BlinkCD;
         m_FOVTimer = m_BlinkCD;
@@ -164,6 +168,10 @@ public class ControllerPlayer : MonoBehaviour
                         m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
                         HorizontalMovement(m_hMovement);
                     }
+                    else
+                    {
+                        m_Rigidbody.AddForce(transform.forward * Input.GetAxis("Vertical") * 0.5f + transform.right * Input.GetAxis("Horizontal") * 1, ForceMode.Impulse);
+                    }
 
                     if (m_WallrunInterrupted)
                     {
@@ -173,10 +181,19 @@ public class ControllerPlayer : MonoBehaviour
                 else
                 {
                     //Horizontal movement is enabled while in air
-                    m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-                    HorizontalMovement(m_hMovement);
-                    CalculateFriction(m_hMovement);
+
                     JumpUpdate();
+                    CalculateFriction(m_hMovement);
+
+                    m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.05f, 0, Input.GetAxis("Vertical") * 0.1f);
+                    HorizontalMovement(m_hMovement);
+
+
+                    if (m_WallrunInterrupted)
+                    {
+                        m_WallrunInterrupted = false;
+                    }
+
                 }
             }
         }
@@ -346,6 +363,12 @@ public class ControllerPlayer : MonoBehaviour
             }
         }
 
+        if (m_MoveState.Equals(MovementState.Falling) || m_MoveState.Equals(MovementState.Jumping))
+        {
+            m_Rigidbody.AddForce(Vector3.down * (2.5f - Mathf.Clamp01(m_Rigidbody.velocity.y) * 1.5f), ForceMode.Impulse);
+            Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
+        }
+
         if (m_MoveState.Equals(MovementState.Wallrunning)) {
             gravityBool = false;
             m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, - 1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
@@ -413,7 +436,7 @@ public class ControllerPlayer : MonoBehaviour
             }
 
             ray = new Ray(tempV + v, direction);
-            Debug.DrawRay(tempV + v, direction);
+            //Debug.DrawRay(tempV + v, direction);
 
             if (Physics.Raycast(ray, 1f, m_JumpMask))
             {
@@ -475,6 +498,9 @@ public class ControllerPlayer : MonoBehaviour
             m_IsFOVChange = true;
             m_IsBlinkCD = true;
             ToggleBlink();
+            m_FOVTimer = 0;
+
+            m_BlinkParticles.Play();
 
             if (RaycastDir(Vector3.down))
             {
@@ -489,6 +515,9 @@ public class ControllerPlayer : MonoBehaviour
         //Blinking
         if (m_IsBlinking)
         {
+
+            m_BlinkParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(0, 1, m_BlinkTimer / m_BlinkTime));
+            m_ConstantParticles.startColor = m_BlinkParticles.startColor;
             m_BlinkTimer += Time.deltaTime;
             Blink();
             Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_BlinkTimer / m_BlinkTime);
@@ -496,13 +525,15 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-            if (m_FOVTimer > 2 && m_FOVTimer != m_BlinkCD) {
-                Camera.main.fieldOfView = Mathf.Lerp(70, 90, m_FOVTimer - 2);
+            if (m_FOVTimer < 1) {
+                m_FOVTimer += Time.deltaTime;
+                Camera.main.fieldOfView = Mathf.Lerp(90, 70, m_FOVTimer / 1);
+                m_BlinkParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(1, 0, m_FOVTimer / 0.5f));
+                m_ConstantParticles.startColor = m_BlinkParticles.startColor;
             }
 
             else
                 Camera.main.fieldOfView = 70;
-
 
                 m_BlinkTimer = 0.0f;
             }
@@ -521,10 +552,10 @@ public class ControllerPlayer : MonoBehaviour
         //FOV timer
         if (m_IsBlinkCD && m_IsFOVChange)
         {
-            m_FOVTimer -= Time.deltaTime;
+            //m_FOVTimer += Time.deltaTime;
             if (m_FOVTimer <= 0.0f)
             {
-                m_FOVTimer = m_BlinkCD;
+               // m_FOVTimer = m_BlinkCD;
                 m_IsFOVChange = false;
             }
         }
