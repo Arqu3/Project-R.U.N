@@ -655,6 +655,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!4 &65276871 stripped
 Transform:
   m_PrefabParentObject: {fileID: 469176, guid: cd23b6c9f5f70d342afd1cf558f6a2b1, type: 2}
@@ -1163,6 +1164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1001 &116373822
 Prefab:
   m_ObjectHideFlags: 0
@@ -1344,6 +1346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1001 &129528786
 Prefab:
   m_ObjectHideFlags: 0
@@ -3106,7 +3109,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_RootOrder
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 131802, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_Name
@@ -3856,6 +3859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!4 &346978006 stripped
 Transform:
   m_PrefabParentObject: {fileID: 432778, guid: 15a19e34ac9b0c447aac0261452713c6, type: 2}
@@ -4079,6 +4083,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1001 &366467667
 Prefab:
   m_ObjectHideFlags: 0
@@ -4616,8 +4621,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Wallrunnable: 0
+  m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1001 &435523192
 Prefab:
   m_ObjectHideFlags: 0
@@ -6722,8 +6728,8 @@ Transform:
   - {fileID: 1970424320}
   - {fileID: 545242254}
   - {fileID: 744348129}
-  - {fileID: 648452343}
   - {fileID: 1210538958}
+  - {fileID: 648452343}
   - {fileID: 286203011}
   - {fileID: 1449430570}
   - {fileID: 1137087572}
@@ -8216,6 +8222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!4 &702024433 stripped
 Transform:
   m_PrefabParentObject: {fileID: 469176, guid: cd23b6c9f5f70d342afd1cf558f6a2b1, type: 2}
@@ -8470,6 +8477,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1 &726023867
 GameObject:
   m_ObjectHideFlags: 0
@@ -8649,7 +8657,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 457638, guid: 8b2c6df098363884c898f998328f4143, type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 124572, guid: 8b2c6df098363884c898f998328f4143, type: 2}
       propertyPath: m_Name
@@ -9654,6 +9662,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!23 &845360908
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -11365,6 +11374,10 @@ Prefab:
       propertyPath: m_EndText
       value: 
       objectReference: {fileID: 1461307108}
+    - target: {fileID: 11479048, guid: 86fc152ce79924948a6eca49de8b35ed, type: 2}
+      propertyPath: m_ResetDepth
+      value: -30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 86fc152ce79924948a6eca49de8b35ed, type: 2}
   m_IsPrefabParent: 0
@@ -12208,6 +12221,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!4 &1104728534 stripped
 Transform:
   m_PrefabParentObject: {fileID: 432778, guid: 15a19e34ac9b0c447aac0261452713c6, type: 2}
@@ -12403,7 +12417,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 452464, guid: 1033069c649731f4abfefd74baa3c02d, type: 2}
       propertyPath: m_RootOrder
-      value: 18
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 452464, guid: 1033069c649731f4abfefd74baa3c02d, type: 2}
       propertyPath: m_LocalScale.z
@@ -12636,7 +12650,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_RootOrder
-      value: 17
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 131802, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_Name
@@ -13133,7 +13147,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_RootOrder
-      value: 14
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_LocalScale.y
@@ -13769,6 +13783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 0
 --- !u!23 &1271616207
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -15213,7 +15228,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400152, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_RootOrder
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 131802, guid: b34fb7b8ed1ec124ab5765b31c5c725a, type: 2}
       propertyPath: m_Name
@@ -17609,6 +17624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!4 &1748792031 stripped
 Transform:
   m_PrefabParentObject: {fileID: 432778, guid: 15a19e34ac9b0c447aac0261452713c6, type: 2}
@@ -17699,6 +17715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 0
 --- !u!4 &1757742445 stripped
 Transform:
   m_PrefabParentObject: {fileID: 432778, guid: 15a19e34ac9b0c447aac0261452713c6, type: 2}
@@ -18349,67 +18366,67 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22413240, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.4871795
       objectReference: {fileID: 0}
     - target: {fileID: 22413240, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22402358, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.4871795
       objectReference: {fileID: 0}
     - target: {fileID: 22402358, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.4871795
       objectReference: {fileID: 0}
     - target: {fileID: 22402358, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22447890, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22447890, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22406322, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22406322, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22406322, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22443778, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22443778, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22493356, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22493356, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 22493356, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22485266, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -951.57007
+      value: -0.000061035156
       objectReference: {fileID: 0}
     - target: {fileID: 22479274, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMax.x
@@ -18433,7 +18450,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22485266, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 539.9605
+      value: 539.9606
       objectReference: {fileID: 0}
     - target: {fileID: 22414986, guid: 32c859efb73b3014aa3e20df5211d6d9, type: 2}
       propertyPath: m_AnchorMin.y
@@ -19043,6 +19060,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1001 &1907227782
 Prefab:
   m_ObjectHideFlags: 0
@@ -19848,30 +19866,6 @@ Prefab:
     - target: {fileID: 124572, guid: 8b2c6df098363884c898f998328f4143, type: 2}
       propertyPath: m_Name
       value: Obstacle03 (5)
-      objectReference: {fileID: 0}
-    - target: {fileID: 457638, guid: 8b2c6df098363884c898f998328f4143, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 0.8400001
-      objectReference: {fileID: 0}
-    - target: {fileID: 457638, guid: 8b2c6df098363884c898f998328f4143, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 0.8400001
-      objectReference: {fileID: 0}
-    - target: {fileID: 2384668, guid: 8b2c6df098363884c898f998328f4143, type: 2}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: aa6c28f620605b94283c2dff167c7696, type: 2}
-    - target: {fileID: 138078, guid: 8b2c6df098363884c898f998328f4143, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 171956, guid: 8b2c6df098363884c898f998328f4143, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 124572, guid: 8b2c6df098363884c898f998328f4143, type: 2}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8b2c6df098363884c898f998328f4143, type: 2}

@@ -6,6 +6,7 @@ public class ParkourObject : MonoBehaviour
 
     public bool m_Wallrunnable;
     public bool m_Climbable;
+    public bool m_VerticalClimbable;
 
     void Start()
     {

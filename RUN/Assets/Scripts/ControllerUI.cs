@@ -46,15 +46,6 @@ public class ControllerUI : MonoBehaviour {
             PauseUpdate();
 
             Cursor.lockState = CursorLockMode.None;
-
-            if (!m_PausePanel.ToggleSound)
-            {
-                m_MusicVolume = 0;
-            }
-            else
-            {
-                m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
-            }
             m_Init = true;
         }
         else
@@ -68,6 +59,15 @@ public class ControllerUI : MonoBehaviour {
             m_Player.ToggleControls(true);
             Time.timeScale = 1;
             PlayerPrefs.SetInt("Restart", 0);
+        }
+
+        if (!m_PausePanel.ToggleSound)
+        {
+            m_MusicVolume = 0;
+        }
+        else
+        {
+            m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
         }
 
         Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
