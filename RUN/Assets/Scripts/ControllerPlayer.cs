@@ -366,7 +366,6 @@ public class ControllerPlayer : MonoBehaviour
         if (m_MoveState.Equals(MovementState.Falling) || m_MoveState.Equals(MovementState.Jumping))
         {
             m_Rigidbody.AddForce(Vector3.down * (2.5f - Mathf.Clamp01(m_Rigidbody.velocity.y) * 1.5f), ForceMode.Impulse);
-            Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
         }
 
         if (m_MoveState.Equals(MovementState.Wallrunning)) {
