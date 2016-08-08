@@ -23,13 +23,16 @@ public class MainMenuFuncs : MonoBehaviour
 
 	void Start ()
     {
-        m_State = State.None;
+        m_State = State.IsOut;
         m_LevelSelect = GameObject.Find("LevelSelectButtons");
         m_Options = GameObject.Find("OptionButtons");
         m_Instructions = GameObject.Find("Instructions");
 
         m_Handler = GetComponent<MainMenuHandler>();
         m_Animator = GetComponent<Animator>();
+
+        Time.timeScale = 1.0f;
+        m_Animator.SetFloat("Direction", 1.0f);
     }
 	
 	void Update ()
