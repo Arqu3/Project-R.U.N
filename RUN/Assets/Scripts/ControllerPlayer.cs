@@ -859,7 +859,7 @@ public class ControllerPlayer : MonoBehaviour
     {
         if (m_MoveState.Equals(MovementState.VerticalClimbing))
         {
-            m_Rigidbody.useGravity = false;
+            ToggleGravity(false);
             bool controllerVertical = false;
             if (Input.GetAxis("Vertical") > 0)
             {

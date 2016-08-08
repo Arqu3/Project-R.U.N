@@ -26,7 +26,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 133958}
   m_LocalRotation: {x: 0, y: -0.38268346, z: 0, w: 0.9238795}
-  m_LocalPosition: {x: 949.8, y: 265.3, z: 2128.93}
+  m_LocalPosition: {x: 917.07, y: 265.3, z: 2185.35}
   m_LocalScale: {x: 2, y: 12, z: 48}
   m_Children: []
   m_Father: {fileID: 0}
@@ -89,6 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 1
   m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

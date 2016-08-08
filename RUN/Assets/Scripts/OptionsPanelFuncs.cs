@@ -99,6 +99,12 @@ public class OptionsPanelFuncs : MonoBehaviour
     void Update()
     {
         m_ControllerSensText.text = "Look Sensitivity: " + m_ControllerSensSlider.value / 10;
+        m_MusicText.text = "Music Volume: " + m_MusicSlider.value;
+        m_SoundText.text = "Sound Volume: " + m_SoundSlider.value;
+    }
+
+    void LateUpdate()
+    {
         if (!m_MusicText)
             m_MusicText = transform.FindChild("MusicText").GetComponent<Text>();
         if (!m_MusicSlider)
@@ -109,8 +115,6 @@ public class OptionsPanelFuncs : MonoBehaviour
             m_SoundSlider = transform.FindChild("SoundSlider").GetComponent<Slider>();
         if (!m_Toggle)
             m_Toggle = transform.FindChild("Toggle").GetComponent<Toggle>();
-        m_MusicText.text = "Music Volume: " + m_MusicSlider.value;
-        m_SoundText.text = "Sound Volume: " + m_SoundSlider.value;
     }
 
     public void ButtonOptions()
@@ -161,5 +165,10 @@ public class OptionsPanelFuncs : MonoBehaviour
         {
             PlayerPrefs.SetInt("Toggle Sound", 0);
         }
+    }
+
+    public bool GetIsSound()
+    {
+        return m_ToggleSound;
     }
 }

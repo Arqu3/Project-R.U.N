@@ -21,7 +21,8 @@ public class MusicSystem : MonoBehaviour {
 
     public void SetVolume(float volume)
     {
-        if (volume != m_Volume && !m_AudioBusy) { 
+        if (volume != m_Volume && !m_AudioBusy) {
+            PlayerPrefs.SetFloat("Music Volume", volume);
             StartCoroutine(LerpVolume(volume));
         }
     }
