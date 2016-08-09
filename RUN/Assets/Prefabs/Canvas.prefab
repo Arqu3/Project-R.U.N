@@ -400,6 +400,7 @@ GameObject:
   - 224: {fileID: 22497132}
   - 222: {fileID: 22266894}
   - 114: {fileID: 11494456}
+  - 114: {fileID: 11447154}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -2569,6 +2570,18 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &11447154
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fe1f40e66cc9824682d7040013c9e86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  logoImage: {fileID: 21300000, guid: ba694d3ddb316424e8ecd65832ef1f43, type: 3}
 --- !u!114 &11447232
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3379,6 +3392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: add8a0f36abc1944c9f7ee9fd2b9c0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_ToggleSound: 0
 --- !u!114 &11470186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4101,6 +4115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Options: 0
+  m_IsMainMenu: 0
 --- !u!114 &11499292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5866,7 +5881,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -951.57, y: 539.9606}
+  m_AnchoredPosition: {x: -1040.2767, y: 494.29022}
   m_SizeDelta: {x: 498, y: 332}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &22485398

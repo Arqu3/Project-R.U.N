@@ -9,12 +9,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 457638}
   - 54: {fileID: 5480654}
+  - 114: {fileID: 11447098}
   m_Layer: 0
   m_Name: Obstacle03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &138078
 GameObject:
@@ -32,7 +33,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &171956
 GameObject:
@@ -51,7 +52,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &437326
 Transform:
@@ -71,9 +72,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 124572}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.96, y: 12.02, z: -31.855}
-  m_LocalScale: {x: 0.84000003, y: 0.84000003, z: 0.84000003}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
+  m_LocalPosition: {x: 20, y: 8.86, z: 729.85}
+  m_LocalScale: {x: 0.8400001, y: 0.84000003, z: 0.8400001}
   m_Children:
   - {fileID: 437326}
   - {fileID: 483976}
@@ -101,7 +102,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 05884f09936eeaf49ac304fe361e15a4, type: 2}
+  - {fileID: 2100000, guid: aa6c28f620605b94283c2dff167c7696, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -193,6 +194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
   m_Climbable: 1
+  m_VerticalClimbable: 0
 --- !u!114 &11446782
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -204,6 +206,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1e5eccefbc8d8d48b4113257d592629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11447098
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 124572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Wallrunnable: 1
+  m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

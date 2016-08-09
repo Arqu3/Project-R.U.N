@@ -10,23 +10,18 @@ public class PausePanelFuncs : MonoBehaviour {
 
     ControllerUI m_UI;
     Toggle m_MusicToggle;
+    OptionsPanelFuncs m_Options;
 
     void Awake()
     {
         m_MusicToggle = GameObject.Find("Toggle").GetComponent<Toggle>();
+        m_Options = GameObject.Find("OptionsPanel").GetComponent<OptionsPanelFuncs>();
     }
 
     void Start()
     {
-        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
-        {
-            m_ToggleSound = true;
-        }
-        else
-        {
-            m_ToggleSound = false;
-        }
-        m_MusicToggle.isOn = !m_ToggleSound;
+        m_ToggleSound = m_Options.GetIsSound();
+        m_MusicToggle.isOn = m_Options.GetIsSound();
 
         m_UI = GetComponentInParent<ControllerUI>();
     }
@@ -69,6 +64,7 @@ public class PausePanelFuncs : MonoBehaviour {
             Camera.main.GetComponent<MusicSystem>().SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Music Volume", 0.5f)));
             Camera.main.GetComponentInChildren<AmbienceHandler>().SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Sound Volume", 0.5f)));
             GameObject.Find("AudioEmitter").GetComponent<SoundEmitter>().SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Sound Volume", 0.5f)));
+            Debug.Log("Sound enabled");
         }
         else
         {
@@ -76,6 +72,7 @@ public class PausePanelFuncs : MonoBehaviour {
             Camera.main.GetComponent<MusicSystem>().SetVolume(0);
             Camera.main.GetComponentInChildren<AmbienceHandler>().SetVolume(0);
             GameObject.Find("AudioEmitter").GetComponent<SoundEmitter>().SetVolume(0);
+            Debug.Log("Sound disabled");
         }
     }
 }
