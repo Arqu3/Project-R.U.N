@@ -81,18 +81,17 @@ public class SoundEmitter : MonoBehaviour {
 
     IEnumerator CrossfadeClip()
     {
-        float timer = m_crossfadeTime;
+        float timer = 0;
         float min = m_Volume, max = 0;
 
         for (int i = 0; i < 2; i++)
         {
-        
             if (i == 1)
             {
                 PlayClip(m_crossfadeClipIndex);
 
-                min = max;
-                max = 0;
+                max = min;
+                min = 0;
             }
 
             while (timer < m_crossfadeTime * 0.5f)
@@ -104,7 +103,14 @@ public class SoundEmitter : MonoBehaviour {
 
             SetVolume(max);
             timer = 0;
+
+            Debug.Log("LOOPING");
         }
+    }
+
+    public void ToggleLoop(bool active)
+    {
+        m_AudioSource.loop = active;
     }
 
 }
