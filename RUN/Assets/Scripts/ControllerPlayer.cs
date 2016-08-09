@@ -47,6 +47,7 @@ public class ControllerPlayer : MonoBehaviour
     Sides m_MySides;
     SoundEmitter m_FootStepEmitter;
     SoundEmitter m_BlinkSoundEmitter;
+    SoundEmitter m_BlinkChargeSoundEmitter;
 
     //Blink vars
     bool m_IsBlinking = false;
@@ -120,6 +121,7 @@ public class ControllerPlayer : MonoBehaviour
         m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
 
         m_BlinkSoundEmitter = m_BlinkParticles.GetComponent<SoundEmitter>();
+        m_BlinkChargeSoundEmitter = Camera.main.transform.FindChild("BlinkChargeEmitter").GetComponent<SoundEmitter>();
 
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
@@ -503,8 +505,11 @@ public class ControllerPlayer : MonoBehaviour
             ToggleBlink();
             m_FOVTimer = 0;
 
+            //Audio
             m_BlinkSoundEmitter.PlayRandomClip(2);
             m_BlinkParticles.Play();
+            m_BlinkChargeSoundEmitter.ToggleLoop(true);
+            m_BlinkChargeSoundEmitter.PlayClip(0);
 
             if (RaycastDir(Vector3.down))
             {
@@ -541,10 +546,18 @@ public class ControllerPlayer : MonoBehaviour
                 m_BlinkTimer = 0.0f;
             }
 
+
+
         //Blink cooldown
         if (m_IsBlinkCD && m_CanBlinkCD)
         {
-            
+            if (m_CurBlinkCD == m_BlinkCD)
+            {
+                Debug.Log("Triggered");
+
+                m_BlinkChargeSoundEmitter.CrossfadeToClip(1, 0.3f);
+                m_BlinkChargeSoundEmitter.ToggleLoop(false);
+            }
 
             m_CurBlinkCD -= Time.deltaTime;
             if (m_CurBlinkCD <= 0.0f)
@@ -583,6 +596,7 @@ public class ControllerPlayer : MonoBehaviour
     {
         m_IsBlinkCD = false;
         m_CurBlinkCD = m_BlinkCD;
+        m_BlinkChargeSoundEmitter.ToggleLoop(false);
     }
 
     bool IsMovingForward()
