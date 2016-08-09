@@ -6,10 +6,10 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: mat_lightsource 1
+  m_Name: genericWall 2x
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _EMISSION _NORMALMAP
-  m_LightmapFlags: 0
+  m_ShaderKeywords: _NORMALMAP
+  m_LightmapFlags: 5
   m_CustomRenderQueue: -1
   stringTagMap: {}
   m_SavedProperties:
@@ -19,14 +19,14 @@ Material:
         first:
           name: _MainTex
         second:
-          m_Texture: {fileID: 2800000, guid: 8a9c251883af17e4d8ffd47b94d149b3, type: 3}
-          m_Scale: {x: 1, y: 1}
+          m_Texture: {fileID: 2800000, guid: c9b5c3ebb189b0d47b17f0b097984803, type: 3}
+          m_Scale: {x: 2, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
           name: _BumpMap
         second:
-          m_Texture: {fileID: 2800000, guid: 5ee5369da1f8e56459fd48233310f98a, type: 3}
+          m_Texture: {fileID: 2800000, guid: 970d9dfefbb9b434c86137d28cc7988d, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
@@ -55,7 +55,7 @@ Material:
           name: _EmissionMap
         second:
           m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
+          m_Scale: {x: 2, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -69,7 +69,7 @@ Material:
           name: _DetailAlbedoMap
         second:
           m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
+          m_Scale: {x: 2, y: 1}
           m_Offset: {x: 0, y: 0}
       data:
         first:
@@ -102,7 +102,7 @@ Material:
       data:
         first:
           name: _Glossiness
-        second: 0.48
+        second: 0.506
       data:
         first:
           name: _BumpScale
@@ -131,8 +131,8 @@ Material:
       data:
         first:
           name: _EmissionColor
-        second: {r: 2.747, g: 2.2165449, b: 0, a: 1}
+        second: {r: 0, g: 0, b: 0, a: 1}
       data:
         first:
           name: _Color
-        second: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+        second: {r: 1, g: 1, b: 1, a: 1}

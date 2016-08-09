@@ -7,7 +7,12 @@ public class SoundEmitter : MonoBehaviour {
     public float m_Volume = 0.1f;
     public AudioClip[] m_AudioClips;
     AudioSource m_AudioSource;
-    
+
+    float m_crossfadeTime;
+    int m_crossfadeClipIndex;
+
+    int m_CurrentClipIndex;
+
     void Awake()
     {
         m_AudioSource = GetComponent<AudioSource>();
@@ -16,9 +21,10 @@ public class SoundEmitter : MonoBehaviour {
         m_AudioSource.volume = m_Volume;
     }
 
-	void Start ()
+    void Update()
     {
-	}
+
+    }
 
     /// <summary>
     /// Plays the clip at the index from AudioClips
@@ -27,6 +33,7 @@ public class SoundEmitter : MonoBehaviour {
     public void PlayClip(int index)
     {
         m_AudioSource.clip = m_AudioClips[index];
+        m_CurrentClipIndex = index;
         m_AudioSource.Play();
     }
 
@@ -36,7 +43,10 @@ public class SoundEmitter : MonoBehaviour {
     /// <param name="offset"></param>
     public void PlayRandomClip(int offset)
     {
-        PlayClip(Mathf.RoundToInt(Random.Range(offset, m_AudioClips.Length)));
+        int random = Mathf.RoundToInt(Random.Range(offset, m_AudioClips.Length));
+        m_CurrentClipIndex = random;
+
+        PlayClip(random);
     }
 
     /// <summary>
@@ -49,7 +59,10 @@ public class SoundEmitter : MonoBehaviour {
         if (max > m_AudioClips.Length)
             max = m_AudioClips.Length;
 
-        PlayClip(Mathf.RoundToInt(Random.Range(min, max)));
+        int random = Mathf.RoundToInt(Random.Range(min, max));
+        m_CurrentClipIndex = random;
+
+        PlayClip(random);
     }
 
     public void SetVolume(float volume)
@@ -58,4 +71,46 @@ public class SoundEmitter : MonoBehaviour {
         m_Volume = volume;
         m_AudioSource.volume = m_Volume;
     }
+
+    public void CrossfadeToClip(int index, float time)
+    {
+        m_crossfadeClipIndex = index;
+        m_crossfadeTime = time;
+        StartCoroutine(CrossfadeClip());
+    }
+
+    IEnumerator CrossfadeClip()
+    {
+        float timer = 0;
+        float min = m_Volume, max = 0;
+
+        for (int i = 0; i < 2; i++)
+        {
+            if (i == 1)
+            {
+                PlayClip(m_crossfadeClipIndex);
+
+                max = min;
+                min = 0;
+            }
+
+            while (timer < m_crossfadeTime * 0.5f)
+            {
+                SetVolume(Mathf.Lerp(min, max, timer / (m_crossfadeTime * 0.5f)));
+                timer += Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+
+            SetVolume(max);
+            timer = 0;
+
+            Debug.Log("LOOPING");
+        }
+    }
+
+    public void ToggleLoop(bool active)
+    {
+        m_AudioSource.loop = active;
+    }
+
 }
