@@ -46,6 +46,7 @@ public class ControllerPlayer : MonoBehaviour
     Hands m_PlayerHands;
     Sides m_MySides;
     SoundEmitter m_FootStepEmitter;
+    SoundEmitter m_BlinkSoundEmitter;
 
     //Blink vars
     bool m_IsBlinking = false;
@@ -117,6 +118,8 @@ public class ControllerPlayer : MonoBehaviour
         m_FootStepEmitter = transform.FindChild("AudioEmitter").GetComponent<SoundEmitter>();
         m_BlinkParticles = Camera.main.transform.FindChild("BlinkParticles").GetComponent<ParticleSystem>();
         m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
+
+        m_BlinkSoundEmitter = m_BlinkParticles.GetComponent<SoundEmitter>();
 
         m_MeshCol = transform.FindChild("Collider").GetComponent<CapsuleCollider>();
 
@@ -500,6 +503,7 @@ public class ControllerPlayer : MonoBehaviour
             ToggleBlink();
             m_FOVTimer = 0;
 
+            m_BlinkSoundEmitter.PlayRandomClip(2);
             m_BlinkParticles.Play();
 
             if (RaycastDir(Vector3.down))
@@ -515,7 +519,6 @@ public class ControllerPlayer : MonoBehaviour
         //Blinking
         if (m_IsBlinking)
         {
-
             m_BlinkParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(0, 1, m_BlinkTimer / m_BlinkTime));
             m_ConstantParticles.startColor = m_BlinkParticles.startColor;
             m_BlinkTimer += Time.deltaTime;
@@ -541,6 +544,8 @@ public class ControllerPlayer : MonoBehaviour
         //Blink cooldown
         if (m_IsBlinkCD && m_CanBlinkCD)
         {
+            
+
             m_CurBlinkCD -= Time.deltaTime;
             if (m_CurBlinkCD <= 0.0f)
             {
