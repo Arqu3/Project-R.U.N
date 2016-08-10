@@ -510,7 +510,7 @@ public class ControllerPlayer : MonoBehaviour
             m_BlinkSoundEmitter.PlayRandomClip(2);
             m_BlinkParticles.Play();
             m_BlinkChargeSoundEmitter.ToggleLoop(true);
-            m_BlinkChargeSoundEmitter.PlayClip(0);
+            //m_BlinkChargeSoundEmitter.PlayClip(0);
 
             if (RaycastDir(Vector3.down))
             {
@@ -554,9 +554,7 @@ public class ControllerPlayer : MonoBehaviour
         {
             if (m_CurBlinkCD == m_BlinkCD)
             {
-                Debug.Log("Triggered");
-
-                m_BlinkChargeSoundEmitter.CrossfadeToClip(1, 0.3f);
+                m_BlinkChargeSoundEmitter.CrossfadeToClip(1 + Mathf.RoundToInt(Random.value), 0.3f);
                 m_BlinkChargeSoundEmitter.ToggleLoop(false);
             }
 
@@ -597,6 +595,7 @@ public class ControllerPlayer : MonoBehaviour
     {
         m_IsBlinkCD = false;
         m_CurBlinkCD = m_BlinkCD;
+        m_BlinkChargeSoundEmitter.Pause(true);
         m_BlinkChargeSoundEmitter.ToggleLoop(false);
     }
 
