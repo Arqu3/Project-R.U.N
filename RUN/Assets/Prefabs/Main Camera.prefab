@@ -36,7 +36,7 @@ GameObject:
   - 82: {fileID: 8220120}
   m_Layer: 8
   m_Name: BlinkChargeEmitter
-  m_TagString: Untagged
+  m_TagString: Sound Emitter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -93,7 +93,7 @@ GameObject:
   - 114: {fileID: 11484840}
   m_Layer: 8
   m_Name: BlinkParticles
-  m_TagString: Untagged
+  m_TagString: Sound Emitter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,8 +133,8 @@ Transform:
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children:
   - {fileID: 427026}
-  - {fileID: 480994}
   - {fileID: 479072}
+  - {fileID: 480994}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &479072
@@ -148,7 +148,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 472102}
-  m_RootOrder: 2
+  m_RootOrder: 1
 --- !u!4 &480994
 Transform:
   m_ObjectHideFlags: 1
@@ -161,7 +161,7 @@ Transform:
   m_Children:
   - {fileID: 463058}
   m_Father: {fileID: 472102}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!20 &2025742
 Camera:
   m_ObjectHideFlags: 1
@@ -593,7 +593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_audioClips:
   - {fileID: 8300000, guid: 866db7e8bf54a5446b1b5005e151871a, type: 3}
-  - {fileID: 8300000, guid: 37122e98af0f34f49a2b62c9c7aad36f, type: 3}
+  - {fileID: 8300000, guid: 91c2b4f0fad4b8a40b497bdf71b925ad, type: 3}
   m_Volume: 1
 --- !u!114 &11403648
 MonoBehaviour:
@@ -3781,7 +3781,7 @@ ParticleSystemRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152138}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
