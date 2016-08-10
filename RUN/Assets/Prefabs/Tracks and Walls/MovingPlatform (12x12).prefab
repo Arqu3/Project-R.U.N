@@ -356,7 +356,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 126776}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1498, y: 276, z: 1715}
+  m_LocalPosition: {x: 1437, y: 438, z: 1212}
   m_LocalScale: {x: 12, y: 2, z: 12}
   m_Children:
   - {fileID: 460652}
@@ -656,8 +656,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.05, y: 0.3, z: 1}
-  m_Center: {x: -0.5, y: 0.5, z: 0}
+  m_Size: {x: 0.05, y: 1, z: 1}
+  m_Center: {x: -0.5, y: 0, z: 0}
 --- !u!65 &6539258
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -668,8 +668,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.05, y: 0.3, z: 1}
-  m_Center: {x: 0.5, y: 0.5, z: 0}
+  m_Size: {x: 0.05, y: 1, z: 1}
+  m_Center: {x: 0.5, y: 0, z: 0}
 --- !u!65 &6563778
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -680,8 +680,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.3, z: 0.05}
-  m_Center: {x: 0, y: 0.5, z: 0.5}
+  m_Size: {x: 1, y: 1, z: 0.05}
+  m_Center: {x: 0, y: 0, z: 0.5}
 --- !u!65 &6589438
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -692,8 +692,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.3, z: 0.05}
-  m_Center: {x: 0, y: 0.5, z: -0.5}
+  m_Size: {x: 1, y: 1, z: 0.05}
+  m_Center: {x: 0, y: 0, z: -0.5}
 --- !u!114 &11407060
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -716,12 +716,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 295ccb31ac4f8c643adc51867027e0fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Direction: 2
-  m_Mode: 0
-  m_StayOnReachedEnd: 0
+  m_Direction: 0
+  m_Mode: 1
+  m_StayOnReachedEnd: 1
   m_ReturnOnExit: 0
-  m_Speed: 5
-  m_Distance: 15
+  m_Speed: 100
+  m_Distance: -1500
   m_PercentageOffset: 0
 --- !u!114 &11457672
 MonoBehaviour:
@@ -736,6 +736,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
   m_Climbable: 1
+  m_VerticalClimbable: 0
 --- !u!114 &11468920
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -749,6 +750,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Wallrunnable: 0
   m_Climbable: 0
+  m_VerticalClimbable: 0
 --- !u!198 &19832776
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -2254,7 +2256,7 @@ ParticleSystemRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 111890}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
