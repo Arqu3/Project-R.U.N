@@ -27,6 +27,14 @@ public class MusicSystem : MonoBehaviour {
         }
     }
 
+    public void SetVolumeMuted(float volume)
+    {
+        if (volume != m_Volume && !m_AudioBusy)
+        {
+            StartCoroutine(LerpVolume(volume));
+        }
+    }
+
     IEnumerator LerpVolume(float toVolume)
     {
         m_AudioBusy = true;
