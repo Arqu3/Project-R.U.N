@@ -88,6 +88,21 @@ public class PlayerCheckpoint : MonoBehaviour
         }
 	}
 
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawLine(new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + 1000), new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + -1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + 1000), new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + 1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + -1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + 1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + 1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + 1000));
+    }
+
     void Update ()
     {
         if (Input.GetKeyDown(KeyCode.F12))

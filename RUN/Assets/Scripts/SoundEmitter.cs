@@ -113,4 +113,12 @@ public class SoundEmitter : MonoBehaviour {
         m_AudioSource.loop = active;
     }
 
+    public void Pause(bool active)
+    {
+        if (active)
+            m_AudioSource.Pause();
+        else
+            m_AudioSource.Play();
+    }
+
 }
