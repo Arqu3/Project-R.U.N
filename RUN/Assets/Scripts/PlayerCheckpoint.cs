@@ -37,6 +37,7 @@ public class PlayerCheckpoint : MonoBehaviour
 
     float m_FTemp = 0.0f;
     string m_SaveString = "";
+    string m_CompleteTime;
 
     void Start ()
     {
@@ -113,7 +114,7 @@ public class PlayerCheckpoint : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F11))
         {
-            Debug.Log(PlayerPrefs.GetFloat("HighScore", Mathf.Infinity));
+            Debug.Log(PlayerPrefs.GetFloat("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString(), Mathf.Infinity));
         }
 
         m_IsColliding = false;
@@ -211,7 +212,7 @@ public class PlayerCheckpoint : MonoBehaviour
                     SetHighscore(m_ElapsedTime);
                     if (m_EndText)
                     {
-                        m_EndText.text = "Level Complete!\nTime: " + m_ElapsedTime.ToString("F1");
+                        m_EndText.text = "Level Complete!\nTime: " + m_CompleteTime;
                     }
                     m_HasSetScore = true;
                 }
@@ -233,22 +234,15 @@ public class PlayerCheckpoint : MonoBehaviour
             m_ElapsedTime += Time.deltaTime;
         }
 
-        string minutes = ((int)(m_ElapsedTime / 60f)).ToString();
-        string seconds = ((int)(m_ElapsedTime - ((int)(m_ElapsedTime / 60f)))).ToString();
+        int minutes = Mathf.FloorToInt(m_ElapsedTime / 60f);
+        int seconds = Mathf.FloorToInt(m_ElapsedTime - minutes * 60f);
         string decimals = (m_ElapsedTime - (int)m_ElapsedTime).ToString("F2");
         decimals = decimals.Remove(0, 2);
 
+        string time = String.Format("{0:00}:{1:00}", minutes, seconds) + ":" + decimals;
 
-        if ((int)(m_ElapsedTime / 60f) < 10)
-        {
-            minutes = minutes.Insert(0, "0");
-        }
-        if ((int)(m_ElapsedTime - ((int)(m_ElapsedTime / 60f))) < 10)
-        {
-            seconds = seconds.Insert(0, "0");
-        }
-
-        m_ElapsedText.text = minutes + ":" + seconds + ":" + decimals;
+        m_ElapsedText.text = time;
+        m_CompleteTime = time;
 
         if (m_ReachedCheckpoint)
         {
@@ -279,7 +273,12 @@ public class PlayerCheckpoint : MonoBehaviour
             string s = "";
             for (int i = 0; i < t; i++)
             {
-                s += i + 1 + ": " + m_HighScores[i] + "\n";
+                minutes = Mathf.FloorToInt(m_HighScores[i] / 60f);
+                seconds = Mathf.FloorToInt(m_HighScores[i] - minutes * 60f);
+                decimals = (m_HighScores[i] - (int)m_HighScores[i]).ToString("F2");
+                decimals = decimals.Remove(0, 2);
+                time = String.Format("{0:00}:{1:00}", minutes, seconds) + ":" + decimals;
+                s += i + 1 + ": " + time + "\n";
             }
             m_HighscoreText.text = "Your best times:\n" + s;
 
@@ -288,24 +287,24 @@ public class PlayerCheckpoint : MonoBehaviour
 
     void SetHighscore(float score)
     {
-        float oldHighScore = PlayerPrefs.GetFloat("HighScore", Mathf.Infinity);
+        float oldHighScore = PlayerPrefs.GetFloat("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString(), Mathf.Infinity);
 
         if (score < oldHighScore)
         {
             Debug.Log("New best time!");
-            PlayerPrefs.SetFloat("HighScore", score);
+            PlayerPrefs.SetFloat("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString(), score);
             PlayerPrefs.Save();
         }
 
         //Save current score to string, add that to the total score string
-        m_SaveString = score.ToString("F1", CultureInfo.InvariantCulture.NumberFormat) + " ";
-        string temp = PlayerPrefs.GetString("Time", "");
+        m_SaveString = score.ToString("F2", CultureInfo.InvariantCulture.NumberFormat) + " ";
+        string temp = PlayerPrefs.GetString("Time" + SceneManager.GetActiveScene().buildIndex.ToString(), "");
         temp += m_SaveString;
-        PlayerPrefs.SetString("Time", temp);
+        PlayerPrefs.SetString("Time" + SceneManager.GetActiveScene().buildIndex.ToString(), temp);
 
         //Get total score string and split it at every " "
         char[] splits = { ' ' };
-        string[] elements = PlayerPrefs.GetString("Time", "").Split(splits);
+        string[] elements = PlayerPrefs.GetString("Time" + SceneManager.GetActiveScene().buildIndex.ToString(), "").Split(splits);
 
         //Parse every score string in elements
         for (int i = 0; i < elements.Length - 1; i++)
