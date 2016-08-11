@@ -5,6 +5,7 @@ using System.Collections;
 public class DisableInactiveParticles : MonoBehaviour
 {
     ParticleSystem.Particle[] m_unused = new ParticleSystem.Particle[1];
+    public bool m_bypass;
 
     void Awake()
     {
@@ -14,6 +15,10 @@ public class DisableInactiveParticles : MonoBehaviour
 	// Update is called once per frame
 	void LateUpdate ()
     {
-        GetComponent<ParticleSystemRenderer>().enabled = GetComponent<ParticleSystem>().GetParticles(m_unused) > 0;
-	}
+        if (!m_bypass)
+            GetComponent<ParticleSystemRenderer>().enabled = GetComponent<ParticleSystem>().GetParticles(m_unused) > 0;
+        else
+            GetComponent<ParticleSystemRenderer>().enabled = true;
+
+    }
 }

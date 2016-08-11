@@ -20,6 +20,7 @@ public class ControllerPlayer : MonoBehaviour
     public float m_AccelMultiplier = 1.0f;
     public float m_JumpForce;
     public float m_FallThreshold = 1.0f;
+    public float m_SlopeValue = 0.7f;
     public LayerMask m_BlinkMask;
     public LayerMask m_JumpMask;
     public bool m_IsAirControl = false;
@@ -38,6 +39,7 @@ public class ControllerPlayer : MonoBehaviour
     float m_AccelPercent = 0;
     bool m_OnGround;
     bool m_ControlsActive = true;
+    ParticleSystem m_SanicParticles;
 
     //Component vars
     Rigidbody m_Rigidbody;
@@ -110,6 +112,11 @@ public class ControllerPlayer : MonoBehaviour
     float m_CurrentStepTime;
     MovementState m_lastState;
 
+    //Slope vars
+    bool m_CanMoveForward = true;
+    RaycastHit m_SlopeHit;
+    Vector3 m_SlopeDirection;
+
     void Start()
     {
         m_PlayerHands = GetComponentInChildren<Hands>();
@@ -120,6 +127,7 @@ public class ControllerPlayer : MonoBehaviour
 
         m_BlinkParticles = Camera.main.transform.FindChild("BlinkParticles").GetComponent<ParticleSystem>();
         m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
+        m_SanicParticles = Camera.main.transform.FindChild("SanicParticles").GetComponent<ParticleSystem>();
 
         m_BlinkSoundEmitter = m_BlinkParticles.GetComponent<SoundEmitter>();
         m_BlinkChargeSoundEmitter = Camera.main.transform.FindChild("BlinkChargeEmitter").GetComponent<SoundEmitter>();
@@ -138,6 +146,8 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_ControlsActive)
         {
+            UpdateSlopeDir();
+
             DampeningUpdate();
 
             CheckNotMovingFromInput();
@@ -160,6 +170,8 @@ public class ControllerPlayer : MonoBehaviour
 
             CheckCanBlinkCD();
 
+            UpdateParticles();
+
             if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
                 if (!m_IsAirControl)
@@ -171,12 +183,15 @@ public class ControllerPlayer : MonoBehaviour
                     //Disable horizontal movement while in air
                     if (!m_MoveState.Equals(MovementState.Jumping) && !m_MoveState.Equals(MovementState.Falling))
                     {
-                        m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
-                        HorizontalMovement(m_hMovement);
+                        if (m_CanMoveForward)
+                        {
+                            m_hMovement = new Vector3(Input.GetAxis("Horizontal") * 0.6f, 0, Input.GetAxis("Vertical"));
+                            HorizontalMovement(m_hMovement);
+                        }
                     }
                     else
                     {
-                        m_Rigidbody.AddForce(transform.forward * Input.GetAxis("Vertical") * 0.5f + transform.right * Input.GetAxis("Horizontal") * 1, ForceMode.Impulse);
+                        //m_Rigidbody.AddForce(transform.forward * Input.GetAxis("Vertical") * 0.5f + transform.right * Input.GetAxis("Horizontal") * 1, ForceMode.Impulse);
                     }
 
                     if (m_WallrunInterrupted)
@@ -208,6 +223,12 @@ public class ControllerPlayer : MonoBehaviour
     public MovementState GetState()
     {
         return m_MoveState;
+    }
+
+    void UpdateParticles()
+    {
+        m_SanicParticles.GetComponent<ParticleSystemRenderer>().enabled = true;
+        m_SanicParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(0, 1, m_AccelPercent * 0.01f));
     }
 
     void CheckState()
@@ -257,6 +278,28 @@ public class ControllerPlayer : MonoBehaviour
                     m_AccelPercent = m_AccelPercent - Time.deltaTime * 150 * m_AccelMultiplier;
                     m_MoveState = MovementState.Idle;
                 }
+
+                float offset = 0.6f;
+                Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - offset, transform.position.z), m_SlopeDirection * 2, Color.red);
+                if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y - offset, transform.position.z), m_SlopeDirection, out m_SlopeHit, 2, m_JumpMask))
+                {
+                    if (m_SlopeHit.collider.gameObject.GetComponent<Terrain>())
+                    {
+                        if (Vector3.Dot(Vector3.up, m_SlopeHit.normal) < m_SlopeValue)
+                        {
+                            m_CanMoveForward = false;
+                            m_Rigidbody.velocity = new Vector3(0.0f, -50.0f, 0.0f);
+                            Debug.Log("Slope too steep yo");
+                        }
+                        else
+                        {
+                            m_CanMoveForward = true;
+                            Debug.Log("We cool");
+                        }
+                    }
+                }
+                else
+                    m_CanMoveForward = true;
             }
         }
         else
@@ -898,6 +941,18 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_VClimbTimer = m_VerticalClimbTimer;
         }
+    }
+
+    void UpdateSlopeDir()
+    {
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        {
+            m_SlopeDirection = m_Rigidbody.velocity.normalized;
+        }
+        else
+            m_SlopeDirection = transform.forward;
+
+        m_SlopeDirection.y = 0.0f;
     }
 
     void CheckNotMovingFromInput()

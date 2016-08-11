@@ -56,6 +56,7 @@ public class CameraMovement : MonoBehaviour {
             if (m_Player.transform.position.y + m_CameraOffset + m_PositionOffset.y < m_Player.transform.position.y + m_CameraOffset - m_HeadBobAmount && direction != 1)
             {
                 direction = 1;
+
             }
 
             m_PositionOffset += Vector3.up * Time.deltaTime * direction * m_BobSpeed;
