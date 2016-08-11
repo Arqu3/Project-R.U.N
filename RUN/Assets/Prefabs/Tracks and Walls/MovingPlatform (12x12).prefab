@@ -705,6 +705,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfa9e4cd70f20594594bc039b19ddb6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_bypass: 0
 --- !u!114 &11425870
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -720,8 +721,8 @@ MonoBehaviour:
   m_Mode: 1
   m_StayOnReachedEnd: 1
   m_ReturnOnExit: 0
-  m_Speed: 100
-  m_Distance: -1500
+  m_Speed: 10
+  m_Distance: 10
   m_PercentageOffset: 0
 --- !u!114 &11457672
 MonoBehaviour:
@@ -2317,6 +2318,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_LocalRotation.w
       value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Distance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Speed
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
