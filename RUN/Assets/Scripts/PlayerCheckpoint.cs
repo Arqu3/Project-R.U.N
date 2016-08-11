@@ -87,8 +87,23 @@ public class PlayerCheckpoint : MonoBehaviour
             }
         }
 	}
+#if UNITY_EDITOR
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawLine(new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + 1000), new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + -1000));
 
-    void Update ()
+        Gizmos.DrawLine(new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + 1000), new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + 1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + -1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + 1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + 1000));
+
+        Gizmos.DrawLine(new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + 1000));
+    }
+#endif
+        void Update ()
     {
         if (Input.GetKeyDown(KeyCode.F12))
         {
@@ -217,7 +232,23 @@ public class PlayerCheckpoint : MonoBehaviour
         {
             m_ElapsedTime += Time.deltaTime;
         }
-        m_ElapsedText.text = "Time: " + m_ElapsedTime.ToString("F1");
+
+        string minutes = ((int)(m_ElapsedTime / 60f)).ToString();
+        string seconds = ((int)(m_ElapsedTime - ((int)(m_ElapsedTime / 60f)))).ToString();
+        string decimals = (m_ElapsedTime - (int)m_ElapsedTime).ToString("F2");
+        decimals = decimals.Remove(0, 2);
+
+
+        if ((int)(m_ElapsedTime / 60f) < 10)
+        {
+            minutes = minutes.Insert(0, "0");
+        }
+        if ((int)(m_ElapsedTime - ((int)(m_ElapsedTime / 60f))) < 10)
+        {
+            seconds = seconds.Insert(0, "0");
+        }
+
+        m_ElapsedText.text = minutes + ":" + seconds + ":" + decimals;
 
         if (m_ReachedCheckpoint)
         {

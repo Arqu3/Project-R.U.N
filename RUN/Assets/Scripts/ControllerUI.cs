@@ -23,8 +23,6 @@ public class ControllerUI : MonoBehaviour {
         m_Paused = false;
         m_MusicStarted = false;
 
-        m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
-
         if (transform.FindChild("BlinkText"))
             m_BlinkText = transform.FindChild("BlinkText").GetComponent<Text>();
         if (GameObject.Find("PlayerBody"))
@@ -61,7 +59,7 @@ public class ControllerUI : MonoBehaviour {
             PlayerPrefs.SetInt("Restart", 0);
         }
 
-        if (!m_PausePanel.ToggleSound)
+        if (!m_OptionsPanel.GetIsSound())
         {
             m_MusicVolume = 0;
         }
@@ -70,7 +68,7 @@ public class ControllerUI : MonoBehaviour {
             m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
         }
 
-        Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
+        Camera.main.GetComponent<MusicSystem>().SetVolumeMuted(m_MusicVolume);
 
         Camera.main.GetComponent<MusicSystem>().PlayClip(0);
     }
@@ -88,9 +86,9 @@ public class ControllerUI : MonoBehaviour {
             ScoreScreenUpdate();
         }
 
-        if (m_PausePanel.ToggleSound)
+        if (m_OptionsPanel.GetIsSound())
         {
-            Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
+            Camera.main.GetComponent<MusicSystem>().SetVolumeMuted(m_MusicVolume);
         }
     }
 
@@ -172,7 +170,7 @@ public class ControllerUI : MonoBehaviour {
     {
         volume = Mathf.Clamp01(volume);
         m_MusicVolume = volume;
-        PlayerPrefs.SetFloat("Music Volume", volume);
-        Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
+        //PlayerPrefs.SetFloat("Music Volume", volume);
+        //Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
     }
 }
