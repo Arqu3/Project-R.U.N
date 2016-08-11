@@ -9,7 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 457638}
   - 54: {fileID: 5480654}
-  - 114: {fileID: 11447098}
   m_Layer: 0
   m_Name: Obstacle03
   m_TagString: Untagged
@@ -47,6 +46,7 @@ GameObject:
   - 23: {fileID: 2384668}
   - 95: {fileID: 9592384}
   - 64: {fileID: 6496596}
+  - 114: {fileID: 11422964}
   m_Layer: 0
   m_Name: Model
   m_TagString: Untagged
@@ -72,8 +72,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 124572}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 20, y: 8.86, z: 729.85}
+  m_LocalRotation: {x: 0, y: -0.38268346, z: 0, w: 0.9238795}
+  m_LocalPosition: {x: 1514.12, y: 393, z: 1455.35}
   m_LocalScale: {x: 0.8400001, y: 0.84000003, z: 0.8400001}
   m_Children:
   - {fileID: 437326}
@@ -181,6 +181,20 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &11422964
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 171956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Wallrunnable: 0
+  m_Climbable: 0
+  m_VerticalClimbable: 1
 --- !u!114 &11445544
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -206,20 +220,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1e5eccefbc8d8d48b4113257d592629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11447098
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 124572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Wallrunnable: 1
-  m_Climbable: 0
-  m_VerticalClimbable: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
