@@ -39,6 +39,7 @@ public class ControllerPlayer : MonoBehaviour
     float m_AccelPercent = 0;
     bool m_OnGround;
     bool m_ControlsActive = true;
+    ParticleSystem m_SanicParticles;
 
     //Component vars
     Rigidbody m_Rigidbody;
@@ -126,6 +127,7 @@ public class ControllerPlayer : MonoBehaviour
 
         m_BlinkParticles = Camera.main.transform.FindChild("BlinkParticles").GetComponent<ParticleSystem>();
         m_ConstantParticles = m_BlinkParticles.transform.FindChild("ConstantParticles").GetComponent<ParticleSystem>();
+        m_SanicParticles = Camera.main.transform.FindChild("SanicParticles").GetComponent<ParticleSystem>();
 
         m_BlinkSoundEmitter = m_BlinkParticles.GetComponent<SoundEmitter>();
         m_BlinkChargeSoundEmitter = Camera.main.transform.FindChild("BlinkChargeEmitter").GetComponent<SoundEmitter>();
@@ -167,6 +169,8 @@ public class ControllerPlayer : MonoBehaviour
             BoostUpdate();
 
             CheckCanBlinkCD();
+
+            UpdateParticles();
 
             if (!m_MoveState.Equals(MovementState.Blinking) && !m_MoveState.Equals(MovementState.Grabbing) && !m_MoveState.Equals(MovementState.Climbing) && !m_MoveState.Equals(MovementState.VerticalClimbing))
             {
@@ -219,6 +223,12 @@ public class ControllerPlayer : MonoBehaviour
     public MovementState GetState()
     {
         return m_MoveState;
+    }
+
+    void UpdateParticles()
+    {
+        m_SanicParticles.GetComponent<ParticleSystemRenderer>().enabled = true;
+        m_SanicParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(0, 1, m_AccelPercent * 0.01f));
     }
 
     void CheckState()
@@ -279,7 +289,7 @@ public class ControllerPlayer : MonoBehaviour
                         {
                             m_CanMoveForward = false;
                             m_Rigidbody.velocity = new Vector3(0.0f, -50.0f, 0.0f);
-                            Debug.Log("Slope to steep yo");
+                            Debug.Log("Slope too steep yo");
                         }
                         else
                         {
