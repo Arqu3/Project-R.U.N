@@ -38,7 +38,6 @@ public class OptionsPanelFuncs : MonoBehaviour
 
     public bool m_ToggleSound;
     Text m_ToggleButton;
-    //Toggle m_Toggle;
 
     void Start()
     {
@@ -136,7 +135,6 @@ public class OptionsPanelFuncs : MonoBehaviour
         {
             m_ToggleSound = true;
         }
-        //m_Toggle.isOn = m_ToggleSound;
     }
 
     void Update()
@@ -163,8 +161,6 @@ public class OptionsPanelFuncs : MonoBehaviour
             m_SoundText = transform.FindChild("SoundText").GetComponent<Text>();
         if (!m_SoundSlider)
             m_SoundSlider = transform.FindChild("SoundSlider").GetComponent<Slider>();
-        //if (!m_Toggle)
-            //m_Toggle = transform.FindChild("Toggle").GetComponent<Toggle>();
         if (!m_ToggleButton)
             m_ToggleButton = transform.FindChild("Toggle").GetComponentInChildren<Text>();
     }
@@ -228,7 +224,6 @@ public class OptionsPanelFuncs : MonoBehaviour
                 m_UI.SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Music Volume", 0.5f)));
                 for (int i = 0; i < m_Sounds.Length; i++)
                 {
-                    //GameObject.Find("AudioEmitter").GetComponent<SoundEmitter>().SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Sound Volume", 0.5f)));
                     m_Sounds[i].SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Sound Volume", 0.5f)));
                 }
                 Debug.Log("Sound enabled");
@@ -245,7 +240,6 @@ public class OptionsPanelFuncs : MonoBehaviour
                 m_UI.SetVolume(0);
                 for (int i = 0; i < m_Sounds.Length; i++)
                 {
-                    //GameObject.Find("AudioEmitter").GetComponent<SoundEmitter>().SetVolume(0);
                     m_Sounds[i].SetVolume(0);
                 }
                 Debug.Log("Sound disabled");

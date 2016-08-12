@@ -623,7 +623,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckCanBlinkCD()
     {
-        if (RaycastDir(Vector3.down))
+        if (RaycastDir(Vector3.down) || m_IsWallrunning || m_IsVerticalClimb || m_IsGrabbed || m_IsClimbing)
         {
             m_CanBlinkCD = true;
         }

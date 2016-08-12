@@ -3,6 +3,9 @@ using System.Collections;
 
 public class Front : MonoBehaviour
 {
+    public float m_GraceTime = 0.5f;
+    float m_GraceTimer = 0.0f;
+
     ControllerPlayer m_Player;
     bool m_HasSentMsg = false;
 
@@ -11,9 +14,17 @@ public class Front : MonoBehaviour
         m_Player = GetComponentInParent<ControllerPlayer>();
 	}
 
+    void Update()
+    {
+        if (m_Player.GetState() == MovementState.Falling)
+            m_GraceTimer += Time.deltaTime;
+        else
+            m_GraceTimer = 0.0f;
+    }
+
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.GetComponent<ParkourObject>() && m_Player.GetState() != MovementState.Falling)
+        if (col.gameObject.GetComponent<ParkourObject>() && m_GraceTimer < m_GraceTime)
         {
             if (col.gameObject.GetComponent<ParkourObject>().m_VerticalClimbable)
             {
