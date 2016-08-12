@@ -65,7 +65,7 @@ GameObject:
   - 114: {fileID: 11468920}
   m_Layer: 0
   m_Name: MovingPlatformStationary (12x12)
-  m_TagString: MovingPlatform
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -704,6 +704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfa9e4cd70f20594594bc039b19ddb6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_bypass: 0
 --- !u!114 &11457672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2289,7 +2290,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 98bbbe2c673a1744d9e5678c5a312d8b, type: 2}
     - target: {fileID: 0}
       propertyPath: m_TagString
-      value: MovingPlatform
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
