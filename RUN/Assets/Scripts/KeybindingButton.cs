@@ -10,6 +10,7 @@ public enum KeyState
 
 public class KeybindingButton : MonoBehaviour
 {
+    public int m_ID = 0;
     public KeyState m_State = KeyState.Keyboard;
     public string m_PlayerPref;
     public string m_KeyBinding;
