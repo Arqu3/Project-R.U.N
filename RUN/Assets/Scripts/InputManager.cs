@@ -85,7 +85,11 @@ public class InputManager : MonoBehaviour
         for (int i = 0; i < m_Buttons.Length; i++)
         {
             if (m_Buttons[i].m_IsActive)
+            {
+                Debug.Log("ERROR, Another button is already active");
                 return true;
+
+            }
         }
         return false;
     }
@@ -146,6 +150,36 @@ public class InputManager : MonoBehaviour
         else if (Input.GetAxisRaw("Right Trigger") != 0)
         {
             m_LastAxis = "Right Trigger";
+            return true;
+        }
+        else if (Input.GetAxisRaw("DPadX") != 0)
+        {
+            m_LastAxis = "DPadX";
+            return true;
+        }
+        else if (Input.GetAxisRaw("DPadY") != 0)
+        {
+            m_LastAxis = "DPadY";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Joystick X") != 0)
+        {
+            m_LastAxis = "Joystick X";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Joystick Y") != 0)
+        {
+            m_LastAxis = "Joystick Y";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Vertical") != 0)
+        {
+            m_LastAxis = "Vertical";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Horizontal") != 0)
+        {
+            m_LastAxis = "Horizontal";
             return true;
         }
         return false;
