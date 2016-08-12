@@ -333,7 +333,7 @@ GameObject:
   - 114: {fileID: 11481008}
   m_Layer: 0
   m_Name: AudioEmitter
-  m_TagString: Untagged
+  m_TagString: Sound Emitter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -407,8 +407,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 102892}
-  m_LocalRotation: {x: 0, y: 0.92387944, z: 0, w: 0.38268372}
-  m_LocalPosition: {x: 479.64, y: 86.24, z: 768.85}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -3.2447052}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 406958}
@@ -1052,6 +1052,7 @@ MonoBehaviour:
   m_AccelMultiplier: 1
   m_JumpForce: 80
   m_FallThreshold: 1
+  m_SlopeValue: 0.7
   m_BlinkMask:
     serializedVersion: 2
     m_Bits: 4294967039
@@ -1136,8 +1137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b82ab6ebd6729d446a3192573058d4c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SetToCheckPoint: 18
-  m_ResetDepth: 50.19
+  m_SetToCheckPoint: 9
+  m_ResetDepth: -30
   m_PromptTime: 1
   m_CheckPoints: []
   m_HighScores: []
