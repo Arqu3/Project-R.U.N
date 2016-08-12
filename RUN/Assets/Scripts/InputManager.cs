@@ -4,9 +4,12 @@ using System.Collections;
 public class InputManager : MonoBehaviour
 {
     public KeybindingButton[] m_Buttons;
+    public string[] m_PlayerPrefs;
 
     System.Array values;
     string m_LastAxis = "";
+
+    KeybindingButton m_Temp;
 
     void Start()
     {
@@ -21,7 +24,31 @@ public class InputManager : MonoBehaviour
             {
                 m_Buttons[i] = buttons[i].GetComponent<KeybindingButton>();
             }
+
+            //Sort buttons
+            for (int write = 0; write < buttons.Length; write++)
+            {
+                for (int sort = 0; sort < buttons.Length - 1; sort++)
+                {
+                    if (m_Buttons[sort].GetComponent<KeybindingButton>().m_ID > m_Buttons[sort + 1].GetComponent<KeybindingButton>().m_ID)
+                    {
+                        m_Temp = m_Buttons[sort + 1];
+                        m_Buttons[sort + 1] = m_Buttons[sort];
+                        m_Buttons[sort] = m_Temp;
+                    }
+                }
+            }
         }
+
+        //Store playerprefs
+        m_PlayerPrefs = new string[m_Buttons.Length];
+
+        for (int i = 0; i < m_Buttons.Length; i++)
+        {
+            m_PlayerPrefs[i] = m_Buttons[i].m_PlayerPref;
+        }
+
+
 	}
 
     void Update()
@@ -85,7 +112,11 @@ public class InputManager : MonoBehaviour
         for (int i = 0; i < m_Buttons.Length; i++)
         {
             if (m_Buttons[i].m_IsActive)
+            {
+                Debug.Log("ERROR, Another button is already active");
                 return true;
+
+            }
         }
         return false;
     }
@@ -148,6 +179,41 @@ public class InputManager : MonoBehaviour
             m_LastAxis = "Right Trigger";
             return true;
         }
+        else if (Input.GetAxisRaw("DPadX") != 0)
+        {
+            m_LastAxis = "DPadX";
+            return true;
+        }
+        else if (Input.GetAxisRaw("DPadY") != 0)
+        {
+            m_LastAxis = "DPadY";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Joystick X") != 0)
+        {
+            m_LastAxis = "Joystick X";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Joystick Y") != 0)
+        {
+            m_LastAxis = "Joystick Y";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Vertical") != 0)
+        {
+            m_LastAxis = "Vertical";
+            return true;
+        }
+        else if (Input.GetAxisRaw("Horizontal") != 0)
+        {
+            m_LastAxis = "Horizontal";
+            return true;
+        }
         return false;
+    }
+
+    public string[] GetPrefs()
+    {
+        return m_PlayerPrefs;
     }
 }
