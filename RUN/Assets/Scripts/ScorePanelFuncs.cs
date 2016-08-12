@@ -8,10 +8,27 @@ public class ScorePanelFuncs : MonoBehaviour
     {
     }
 
+    void Update()
+    {
+        if (SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 1)
+        {
+            transform.FindChild("ButtonNextLevel").gameObject.SetActive(true);
+        }
+        else
+        {
+            transform.FindChild("ButtonNextLevel").gameObject.SetActive(false);
+        }
+    }
+
     public void ResetLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         PlayerPrefs.SetInt("Restart", 1);
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void Exit()
