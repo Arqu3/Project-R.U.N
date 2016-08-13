@@ -1,9 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class InputManager : MonoBehaviour
 {
     public KeybindingButton[] m_Buttons;
+
+    public List<string> m_KeyCodePrefs = new List<string>();
+
+    public List<string> m_AxisPrefs = new List<string>();
+
     public string[] m_PlayerPrefs;
 
     System.Array values;
@@ -23,6 +29,16 @@ public class InputManager : MonoBehaviour
             for (int i = 0; i < buttons.Length; i++)
             {
                 m_Buttons[i] = buttons[i].GetComponent<KeybindingButton>();
+
+                //Add to different list depending on axis or not
+                if (!buttons[i].GetComponent<KeybindingButton>().m_IsAxis)
+                {
+                    m_KeyCodePrefs.Add(buttons[i].GetComponent<KeybindingButton>().m_PlayerPref);
+                }
+                else
+                {
+                    m_AxisPrefs.Add(buttons[i].GetComponent<KeybindingButton>().m_PlayerPref);
+                }
             }
 
             //Sort buttons
@@ -53,6 +69,9 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+            PrintKeybindings();
+
         for (int i = 0; i < m_Buttons.Length; i++)
         {
             if (m_Buttons[i].m_IsActive)
@@ -63,7 +82,7 @@ public class InputManager : MonoBehaviour
                     {
                         if (m_Buttons[i].m_State.Equals(KeyState.Keyboard))
                         {
-                            if (!IsControllerInput())
+                            if (!IsControllerInput() && !IsControllerAxis())
                             {
                                 //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
                                 m_Buttons[i].m_KeyBinding = code.ToString();
@@ -74,6 +93,16 @@ public class InputManager : MonoBehaviour
                         {
                             if (IsControllerInput())
                             {
+                                m_Buttons[i].SetIsAxis(false);
+                                for (int j = 0; j < m_AxisPrefs.Count; j++)
+                                {
+                                    if (!m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_AxisPrefs[j])
+                                    {
+                                        m_KeyCodePrefs.Add(m_AxisPrefs[j]);
+                                        m_AxisPrefs.Remove(m_AxisPrefs[j]);
+                                    }
+                                }
+
                                 //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
                                 m_Buttons[i].m_KeyBinding = code.ToString();
                                 SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
@@ -86,6 +115,16 @@ public class InputManager : MonoBehaviour
                 {
                     if (IsControllerAxis())
                     {
+                        m_Buttons[i].SetIsAxis(true);
+                        for (int j = 0; j < m_KeyCodePrefs.Count; j++)
+                        {
+                            if (m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_KeyCodePrefs[j])
+                            {
+                                m_AxisPrefs.Add(m_KeyCodePrefs[j]);
+                                m_KeyCodePrefs.Remove(m_KeyCodePrefs[j]);
+                            }
+                        }
+
                         m_Buttons[i].m_KeyBinding = m_LastAxis;
                         SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
                     }
@@ -104,7 +143,6 @@ public class InputManager : MonoBehaviour
                 m_Buttons[i].m_IsActive = false;
             }
         }
-        Debug.Log(playerpref + " set to " + keybind);
     }
 
     public bool ButtonActive()
@@ -151,22 +189,6 @@ public class InputManager : MonoBehaviour
         return false;
     }
 
-    bool IsControllerAxisAll()
-    {
-        if (Input.GetAxisRaw("Left Trigger") != 0 ||
-            Input.GetAxisRaw("Right Trigger") != 0 ||
-            Input.GetAxisRaw("DPadX") != 0 ||
-            Input.GetAxisRaw("DPadY") != 0 ||
-            Input.GetAxisRaw("Joystick X") != 0 ||
-            Input.GetAxisRaw("Joystick Y") != 0 ||
-            Input.GetAxisRaw("Vertical") != 0 ||
-            Input.GetAxisRaw("Horizontal") != 0)
-        {
-            return true;
-        }
-        return false;
-    }
-
     bool IsControllerAxis()
     {
         if (Input.GetAxisRaw("Left Trigger") != 0)
@@ -189,31 +211,29 @@ public class InputManager : MonoBehaviour
             m_LastAxis = "DPadY";
             return true;
         }
-        else if (Input.GetAxisRaw("Joystick X") != 0)
-        {
-            m_LastAxis = "Joystick X";
-            return true;
-        }
-        else if (Input.GetAxisRaw("Joystick Y") != 0)
-        {
-            m_LastAxis = "Joystick Y";
-            return true;
-        }
-        else if (Input.GetAxisRaw("Vertical") != 0)
-        {
-            m_LastAxis = "Vertical";
-            return true;
-        }
-        else if (Input.GetAxisRaw("Horizontal") != 0)
-        {
-            m_LastAxis = "Horizontal";
-            return true;
-        }
         return false;
     }
 
     public string[] GetPrefs()
     {
         return m_PlayerPrefs;
+    }
+
+    public List<string> GetKeyCodes()
+    {
+        return m_KeyCodePrefs;
+    }
+
+    public List<string> GetAxisPrefs()
+    {
+        return m_AxisPrefs;
+    }
+
+    void PrintKeybindings()
+    {
+        for (int i = 0; i < m_Buttons.Length; i++)
+        {
+            Debug.Log(m_Buttons[i].m_PlayerPref + " has " + m_Buttons[i].m_KeyBinding);
+        }
     }
 }

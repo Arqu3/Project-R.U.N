@@ -15,6 +15,7 @@ public class KeybindingButton : MonoBehaviour
     public string m_PlayerPref;
     public string m_KeyBinding;
     public bool m_IsActive = false;
+    public bool m_IsAxis = false;
 
     Text m_Text;
 
@@ -23,6 +24,11 @@ public class KeybindingButton : MonoBehaviour
         m_KeyBinding = PlayerPrefs.GetString(m_PlayerPref, m_KeyBinding);
         PlayerPrefs.SetString(m_PlayerPref, m_KeyBinding);
         m_Text = GetComponentInChildren<Text>();
+
+        if (PlayerPrefs.GetInt("IsAxis" + m_ID + "1", 0) == 1)
+            m_IsAxis = true;
+        else if (PlayerPrefs.GetInt("IsAxis" + m_ID + "1", 0) == 0)
+            m_IsAxis = false;
     }
 
     void Update()
@@ -34,5 +40,15 @@ public class KeybindingButton : MonoBehaviour
     {
         if (!GetComponentInParent<InputManager>().ButtonActive())
         m_IsActive = true;
+    }
+
+    public void SetIsAxis(bool state)
+    {
+        m_IsAxis = state;
+        if (m_IsAxis)
+            PlayerPrefs.SetInt("IsAxis" + m_ID + "1", 1);
+        else
+            PlayerPrefs.SetInt("IsAxis" + m_ID + "1", 0);
+        PlayerPrefs.Save();
     }
 }
