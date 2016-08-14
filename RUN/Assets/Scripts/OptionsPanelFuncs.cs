@@ -13,7 +13,6 @@ public class OptionsPanelFuncs : MonoBehaviour
 {
     //Public vars
     public bool m_Options = false;
-    //public bool m_IsMainMenu;
     public State m_State;
 
     //Component vars
@@ -23,6 +22,8 @@ public class OptionsPanelFuncs : MonoBehaviour
     public SoundEmitter[] m_Sounds;
     AmbienceHandler m_Ambience;
     PausePanelFuncs m_Pause;
+    ControllerPlayer m_Player;
+    InputManager m_InputManager;
 
     //Sensitivity
     Text m_ControllerSensText;
@@ -64,6 +65,9 @@ public class OptionsPanelFuncs : MonoBehaviour
             m_Music = GameObject.Find("Main Camera").GetComponent<MusicSystem>();
         }
 
+        //Get inputmanager
+        m_InputManager = GetComponent<InputManager>();
+
         //Find child components
         //Sensitivity-slider
         m_ControllerSensText = transform.FindChild("ControllerSensText").GetComponent<Text>();
@@ -87,6 +91,10 @@ public class OptionsPanelFuncs : MonoBehaviour
         //Get components if in-game
         if (m_State.Equals(State.InGame))
         {
+            //Player
+            m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
+            //m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
+
             //Sounds
             var sounds = GameObject.FindGameObjectsWithTag("Sound Emitter");
             if (sounds.Length > 0)
@@ -167,6 +175,8 @@ public class OptionsPanelFuncs : MonoBehaviour
 
     public void ButtonOptions()
     {
+        if (m_Options)
+            m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
         m_Options = !m_Options;
     }
 

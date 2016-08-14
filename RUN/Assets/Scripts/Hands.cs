@@ -5,43 +5,15 @@ public class Hands : MonoBehaviour {
 
     Rigidbody m_Rigidbody;
     ControllerPlayer m_CPlayer;
-    AnimationHandler m_AnimHandler;
     Vector3 m_PlayerVel;
 
     public bool m_CanClimb;
 
-    bool m_HasSentMsg;
-
     void Start()
     {
-        m_HasSentMsg = false;
-
         m_Rigidbody = GetComponentInParent<Rigidbody>();
         m_CPlayer = GetComponentInParent<ControllerPlayer>();
-        m_AnimHandler = GetComponentInParent<AnimationHandler>();
 	}
-	
-	void Update()
-    { 
-        if (m_CanClimb)
-        {
-            //Climb if pressing space
-            if (Input.GetButton("Jump"))
-            {
-                m_CPlayer.Climb();
-                if (!m_HasSentMsg)
-                {
-                    m_AnimHandler.PlayAnimation("Climb");
-                    m_HasSentMsg = true;
-                }
-            }
-
-        }
-        else
-        {
-            m_HasSentMsg = false;
-        }
-    }
 
     void OnTriggerEnter(Collider col)
     {
