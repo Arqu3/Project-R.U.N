@@ -25,6 +25,12 @@ public class KeybindingButton : MonoBehaviour
         PlayerPrefs.SetString(m_PlayerPref, m_KeyBinding);
         m_Text = GetComponentInChildren<Text>();
 
+        if (m_KeyBinding == "Right Trigger" || m_KeyBinding == "Left Trigger" || m_KeyBinding == "DPadX" || m_KeyBinding == "DPadY")
+        {
+            PlayerPrefs.SetInt("IsAxis" + m_ID + "1", 1);
+            Debug.Log("Button with ID: " + m_ID + " is axis");
+        }
+
         if (PlayerPrefs.GetInt("IsAxis" + m_ID + "1", 0) == 1)
             m_IsAxis = true;
         else if (PlayerPrefs.GetInt("IsAxis" + m_ID + "1", 0) == 0)
