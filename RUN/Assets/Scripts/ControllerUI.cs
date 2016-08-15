@@ -10,6 +10,7 @@ public class ControllerUI : MonoBehaviour {
     GameObject m_ScorePanel;
     TutorialPanelFuncs m_TutorialPanel;
     OptionsPanelFuncs m_OptionsPanel;
+    InputManager m_InputManager;
 
     bool m_Init = false;
     bool m_Paused = false;
@@ -35,6 +36,11 @@ public class ControllerUI : MonoBehaviour {
             m_TutorialPanel = transform.FindChild("TutorialPanel").GetComponent<TutorialPanelFuncs>();
         if (transform.FindChild("OptionsPanel"))
             m_OptionsPanel = transform.FindChild("OptionsPanel").GetComponent<OptionsPanelFuncs>();
+
+
+        //Get and set player inputs
+        m_InputManager = GetComponentInChildren<InputManager>();
+        m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
 
         if (PlayerPrefs.GetInt("Restart", 0) != 1)
         {
