@@ -84,28 +84,34 @@ public class InputManager : MonoBehaviour
                         {
                             if (!IsControllerInput() && !IsControllerAxis())
                             {
-                                //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
-                                m_Buttons[i].m_KeyBinding = code.ToString();
-                                SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                if (!DuplicateCheck(i, code.ToString()))
+                                {
+                                    //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
+                                    m_Buttons[i].m_KeyBinding = code.ToString();
+                                    SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                }
                             }
                         }
                         else if (m_Buttons[i].m_State.Equals(KeyState.Controller))
                         {
                             if (IsControllerInput())
                             {
-                                m_Buttons[i].SetIsAxis(false);
-                                for (int j = 0; j < m_AxisPrefs.Count; j++)
+                                if (!DuplicateCheck(i, code.ToString()))
                                 {
-                                    if (!m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_AxisPrefs[j])
+                                    m_Buttons[i].SetIsAxis(false);
+                                    for (int j = 0; j < m_AxisPrefs.Count; j++)
                                     {
-                                        m_KeyCodePrefs.Add(m_AxisPrefs[j]);
-                                        m_AxisPrefs.Remove(m_AxisPrefs[j]);
+                                        if (!m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_AxisPrefs[j])
+                                        {
+                                            m_KeyCodePrefs.Add(m_AxisPrefs[j]);
+                                            m_AxisPrefs.Remove(m_AxisPrefs[j]);
+                                        }
                                     }
-                                }
 
-                                //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
-                                m_Buttons[i].m_KeyBinding = code.ToString();
-                                SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                    //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
+                                    m_Buttons[i].m_KeyBinding = code.ToString();
+                                    SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                }
                             }
                         }
                     }
@@ -115,18 +121,20 @@ public class InputManager : MonoBehaviour
                 {
                     if (IsControllerAxis())
                     {
-                        m_Buttons[i].SetIsAxis(true);
-                        for (int j = 0; j < m_KeyCodePrefs.Count; j++)
+                        if (!DuplicateCheck(i, m_LastAxis))
                         {
-                            if (m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_KeyCodePrefs[j])
+                            m_Buttons[i].SetIsAxis(true);
+                            for (int j = 0; j < m_KeyCodePrefs.Count; j++)
                             {
-                                m_AxisPrefs.Add(m_KeyCodePrefs[j]);
-                                m_KeyCodePrefs.Remove(m_KeyCodePrefs[j]);
+                                if (m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_KeyCodePrefs[j])
+                                {
+                                    m_AxisPrefs.Add(m_KeyCodePrefs[j]);
+                                    m_KeyCodePrefs.Remove(m_KeyCodePrefs[j]);
+                                }
                             }
+                            m_Buttons[i].m_KeyBinding = m_LastAxis;
+                            SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
                         }
-
-                        m_Buttons[i].m_KeyBinding = m_LastAxis;
-                        SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
                     }
                 }
             }
@@ -145,15 +153,33 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public bool ButtonActive()
+    bool DuplicateCheck(int index, string keybind)
     {
         for (int i = 0; i < m_Buttons.Length; i++)
         {
-            if (m_Buttons[i].m_IsActive)
+            if (i != index)
             {
-                Debug.Log("ERROR, Another button is already active");
-                return true;
+                if (m_Buttons[i].m_KeyBinding == keybind)
+                {
+                    Debug.Log("Button with ID: " + m_Buttons[i].m_ID + " already has the keybind: " + keybind);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    public bool ButtonActive(int ID)
+    {
+        for (int i = 0; i < m_Buttons.Length; i++)
+        {
+            if (i != ID)
+            {
+                if (m_Buttons[i].m_IsActive)
+                {
+                    Debug.Log("ERROR, Another button is already active");
+                    return true;
+                }
             }
         }
         return false;

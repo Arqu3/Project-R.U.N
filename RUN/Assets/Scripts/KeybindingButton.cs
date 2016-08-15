@@ -16,6 +16,7 @@ public class KeybindingButton : MonoBehaviour
     public string m_KeyBinding;
     public bool m_IsActive = false;
     public bool m_IsAxis = false;
+    public bool m_IsUnbound = false;
 
     Text m_Text;
 
@@ -44,8 +45,8 @@ public class KeybindingButton : MonoBehaviour
 
     public void ButtonKeyBidning()
     {
-        if (!GetComponentInParent<InputManager>().ButtonActive())
-        m_IsActive = true;
+        if (!GetComponentInParent<InputManager>().ButtonActive(m_ID))
+            m_IsActive = true;
     }
 
     public void SetIsAxis(bool state)
