@@ -104,25 +104,14 @@ public class PlayerCheckpoint : MonoBehaviour
         Gizmos.DrawLine(new Vector3(transform.position.x + 1000, m_ResetDepth, transform.position.z + -1000), new Vector3(transform.position.x + -1000, m_ResetDepth, transform.position.z + 1000));
     }
 #endif
-        void Update ()
+    void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.F12))
-        {
-            PlayerPrefs.DeleteAll();
-            Debug.Log("Deleted all playerprefs");
-        }
-
         if (Input.GetKeyDown(KeyCode.F11))
         {
             Debug.Log(PlayerPrefs.GetFloat("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString(), Mathf.Infinity));
         }
 
         m_IsColliding = false;
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SetToCheckpoint(m_LastPassed);
-        }
 
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -149,16 +138,10 @@ public class PlayerCheckpoint : MonoBehaviour
             SetToCheckpoint(m_LastPassed);
         }
 
-        //Get and reload current scene
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-
         TextUpdate();
 	}
 
-    void SetToCheckpoint(int num)
+    public void SetToCheckpoint(int num)
     {
         //Reset player velocity
         GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -180,6 +163,16 @@ public class PlayerCheckpoint : MonoBehaviour
         {
             m_MovingPlatforms[i].Reset();
         }
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public int GetLastPassed()
+    {
+        return m_LastPassed;
     }
 
     void OnTriggerEnter(Collider col)
