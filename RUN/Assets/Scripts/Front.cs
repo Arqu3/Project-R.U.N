@@ -16,7 +16,7 @@ public class Front : MonoBehaviour
 
     void Update()
     {
-        if (m_Player.GetState() == MovementState.Falling)
+        if (m_Player.GetState().Equals(MovementState.Falling))
             m_GraceTimer += Time.deltaTime;
         else
             m_GraceTimer = 0.0f;

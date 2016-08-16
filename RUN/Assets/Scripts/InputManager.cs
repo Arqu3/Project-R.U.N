@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour
 
     KeybindingButton m_Temp;
 
-    void Start()
+    void Awake()
     {
         values = System.Enum.GetValues(typeof(KeyCode));
 
@@ -63,9 +63,7 @@ public class InputManager : MonoBehaviour
         {
             m_PlayerPrefs[i] = m_Buttons[i].m_PlayerPref;
         }
-
-
-	}
+    }
 
     void Update()
     {

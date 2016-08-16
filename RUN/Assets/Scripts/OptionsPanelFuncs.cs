@@ -156,6 +156,9 @@ public class OptionsPanelFuncs : MonoBehaviour
             m_ToggleButton.text = "Sound Enabled";
         else
             m_ToggleButton.text = "Sound Disabled";
+
+        if (m_Options && Input.GetButtonDown("Pause"))
+            ButtonOptions();
     }
 
     void LateUpdate()

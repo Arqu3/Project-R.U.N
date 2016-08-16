@@ -28,4 +28,9 @@ public class PausePanelFuncs : MonoBehaviour {
     {
         SceneManager.LoadScene(0);
     }
+
+    public void ButtonRestart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
 }
