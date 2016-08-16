@@ -1,0 +1,207 @@
+fileFormatVersion: 2
+guid: f84274105b2361d469c28e421fb35aa4
+timeCreated: 1471270568
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: hip_ctrl
+    100004: hip_ctrl_group
+    100006: l_collar_joint
+    100008: l_elbow_joint
+    100010: l_forearm_joint
+    100012: l_hand_joint
+    100014: l_hip_joint
+    100016: l_indexfinger_01_joint
+    100018: l_indexfinger_02_joint
+    100020: l_indexfinger_03_joint
+    100022: l_indexfinger_04_joint
+    100024: l_knee_joint
+    100026: l_littlefinger_01_joint
+    100028: l_littlefinger_02_joint
+    100030: l_littlefinger_03_joint
+    100032: l_littlefinger_04_joint
+    100034: l_middlefinger_01_joint
+    100036: l_middlefinger_02_joint
+    100038: l_middlefinger_03_joint
+    100040: l_middlefinger_04_joint
+    100042: l_ringfinger_01_joint
+    100044: l_ringfinger_02_joint
+    100046: l_ringfinger_03_joint
+    100048: l_ringfinger_04_joint
+    100050: l_shoulder_joint
+    100052: l_wrist_joint
+    100054: neck_joint
+    100056: pelvis_joint
+    100058: pSphere3
+    100060: r_collar_joint
+    100062: r_elbow_joint
+    100064: r_forearm_joint
+    100066: r_hand_joint
+    100068: r_hip_joint
+    100070: r_indexfinger_01_joint
+    100072: r_indexfinger_02_joint
+    100074: r_indexfinger_03_joint
+    100076: r_indexfinger_04_joint
+    100078: r_knee_joint
+    100080: r_littlefinger_01_joint
+    100082: r_littlefinger_02_joint
+    100084: r_littlefinger_03_joint
+    100086: r_littlefinger_04_joint
+    100088: r_middlefinger_01_joint
+    100090: r_middlefinger_02_joint
+    100092: r_middlefinger_03_joint
+    100094: r_middlefinger_04_joint
+    100096: r_ringfinger_01_joint
+    100098: r_ringfinger_02_joint
+    100100: r_ringfinger_03_joint
+    100102: r_ringfinger_04_joint
+    100104: r_shoulder_joint
+    100106: r_wrist_joint
+    100108: spine_1_joint
+    100110: spine_2_joint
+    100112: spine_3_joint
+    100114: spine_4_joint
+    100116: spine_5_joint
+    100118: spine_6_joint
+    100120: thumbfinger_01_joint
+    100122: thumbfinger_01_joint 1
+    100124: thumbfinger_02_joint
+    100126: thumbfinger_02_joint 1
+    100128: thumbfinger_03_joint
+    100130: thumbfinger_03_joint 1
+    400000: //RootNode
+    400002: hip_ctrl
+    400004: hip_ctrl_group
+    400006: l_collar_joint
+    400008: l_elbow_joint
+    400010: l_forearm_joint
+    400012: l_hand_joint
+    400014: l_hip_joint
+    400016: l_indexfinger_01_joint
+    400018: l_indexfinger_02_joint
+    400020: l_indexfinger_03_joint
+    400022: l_indexfinger_04_joint
+    400024: l_knee_joint
+    400026: l_littlefinger_01_joint
+    400028: l_littlefinger_02_joint
+    400030: l_littlefinger_03_joint
+    400032: l_littlefinger_04_joint
+    400034: l_middlefinger_01_joint
+    400036: l_middlefinger_02_joint
+    400038: l_middlefinger_03_joint
+    400040: l_middlefinger_04_joint
+    400042: l_ringfinger_01_joint
+    400044: l_ringfinger_02_joint
+    400046: l_ringfinger_03_joint
+    400048: l_ringfinger_04_joint
+    400050: l_shoulder_joint
+    400052: l_wrist_joint
+    400054: neck_joint
+    400056: pelvis_joint
+    400058: pSphere3
+    400060: r_collar_joint
+    400062: r_elbow_joint
+    400064: r_forearm_joint
+    400066: r_hand_joint
+    400068: r_hip_joint
+    400070: r_indexfinger_01_joint
+    400072: r_indexfinger_02_joint
+    400074: r_indexfinger_03_joint
+    400076: r_indexfinger_04_joint
+    400078: r_knee_joint
+    400080: r_littlefinger_01_joint
+    400082: r_littlefinger_02_joint
+    400084: r_littlefinger_03_joint
+    400086: r_littlefinger_04_joint
+    400088: r_middlefinger_01_joint
+    400090: r_middlefinger_02_joint
+    400092: r_middlefinger_03_joint
+    400094: r_middlefinger_04_joint
+    400096: r_ringfinger_01_joint
+    400098: r_ringfinger_02_joint
+    400100: r_ringfinger_03_joint
+    400102: r_ringfinger_04_joint
+    400104: r_shoulder_joint
+    400106: r_wrist_joint
+    400108: spine_1_joint
+    400110: spine_2_joint
+    400112: spine_3_joint
+    400114: spine_4_joint
+    400116: spine_5_joint
+    400118: spine_6_joint
+    400120: thumbfinger_01_joint
+    400122: thumbfinger_01_joint 1
+    400124: thumbfinger_02_joint
+    400126: thumbfinger_02_joint 1
+    400128: thumbfinger_03_joint
+    400130: thumbfinger_03_joint 1
+    4300000: pSphere3
+    7400000: Take 001
+    9500000: //RootNode
+    13700000: pSphere3
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -26,8 +26,6 @@ public class ControllerUI : MonoBehaviour {
 
         if (transform.FindChild("BlinkText"))
             m_BlinkText = transform.FindChild("BlinkText").GetComponent<Text>();
-        if (GameObject.Find("PlayerBody"))
-            m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
         if (transform.FindChild("PausePanel"))
             m_PausePanel = transform.FindChild("PausePanel").GetComponent<PausePanelFuncs>();
         if (transform.FindChild("EndPanel"))
@@ -36,11 +34,11 @@ public class ControllerUI : MonoBehaviour {
             m_TutorialPanel = transform.FindChild("TutorialPanel").GetComponent<TutorialPanelFuncs>();
         if (transform.FindChild("OptionsPanel"))
             m_OptionsPanel = transform.FindChild("OptionsPanel").GetComponent<OptionsPanelFuncs>();
+        if (GameObject.Find("PlayerBody"))
+            m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
 
-
-        //Get and set player inputs
+        //Get inputs
         m_InputManager = GetComponentInChildren<InputManager>();
-        m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
 
         if (PlayerPrefs.GetInt("Restart", 0) != 1)
         {
@@ -79,13 +77,19 @@ public class ControllerUI : MonoBehaviour {
         Camera.main.GetComponent<MusicSystem>().PlayClip(0);
     }
 
-    void Update () {
+    void Update ()
+    {
         m_TutorialPanel.gameObject.SetActive(m_TutorialPanel.m_Tutorial);
-        m_OptionsPanel.gameObject.SetActive(m_OptionsPanel.m_Options);
+
+        if (m_Player.GetHasKeyBinds())
+            m_OptionsPanel.gameObject.SetActive(m_OptionsPanel.m_Options);
+        else
+            m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
+
         if (!m_IsScoreScreen)
         {
             PauseUpdate();
-            BlinkUpdate();
+            BlinkTextUpdate();
         }
         else
         {
@@ -149,7 +153,7 @@ public class ControllerUI : MonoBehaviour {
         }
     }
 
-    void BlinkUpdate()
+    void BlinkTextUpdate()
     {
         float [] cdValues = m_Player.GetUIValues();
 
@@ -167,16 +171,19 @@ public class ControllerUI : MonoBehaviour {
         }
     }
 
-    void ToggleScoreScreen()
+    public void ToggleScoreScreen()
     {
         m_IsScoreScreen = !m_IsScoreScreen;
+    }
+
+    public bool GetIsScoreScreen()
+    {
+        return m_IsScoreScreen;
     }
 
     public void SetVolume(float volume)
     {
         volume = Mathf.Clamp01(volume);
         m_MusicVolume = volume;
-        //PlayerPrefs.SetFloat("Music Volume", volume);
-        //Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
     }
 }
