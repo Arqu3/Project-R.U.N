@@ -12,6 +12,9 @@ public class FramesPerSecond : MonoBehaviour {
     float m_accum = 0.0f;
     float m_timeLeft;
     int m_frames = 0;
+    int m_TotalFrames = 0;
+    float m_AVGFrames = 0.0f;
+    float m_Elapsed;
 
 	void Start ()
     {
@@ -29,17 +32,25 @@ public class FramesPerSecond : MonoBehaviour {
 	
 	void Update ()
     {
+        m_Elapsed += Time.deltaTime;
+
         m_timeLeft -= Time.deltaTime;
         m_accum += Time.timeScale / Time.deltaTime;
         //Make sure the value is given after incrementation
         ++m_frames;
+        ++m_TotalFrames;
+
+        if (m_Elapsed >= 1.0f)
+            m_AVGFrames = m_TotalFrames / m_Elapsed;
+        if (Input.GetKeyDown(KeyCode.F12))
+            Debug.Log("Current average FPS: " + m_AVGFrames);
 
         //End of interval
         if (m_timeLeft <= 0.0f)
         {
             //Display fps in F2 format
             float fps = m_accum / m_frames;
-            m_Text.text = "" + fps.ToString("F2");
+            m_Text.text = "" + fps.ToString("F0");
 
             //Color change depending on fps
             if (fps < 30)
