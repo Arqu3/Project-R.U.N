@@ -104,7 +104,7 @@ public class SoundEmitter : MonoBehaviour {
             SetVolume(max);
             timer = 0;
 
-            Debug.Log("LOOPING");
+            //Debug.Log("LOOPING");
         }
     }
 

@@ -16,7 +16,6 @@ public class KeybindingButton : MonoBehaviour
     public string m_KeyBinding;
     public bool m_IsActive = false;
     public bool m_IsAxis = false;
-    public bool m_IsUnbound = false;
 
     Text m_Text;
 
