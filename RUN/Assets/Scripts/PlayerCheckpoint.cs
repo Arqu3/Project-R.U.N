@@ -84,7 +84,18 @@ public class PlayerCheckpoint : MonoBehaviour
                 m_MovingPlatforms[i] = movingPlatforms[i].GetComponent<MovingPlatform>();
             }
         }
-	}
+
+        if (PlayerPrefs.GetInt("Continue", 0) == 1)
+        {
+            m_ElapsedTime = PlayerPrefs.GetFloat("TimeAtCheckpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0.0f);
+            SetToCheckpoint(PlayerPrefs.GetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0));
+            Debug.Log(m_ElapsedTime);
+            Debug.Log(PlayerPrefs.GetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0));
+            PlayerPrefs.SetInt("Continue", 0);
+        }
+
+        PlayerPrefs.SetInt("CurrentLevel", SceneManager.GetActiveScene().buildIndex);
+    }
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
@@ -148,6 +159,7 @@ public class PlayerCheckpoint : MonoBehaviour
         transform.position = new Vector3(m_CheckPoints[num].position.x, m_CheckPoints[num].position.y - 18.0f, m_CheckPoints[num].position.z);
 
         //Reset player
+        if (PlayerPrefs.GetInt("Continue", 0) == 0)
         m_CPlayer.ResetValues();
 
         //Set rotation to corresponding checkpoint
@@ -200,6 +212,11 @@ public class PlayerCheckpoint : MonoBehaviour
                     SetHighscore(m_ElapsedTime);
                     m_HasSetScore = true;
                 }
+            }
+            else
+            {
+                PlayerPrefs.SetFloat("TimeAtCheckpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), m_ElapsedTime);
+                PlayerPrefs.SetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), m_LastPassed);
             }
         }
 
