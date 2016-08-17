@@ -8,6 +8,100 @@ public enum MovementState
     Idle, Moving, Jumping, Falling, Wallrunning, Grabbing, Blinking, Climbing, VerticalClimbing
 }
 
+public struct Keybinding
+{
+    string m_Bind1;
+    string m_Bind2;
+    string m_Axis;
+    int m_ID;
+    KeyCode m_Keycode;
+    KeyCode m_Keycode2;
+
+    public Keybinding(string keycode, string keycode2, string axis, int id)
+    {
+        this.m_Bind1 = keycode;
+        this.m_Bind2 = keycode2;
+        this.m_Axis = axis;
+        this.m_ID = id;
+        m_Keycode = (KeyCode)System.Enum.Parse(typeof(KeyCode), keycode);
+        m_Keycode2 = (KeyCode)System.Enum.Parse(typeof(KeyCode), keycode2);
+    }
+
+    public void SetID(int id)
+    {
+        m_ID = id;
+    }
+    public void SetKeyCode(string keycode)
+    {
+        if (keycode != "Right Trigger" && keycode != "Left Trigger" && keycode != "DPadX" && keycode != "DPadY")
+        {
+            m_Bind1 = keycode;
+            m_Keycode = (KeyCode)System.Enum.Parse(typeof(KeyCode), keycode);
+        }
+    }
+
+    public void SetKeyCode2(string keycode)
+    {
+        if (keycode != "Right Trigger" && keycode != "Left Trigger" && keycode != "DPadX" && keycode != "DPadY")
+        {
+            m_Axis = "";
+            m_Bind2 = keycode;
+            m_Keycode2 = (KeyCode)System.Enum.Parse(typeof(KeyCode), keycode);
+        }
+        else
+        {
+            m_Bind2 = "";
+            m_Axis = keycode;
+        }
+    }
+
+    public bool IsButtonDown()
+    {
+        if (Input.GetKeyDown(m_Keycode))
+            return true;
+        if (m_Bind2 != "")
+        {
+            if (Input.GetKeyDown(m_Keycode2))
+                return true;
+        }
+        return false;
+    }
+    public bool IsButton()
+    {
+        if (Input.GetKey(m_Keycode))
+            return true;
+        if (m_Bind2 != "")
+        {
+            if (Input.GetKey(m_Keycode2))
+                return true;
+        }
+        return false;
+    }
+    public bool IsAxis()
+    {
+        if (m_Axis != "")
+        {
+            if (Input.GetAxis(m_Axis) != 0)
+                return true;
+        }
+        return false;
+    }
+    public bool IsAxisRaw()
+    {
+        if (m_Axis != "")
+        {
+            if (Input.GetAxisRaw(m_Axis) != 0)
+                return true;
+        }
+        return false;
+    }
+
+    public void PrintValues()
+    {
+        Debug.Log(m_ID + " : " + m_Bind1 + " : " + m_Bind2 + " : " + m_Axis);
+    }
+}
+
 public class ControllerPlayer : MonoBehaviour
 {
     //Public vars
@@ -35,10 +129,8 @@ public class ControllerPlayer : MonoBehaviour
 
     //Input vars
     string[] m_Keybinds;
-    KeyCode[] m_keycodes;
-    string[] m_Axis;
-    string[] m_KeyCodes;
-    public bool m_HasKeybinds;
+    bool m_HasKeybinds;
+    Keybinding[] m_Keys = new Keybinding[8];
 
     //Basic movement vars
     Vector3 m_ForwardDir;
@@ -90,7 +182,6 @@ public class ControllerPlayer : MonoBehaviour
     //Fall and dampen vars
     bool m_Dampening = false;
     bool m_Dampening1 = false;
-    bool m_Dampening2 = false;
     bool m_RequireDampening = false;
     bool m_Dampened = false;
     bool m_Slowed = false;
@@ -161,6 +252,12 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
+        for (int i = 0; i < m_Keys.Length; i++)
+        {
+            if (Input.GetKeyDown(KeyCode.H))
+                m_Keys[i].PrintValues();
+        }
+
         if (m_ControlsActive)
         {
             ResetUpdate();
@@ -238,7 +335,7 @@ public class ControllerPlayer : MonoBehaviour
             }
         }
     }
-    
+
     public MovementState GetState()
     {
         return m_MoveState;
@@ -262,7 +359,8 @@ public class ControllerPlayer : MonoBehaviour
             {
                 m_OnGround = false;
 
-                if (m_Rigidbody.velocity.y > 0f) { 
+                if (m_Rigidbody.velocity.y > 0f)
+                {
                     m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
                     m_MoveState = MovementState.Jumping;
                 }
@@ -346,7 +444,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_MoveState.Equals(MovementState.Wallrunning) && !m_WallrunInterrupted)
         {
-            movementVector = m_WallrunDir * Mathf.Clamp01(movementVector.z) * currentMoveSpeed;   
+            movementVector = m_WallrunDir * Mathf.Clamp01(movementVector.z) * currentMoveSpeed;
         }
         else
         {
@@ -390,7 +488,7 @@ public class ControllerPlayer : MonoBehaviour
             }
 
             else if (m_CurrentStepTime > stepTime)
-            { 
+            {
                 m_FootStepEmitter.PlayRandomClip(2);
                 m_CurrentStepTime -= stepTime;
             }
@@ -436,9 +534,10 @@ public class ControllerPlayer : MonoBehaviour
             //Debug.Log(Mathf.Clamp01(m_Rigidbody.velocity.y));
         }
 
-        if (m_MoveState.Equals(MovementState.Wallrunning)) {
+        if (m_MoveState.Equals(MovementState.Wallrunning))
+        {
             gravityBool = false;
-            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, - 1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
+            m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, -1 + movementVector.z * 0.8f, m_Rigidbody.velocity.z);
         }
         if (m_MoveState.Equals(MovementState.Climbing))
         {
@@ -450,9 +549,10 @@ public class ControllerPlayer : MonoBehaviour
 
     void JumpUpdate()
     {
-        if ((IsKeyDown(6) || IsKeyDown(7) || IsAxisRaw(7)) && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
+        if ((m_Keys[5].IsButtonDown() || m_Keys[5].IsAxisRaw()) && (m_OnGround || m_MoveState.Equals(MovementState.Wallrunning)))
         {
-            if (m_MoveState.Equals(MovementState.Wallrunning)){
+            if (m_MoveState.Equals(MovementState.Wallrunning))
+            {
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
             }
@@ -466,13 +566,13 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_WallrunGraceTimer += Time.deltaTime;
 
-                if (!m_isMovingFromInput)
-                {
-                    m_hMovement = Vector3.zero;
-                }
+            if (!m_isMovingFromInput)
+            {
+                m_hMovement = Vector3.zero;
+            }
         }
     }
-    
+
     bool RaycastDir(Vector3 direction)
     {
         float offsetCenter = 0.3f;
@@ -562,7 +662,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void BlinkUpdate()
     {
-        if (!m_IsBlinkCD && (IsKeyDown(4) || IsKeyDown(5) || IsAxisRaw(5)))
+        if (!m_IsBlinkCD && (m_Keys[4].IsButton() || m_Keys[4].IsAxisRaw()))
         {
             m_IsFOVChange = true;
             m_IsBlinkCD = true;
@@ -597,7 +697,8 @@ public class ControllerPlayer : MonoBehaviour
         else
         {
             //m_Rigidbody.collisionDetectionMode = CollisionDetectionMode.Discrete;
-            if (m_FOVTimer < 1) {
+            if (m_FOVTimer < 1)
+            {
                 m_FOVTimer += Time.deltaTime;
                 Camera.main.fieldOfView = Mathf.Lerp(90, 70, m_FOVTimer / 1);
                 m_BlinkParticles.startColor = new Color(1, 1, 1, Mathf.Lerp(1, 0, m_FOVTimer / 0.5f));
@@ -607,8 +708,8 @@ public class ControllerPlayer : MonoBehaviour
             else
                 Camera.main.fieldOfView = 70;
 
-                m_BlinkTimer = 0.0f;
-            }
+            m_BlinkTimer = 0.0f;
+        }
 
 
 
@@ -635,7 +736,7 @@ public class ControllerPlayer : MonoBehaviour
             //m_FOVTimer += Time.deltaTime;
             if (m_FOVTimer <= 0.0f)
             {
-               // m_FOVTimer = m_BlinkCD;
+                // m_FOVTimer = m_BlinkCD;
                 m_IsFOVChange = false;
             }
         }
@@ -696,14 +797,14 @@ public class ControllerPlayer : MonoBehaviour
 
     void ClimbUpdate()
     {
-        if (m_PlayerHands.m_CanClimb && (IsKey(6) || IsKey(7)) || IsAxisRaw(7))
+        if (m_PlayerHands.m_CanClimb && (m_Keys[5].IsButton() || m_Keys[5].IsAxisRaw()))
         {
             Climb();
             m_AnimHandler.PlayAnimation("Climb");
         }
 
         if (!m_MoveState.Equals(MovementState.Jumping))
-        { 
+        {
             //Climbing
             if (m_IsClimbing)
             {
@@ -737,7 +838,7 @@ public class ControllerPlayer : MonoBehaviour
                 m_IsColliderActive = true;
                 m_DisableTime = 0.3f;
             }
-        }   
+        }
     }
 
     public void DisableCollider(float time)
@@ -753,27 +854,25 @@ public class ControllerPlayer : MonoBehaviour
 
     void DampeningUpdate()
     {
-        if ((m_Dampening || m_Dampening1 || m_Dampening2) && m_DampeningTimer < m_DampeningTime)
+        if ((m_Dampening || m_Dampening1) && m_DampeningTimer < m_DampeningTime)
         {
             m_DampeningTimer += Time.deltaTime;
         }
         else
         {
             m_DampeningTimer = 0.0f;
-            m_Dampening = IsKey(8);
-            m_Dampening1 = IsKey(9);
-            m_Dampening2 = IsAxisRaw(9);
-            if (IsKey(8) || IsKey(9) || IsAxisRaw(9))
+            m_Dampening = m_Keys[6].IsButton();
+            m_Dampening1 = m_Keys[6].IsAxisRaw();
+            if (m_Keys[6].IsButton() || m_Keys[6].IsAxisRaw())
             {
                 if (!m_FallDampenInUse)
                 {
                     m_FallDampenInUse = true;
                     m_Dampening = true;
                     m_Dampening1 = true;
-                    m_Dampening2 = true;
                 }
             }
-            if (!IsKey(8) && !IsKey(9) && !IsAxisRaw(9))
+            if (!m_Keys[6].IsButton() && !m_Keys[6].IsAxisRaw())
             {
                 m_FallDampenInUse = false;
             }
@@ -827,7 +926,7 @@ public class ControllerPlayer : MonoBehaviour
             m_RequireDampening = false;
         }
 
-        if (m_RequireDampening && (m_Dampening || m_Dampening1 || m_Dampening2))
+        if (m_RequireDampening && (m_Dampening || m_Dampening1))
         {
             m_Dampened = true;
             m_IsBoosted = true;
@@ -867,22 +966,23 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckWallrun()
     {
-        if (m_MySides.m_CanWallrun && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun )
+        if (m_MySides.m_CanWallrun && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun)
         {
             m_IsWallrunning = true;
 
             StartWallrun();
         }
-        
+
         if (!m_MySides.m_CanWallrun || m_WallrunInterrupted || !m_CanWallrun)
         {
             m_IsWallrunning = false;
             m_WallrunDirSet = false;
         }
 
-        if (m_IsWallrunning) {
+        if (m_IsWallrunning)
+        {
 
-            if ((IsKeyDown(6) || IsKeyDown(7) || IsAxisRaw(7)) || !m_isMovingFromInput)
+            if ((m_Keys[5].IsButtonDown() || m_Keys[5].IsAxisRaw()) || !m_isMovingFromInput)
             {
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
@@ -906,12 +1006,14 @@ public class ControllerPlayer : MonoBehaviour
             Vector3[] tempV = m_MySides.GetColliderInfo();
 
             Vector3 forward = new Vector3(transform.forward.x, 0, transform.forward.z);
-            
-            for (int t = 0; t < 2; t++) {  
-                for (int i = 0; i < 4; i++){
-                    if (Vector3.Angle(t * 2 * -tempV[i] +tempV[i], forward) < m_WallrunAngle)
+
+            for (int t = 0; t < 2; t++)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    if (Vector3.Angle(t * 2 * -tempV[i] + tempV[i], forward) < m_WallrunAngle)
                     {
-                        
+
                         m_WallrunDir = (t * 2 * -tempV[i] + tempV[i]).normalized;
                         t = 2;
                         i = 4;
@@ -939,7 +1041,7 @@ public class ControllerPlayer : MonoBehaviour
             {
                 controllerVertical = true;
             }
-            if ((m_VClimbTimer > 0 && IsKey(0) || controllerVertical) && !m_IsGrabbed)
+            if ((m_VClimbTimer > 0 && m_Keys[0].IsButton() || controllerVertical) && !m_IsGrabbed)
             {
                 m_VClimbTimer -= Time.deltaTime;
                 m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_VClimbTimer * 10, m_Rigidbody.velocity.z);
@@ -964,7 +1066,7 @@ public class ControllerPlayer : MonoBehaviour
         Ray ray = new Ray();
         for (int i = 0; i < 4; i++)
         {
-            switch(i)
+            switch (i)
             {
                 case (0):
                     tempV = transform.forward;
@@ -1026,7 +1128,7 @@ public class ControllerPlayer : MonoBehaviour
             m_isMovingFromInput = true;
             m_NotMovingCount = 0;
         }
-        
+
         else
         {
             m_NotMovingCount++;
@@ -1103,7 +1205,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void ResetUpdate()
     {
-        if (IsKeyDown(10) || IsKeyDown(11) || IsAxisRaw(11))
+        if (m_Keys[7].IsButtonDown() || m_Keys[7].IsAxisRaw())
         {
             m_PCheckpoint.SetToCheckpoint(m_PCheckpoint.GetLastPassed());
         }
@@ -1113,21 +1215,9 @@ public class ControllerPlayer : MonoBehaviour
         }
     }
 
-    public void SetKeybinds(string[] binds, List<string> keycodes, List<string> axis)
+    public void SetKeybinds(string[] binds)
     {
         m_Keybinds = new string[binds.Length];
-        m_KeyCodes = new string[keycodes.Count];
-        m_keycodes = new KeyCode[keycodes.Count];
-        m_Axis = new string[axis.Count];
-
-        for (int i = 0; i < keycodes.Count; i++)
-        {
-            m_KeyCodes[i] = PlayerPrefs.GetString(keycodes[i]);
-        }
-        for (int i = 0; i < axis.Count; i++)
-        {
-            m_Axis[i] = PlayerPrefs.GetString(axis[i]);
-        }
 
         if (m_Keybinds.Length > 0)
         {
@@ -1136,24 +1226,28 @@ public class ControllerPlayer : MonoBehaviour
                 m_Keybinds[i] = PlayerPrefs.GetString(binds[i]);
             }
 
-            for (int i = 0; i < m_Keybinds.Length; i++)
+            int inc = 1;
+            int laps = 0;
+            for (int i = 0; i < m_Keybinds.Length; i+=inc)
             {
-                for (int j = 0; j < m_KeyCodes.Length; j++)
+                if (i <= 3)
+                    m_Keys[laps].SetKeyCode(m_Keybinds[i]);
+                else
                 {
-                    if (m_Keybinds[i] == m_KeyCodes[j])
+                    inc = 2;
+                    if (i + 1 < m_Keybinds.Length)
                     {
-                        m_keycodes[j] = ((KeyCode)System.Enum.Parse(typeof(KeyCode), m_KeyCodes[j]));
+                        m_Keys[laps].SetKeyCode(m_Keybinds[i]);
+                        m_Keys[laps].SetKeyCode2(m_Keybinds[i + 1]);
                     }
                 }
 
-                for (int j = 0; j < m_Axis.Length; j++)
+                if (laps < m_Keys.Length - 1)
                 {
-                    if (m_Keybinds[i] == m_Axis[j])
-                    {
-                        m_Axis[j] = m_Keybinds[i];
-                    }
+                    laps++;
+                    m_Keys[laps].SetID(laps);
                 }
-            }
+            }            
             m_HasKeybinds = true;
         }
         else
@@ -1165,61 +1259,13 @@ public class ControllerPlayer : MonoBehaviour
         return m_HasKeybinds;
     }
 
-    bool IsKeyDown(int index)
-    {
-        for (int i = 0; i < m_KeyCodes.Length; i++)
-        {
-            if (m_Keybinds[index] == m_KeyCodes[i])
-            {
-                return Input.GetKeyDown(m_keycodes[i]);
-            }
-        }
-        return false;
-    }
-
-    bool IsKey(int index)
-    {
-        for (int i = 0; i < m_KeyCodes.Length; i++)
-        {
-            if (m_Keybinds[index] == m_KeyCodes[i])
-            {
-                return Input.GetKey(m_keycodes[i]);
-            }
-        }
-        return false;
-    }
-
-    bool IsAxis(int index)
-    {
-        for (int i = 0; i < m_Axis.Length; i++)
-        {
-            if (m_Keybinds[index] == m_Axis[i])
-            {
-                return Input.GetAxis(m_Axis[i]) != 0;
-            }
-        }
-        return false;
-    }
-
-    bool IsAxisRaw(int index)
-    {
-        for (int i = 0; i < m_Axis.Length; i++)
-        {
-            if (m_Keybinds[index] == m_Axis[i])
-            {
-                return Input.GetAxisRaw(m_Axis[i]) != 0;
-            }
-        }
-        return false;
-    }
-
     float InputZ()
     {
-        if (IsKey(0))
+        if (m_Keys[0].IsButton())
         {
             m_ZDir = 1.0f;
         }
-        else if (IsKey(1))
+        else if (m_Keys[1].IsButton())
         {
             m_ZDir = -1.0f;
         }
@@ -1231,11 +1277,11 @@ public class ControllerPlayer : MonoBehaviour
 
     float InputX()
     {
-        if (IsKey(2))
+        if (m_Keys[2].IsButton())
         {
             m_XDir = -1.0f;
         }
-        else if (IsKey(3))
+        else if (m_Keys[3].IsButton())
         {
             m_XDir = 1.0f;
         }
