@@ -6,7 +6,8 @@ public class Hands : MonoBehaviour {
     Rigidbody m_Rigidbody;
     ControllerPlayer m_CPlayer;
     Vector3 m_PlayerVel;
-
+    Vector3 m_LedgeForward;
+    bool m_HasSetDir = false;
     public bool m_CanClimb;
 
     void Start()
@@ -21,12 +22,25 @@ public class Hands : MonoBehaviour {
         {
             if (col.GetComponent<ParkourObject>().m_Climbable)
             {
+                if (!m_HasSetDir)
+                {
+                    m_LedgeForward = col.transform.parent.InverseTransformDirection(col.transform.forward);
+                    if (Dot(transform.forward, m_LedgeForward) < 0)
+                    {
+                        m_LedgeForward = -m_LedgeForward;
+                        Debug.Log("Behind");
+                    }
+                    else
+                    {
+                        Debug.Log("Front");
+                    }
+                }
                 m_PlayerVel = m_Rigidbody.velocity;
                 m_Rigidbody.useGravity = false;
                 m_Rigidbody.velocity = Vector3.zero;
                 m_CanClimb = true;
+                m_HasSetDir = true;
                 m_CPlayer.IsGrabbed(true);
-                Debug.Log("Grabbed");
             }
         }
     }
@@ -38,9 +52,9 @@ public class Hands : MonoBehaviour {
             if (col.GetComponent<ParkourObject>().m_Climbable)
             {
                 m_CanClimb = false;
+                m_HasSetDir = false;
                 m_Rigidbody.useGravity = true;
                 m_CPlayer.IsGrabbed(false);
-                Debug.Log("Released");
             }
         }
     }
@@ -54,6 +68,15 @@ public class Hands : MonoBehaviour {
         {
             m_Rigidbody.AddForce(new Vector3(transform.forward.x, 0.0f, transform.forward.z) * 100.0f, ForceMode.Impulse);
         }
-        Debug.Log("Velocity set");
+    }
+
+    public Vector3 GetLedgeForward()
+    {
+        return m_LedgeForward;
+    }
+
+    float Dot(Vector3 lhs, Vector3 rhs)
+    {
+        return Vector3.Dot(lhs, rhs);
     }
 }

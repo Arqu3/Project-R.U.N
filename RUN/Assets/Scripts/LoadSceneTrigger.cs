@@ -20,6 +20,7 @@ public class LoadSceneTrigger : MonoBehaviour
     {
         if (col.gameObject.tag == "Player")
         {
+            Debug.Log("Player entered loadscene trigger");
             SceneManager.LoadScene(m_SceneName);
         }
     }

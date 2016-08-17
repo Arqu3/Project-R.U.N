@@ -155,8 +155,8 @@ public class PlayerCheckpoint : MonoBehaviour
         GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         //Set position
-        //Note - y position -18 because of parent offset position in playerbody
-        transform.position = new Vector3(m_CheckPoints[num].position.x, m_CheckPoints[num].position.y - 18.0f, m_CheckPoints[num].position.z);
+        //Note - y position -16 because of parent offset position in playerbody
+        transform.position = new Vector3(m_CheckPoints[num].position.x, m_CheckPoints[num].position.y - 16.0f, m_CheckPoints[num].position.z);
 
         //Reset player
         if (PlayerPrefs.GetInt("Continue", 0) == 0)
