@@ -79,6 +79,7 @@ public class ControllerPlayer : MonoBehaviour
     ParticleSystem m_ConstantParticles;
 
     //Ledgegrab vars
+    Vector3 m_GrabbedDir;
     bool m_IsColliderActive = true;
     float m_DisableTime = 0.3f;
     bool m_IsGrabbed = false;
@@ -270,13 +271,8 @@ public class ControllerPlayer : MonoBehaviour
                     m_AccelPercent = m_AccelPercent + Time.deltaTime * 10 * m_AccelMultiplier;
                     m_MoveState = MovementState.Falling;
                 }
-                    
-                if (m_IsGrabbed)
-                {
-                    m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
-                    m_MoveState = MovementState.Grabbing;
-                }
-                else if (m_IsWallrunning)
+
+                if (m_IsWallrunning)
                 {
                     m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
                     m_MoveState = MovementState.Wallrunning;
@@ -325,8 +321,13 @@ public class ControllerPlayer : MonoBehaviour
             m_MoveState = MovementState.Blinking;
         }
 
-        //Checks if player is currently climbing
-        if (m_IsClimbing)
+
+        if (m_IsGrabbed)
+        {
+            m_AccelPercent = m_AccelPercent - Time.deltaTime * 20 * m_AccelMultiplier;
+            m_MoveState = MovementState.Grabbing;
+        }
+        else if (m_IsClimbing)
         {
             m_OnGround = false;
             m_MoveState = MovementState.Climbing;
@@ -474,25 +475,27 @@ public class ControllerPlayer : MonoBehaviour
     
     bool RaycastDir(Vector3 direction)
     {
-        Vector3 v = new Vector3(transform.position.x, m_Collider.bounds.min.y, transform.position.z);
+        float offsetCenter = 0.3f;
+        float offsetHeight = 0.6f;
+        float distance = 0.6f;
 
+        Vector3 v = new Vector3(transform.position.x, m_Collider.bounds.min.y - offsetHeight, transform.position.z);
         Vector3 tempV = Vector3.zero;
 
         Ray ray = new Ray();
-        float offset = 0.3f;
 
         for (int i = 0; i < 4; i++)
         {
             switch (i)
             {
                 case (0):
-                    tempV = new Vector3(transform.forward.x * offset, 0, transform.forward.z * offset);
+                    tempV = new Vector3(transform.forward.x * offsetCenter, 0, transform.forward.z * offsetCenter);
                     break;
                 case (1):
                     tempV = -tempV;
                     break;
                 case (2):
-                    tempV = new Vector3(transform.right.x * offset, 0, transform.right.z * offset);
+                    tempV = new Vector3(transform.right.x * offsetCenter, 0, transform.right.z * offsetCenter);
                     break;
                 case (3):
                     tempV = -tempV;
@@ -502,9 +505,9 @@ public class ControllerPlayer : MonoBehaviour
             }
 
             ray = new Ray(tempV + v, direction);
-            Debug.DrawRay(tempV + v, direction);
+            Debug.DrawRay(tempV + v, direction * distance, Color.red);
 
-            if (Physics.Raycast(ray, 1f, m_JumpMask))
+            if (Physics.Raycast(ray, distance, m_JumpMask))
             {
                 return true;
             }
@@ -672,6 +675,8 @@ public class ControllerPlayer : MonoBehaviour
     public void IsGrabbed(bool state)
     {
         m_IsGrabbed = state;
+        if (m_IsGrabbed)
+            m_GrabbedDir = m_PlayerHands.GetLedgeForward();
     }
 
     void FeetClimb()
@@ -1060,6 +1065,11 @@ public class ControllerPlayer : MonoBehaviour
     public Vector3 GetWallrunDir()
     {
         return m_WallrunDir;
+    }
+
+    public Vector3 GetGrabbedDir()
+    {
+        return m_GrabbedDir;
     }
 
     public void ResetValues()
