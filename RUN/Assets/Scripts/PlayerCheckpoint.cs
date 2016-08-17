@@ -15,8 +15,6 @@ public class PlayerCheckpoint : MonoBehaviour
     public static int m_LastPassed;
     public Transform[] m_CheckPoints;
     public List<float> m_HighScores;
-    public Text m_HighscoreText;
-    public Text m_EndText;
     public MovingPlatform[] m_MovingPlatforms;
 
     //Other vars
@@ -33,7 +31,7 @@ public class PlayerCheckpoint : MonoBehaviour
     SimpleSmoothMouseLook m_Camera;
     Text m_ElapsedText;
     Text m_PromptText;
-    GameObject m_UI;
+    ControllerUI m_UI;
 
     float m_FTemp = 0.0f;
     string m_SaveString = "";
@@ -47,9 +45,7 @@ public class PlayerCheckpoint : MonoBehaviour
 
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
         m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
-        //m_HighscoreText = GameObject.Find("HighscoreText").GetComponent<Text>();
-        //m_EndText = GameObject.Find("EndText").GetComponent<Text>();
-        m_UI = GameObject.Find("Canvas");
+        m_UI = GameObject.Find("Canvas").GetComponent<ControllerUI>();
 
         //Find checkpoints
         var checkPoints = GameObject.FindGameObjectsWithTag("Checkpoint");
@@ -84,10 +80,22 @@ public class PlayerCheckpoint : MonoBehaviour
             m_MovingPlatforms = new MovingPlatform[movingPlatforms.Length];
             for (int i = 0; i < movingPlatforms.Length; i++)
             {
+                if (movingPlatforms[i].GetComponent<MovingPlatform>())
                 m_MovingPlatforms[i] = movingPlatforms[i].GetComponent<MovingPlatform>();
             }
         }
-	}
+
+        if (PlayerPrefs.GetInt("Continue", 0) == 1)
+        {
+            m_ElapsedTime = PlayerPrefs.GetFloat("TimeAtCheckpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0.0f);
+            SetToCheckpoint(PlayerPrefs.GetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0));
+            Debug.Log(m_ElapsedTime);
+            Debug.Log(PlayerPrefs.GetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0));
+            PlayerPrefs.SetInt("Continue", 0);
+        }
+
+        PlayerPrefs.SetInt("CurrentLevel", SceneManager.GetActiveScene().buildIndex);
+    }
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
@@ -147,13 +155,12 @@ public class PlayerCheckpoint : MonoBehaviour
         GetComponent<Rigidbody>().velocity = Vector3.zero;
 
         //Set position
-        //Note - y position -18 because of parent offset position in playerbody
-        transform.position = new Vector3(m_CheckPoints[num].position.x, m_CheckPoints[num].position.y - 18.0f, m_CheckPoints[num].position.z);
+        //Note - y position -16 because of parent offset position in playerbody
+        transform.position = new Vector3(m_CheckPoints[num].position.x, m_CheckPoints[num].position.y - 16.0f, m_CheckPoints[num].position.z);
 
-        //Reset blink CD and fall time
-        m_CPlayer.SendMessage("BlinkReset");
-        m_CPlayer.SendMessage("FallTimerReset");
-        m_CPlayer.SendMessage("BoostReset");
+        //Reset player
+        if (PlayerPrefs.GetInt("Continue", 0) == 0)
+        m_CPlayer.ResetValues();
 
         //Set rotation to corresponding checkpoint
         m_Camera._mouseAbsolute.x = m_CheckPoints[num].localEulerAngles.y;
@@ -201,14 +208,15 @@ public class PlayerCheckpoint : MonoBehaviour
 
                 if (!m_HasSetScore)
                 {
-                    m_UI.SendMessage("ToggleScoreScreen");
+                    m_UI.ToggleScoreScreen();
                     SetHighscore(m_ElapsedTime);
-                    if (m_EndText)
-                    {
-                        m_EndText.text = "Level Complete!\nTime: " + m_CompleteTime;
-                    }
                     m_HasSetScore = true;
                 }
+            }
+            else
+            {
+                PlayerPrefs.SetFloat("TimeAtCheckpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), m_ElapsedTime);
+                PlayerPrefs.SetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), m_LastPassed);
             }
         }
 
@@ -252,7 +260,7 @@ public class PlayerCheckpoint : MonoBehaviour
             m_PromptTimer = 0.0f;
         }
 
-        if (m_HighscoreText)
+        if (m_UI.GetIsScoreScreen())
         {
             int t = 0;
             if (m_HighScores.Count < 10)
@@ -273,8 +281,8 @@ public class PlayerCheckpoint : MonoBehaviour
                 time = String.Format("{0:00}:{1:00}", minutes, seconds) + ":" + decimals;
                 s += i + 1 + ": " + time + "\n";
             }
-            m_HighscoreText.text = "Your best times:\n" + s;
-
+            GameObject.Find("EndText").GetComponent<Text>().text = "Level Complete!\nTime: " + m_CompleteTime;
+            GameObject.Find("HighscoreText").GetComponent<Text>().text = "Your Best Times:\n" + s;
         }
     }
 

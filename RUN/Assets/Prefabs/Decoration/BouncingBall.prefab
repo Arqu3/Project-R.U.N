@@ -12,8 +12,9 @@ GameObject:
   - 135: {fileID: 13563064}
   - 23: {fileID: 2347712}
   - 54: {fileID: 5405132}
+  - 114: {fileID: 11444248}
   m_Layer: 0
-  m_Name: Sphere (1)
+  m_Name: BouncingBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 126054}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2466.05, y: 442, z: 1211.9}
+  m_LocalPosition: {x: 2.8803596, y: 19.15, z: 63.12452}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -73,12 +74,24 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &11444248
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 126054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7076064e067c3c74d9a2eb0b7779b237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounce: 1.1
 --- !u!135 &13563064
 SphereCollider:
   m_ObjectHideFlags: 1
