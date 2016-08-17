@@ -9,7 +9,7 @@ public class MenuManager : MonoBehaviour {
 	void Start () {
         float range = Random.Range(0, 100);
 
-        if (range < 10)
+        if (range < 2)
         {
             GetComponent<Image>().sprite = logoImage;
         }

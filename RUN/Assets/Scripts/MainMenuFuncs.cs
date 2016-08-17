@@ -33,15 +33,13 @@ public class MainMenuFuncs : MonoBehaviour
 
 		Time.timeScale = 1.0f;
 		m_Animator.SetFloat("Direction", 1.0f);
-	}
-	
-	void Update ()
-	{
+        PlayerPrefs.SetInt("Continue", 0);
 	}
 
 	public void OnPlayButton()
 	{
-		if (PlayerPrefs.GetInt("CurrentLevel", 0) == 0)
+        PlayerPrefs.SetInt("Continue", 1);
+        if (PlayerPrefs.GetInt("CurrentLevel", 0) == 0)
 		{
 			PlayerPrefs.SetInt("CurrentLevel", 1);
 			SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));

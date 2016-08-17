@@ -877,7 +877,7 @@ public class ControllerPlayer : MonoBehaviour
 
         if (m_IsWallrunning) {
 
-            if (Input.GetButtonDown("Jump") || !m_isMovingFromInput)
+            if ((IsKeyDown(6) || IsKeyDown(7) || IsAxisRaw(7)) || !m_isMovingFromInput)
             {
                 m_WallrunInterrupted = true;
                 m_CanWallrun = false;
@@ -1083,6 +1083,12 @@ public class ControllerPlayer : MonoBehaviour
 
         //Vertical climbing
         SetVerticalClimb(false);
+
+        //Grabbing/climbing
+        m_IsGrabbed = false;
+        m_IsClimbing = false;
+
+        GameObject.Find("Player").transform.parent = null;
     }
 
     void ResetUpdate()
