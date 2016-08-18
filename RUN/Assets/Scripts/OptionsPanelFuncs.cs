@@ -39,9 +39,20 @@ public class OptionsPanelFuncs : MonoBehaviour
 
     public bool m_ToggleSound;
     Text m_ToggleButton;
+    float m_SoundVolume;
 
     void Start()
     {
+        //Set toggle value
+        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
+        {
+            m_ToggleSound = false;
+        }
+        else
+        {
+            m_ToggleSound = true;
+        }
+
         //PlayerPrefs.SetInt("Toggle Sound", 0);
         //Debug.Log("Set default toggle value");
 
@@ -93,7 +104,6 @@ public class OptionsPanelFuncs : MonoBehaviour
         {
             //Player
             m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
-            //m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
 
             //Sounds
             var sounds = GameObject.FindGameObjectsWithTag("Sound Emitter");
@@ -107,9 +117,15 @@ public class OptionsPanelFuncs : MonoBehaviour
                 for (int i = 0; i < m_Sounds.Length; i++)
                 {
                     if (m_ToggleSound)
+                    {
                         m_Sounds[i].SetVolume(PlayerPrefs.GetFloat("Sound Volume", 0.5f));
+                        m_SoundVolume = PlayerPrefs.GetFloat("Sound Volume", 0.5f);
+                    }
                     else
+                    {
                         m_Sounds[i].SetVolume(0);
+                        m_SoundVolume = 0;
+                    }
                 }
             }
 
@@ -133,16 +149,6 @@ public class OptionsPanelFuncs : MonoBehaviour
                 m_Pause = GameObject.Find("PausePanel").GetComponent<PausePanelFuncs>();
             }
         }
-
-        //Set toggle value
-        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
-        {
-            m_ToggleSound = false;
-        }
-        else
-        {
-            m_ToggleSound = true;
-        }
     }
 
     void Update()
@@ -153,9 +159,17 @@ public class OptionsPanelFuncs : MonoBehaviour
         m_SoundText.text = "Sound Volume: " + m_SoundSlider.value;
 
         if (m_ToggleSound)
+        {
+            for (int i = 0; i < m_Sounds.Length; i++)
+            {
+                m_Sounds[i].SetVolume(m_SoundVolume);
+            }
             m_ToggleButton.text = "Sound Enabled";
+        }
         else
+        {
             m_ToggleButton.text = "Sound Disabled";
+        }
 
         if (m_Options && Input.GetButtonDown("Pause"))
             ButtonOptions();
@@ -211,6 +225,7 @@ public class OptionsPanelFuncs : MonoBehaviour
         if (m_Options || m_State.Equals(State.MainMenu))
         {
             PlayerPrefs.SetFloat("Sound Volume", m_SoundSlider.value / 100);
+            m_SoundVolume = PlayerPrefs.GetFloat("Sound Volume", 0.5f);
             if (m_Sounds.Length > 0 && m_ToggleSound)
             {
                 for (int i = 0; i < m_Sounds.Length; i++)
@@ -235,6 +250,7 @@ public class OptionsPanelFuncs : MonoBehaviour
                 m_Music.SetVolumeMuted(Mathf.Clamp01(PlayerPrefs.GetFloat("Music Volume", 0.5f)));
                 m_Ambience.SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Sound Volume", 0.5f)));
                 m_UI.SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Music Volume", 0.5f)));
+                m_SoundVolume = PlayerPrefs.GetFloat("Sound Volume", 0.5f);
                 for (int i = 0; i < m_Sounds.Length; i++)
                 {
                     m_Sounds[i].SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Sound Volume", 0.5f)));
@@ -251,6 +267,7 @@ public class OptionsPanelFuncs : MonoBehaviour
                 m_Music.SetVolumeMuted(0);
                 m_Ambience.SetVolume(0);
                 m_UI.SetVolume(0);
+                m_SoundVolume = 0;
                 for (int i = 0; i < m_Sounds.Length; i++)
                 {
                     m_Sounds[i].SetVolume(0);

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LevelSelectButton : MonoBehaviour
 {
@@ -13,7 +14,14 @@ public class LevelSelectButton : MonoBehaviour
 	
 	void Update()
     {
-	
+        if (m_ID == 4)
+        {
+            GetComponentInChildren<Text>().text = "Tutorial";
+        }
+        else
+        {
+            GetComponentInChildren<Text>().text = "Level: " + m_ID;
+        }
 	}
 
     public void SelectLevel()

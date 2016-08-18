@@ -292,8 +292,9 @@ public class MovingPlatform : MonoBehaviour
     {
         //Set IsMoving to true if mode isn't Constant
         //Set player parent to this platform
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player" || col.gameObject.tag == "Hand")
         {
+            Debug.Log(col.gameObject.tag);
             if (!m_HasReachedEnd || m_IsAtStart)
             {
                 if (!GetMode().Equals(Mode.Constant))
@@ -309,8 +310,9 @@ public class MovingPlatform : MonoBehaviour
     void OnCollisionStay(Collision col)
     {
         //Keep IsMoving true if mode is CollisionStay
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player" || col.gameObject.tag == "Hand")
         {
+            Debug.Log(col.gameObject.tag);
             if (!m_HasReachedEnd)
             {
                 if (GetMode().Equals(Mode.OnPlayerCollisionStay))
@@ -326,8 +328,9 @@ public class MovingPlatform : MonoBehaviour
     {
         //Set IsMoving to false if mode is CollisionStay
         //Set player parent to null when exiting
-        if (col.gameObject.tag == "Player")
+        if (col.gameObject.tag == "Player" || col.gameObject.tag == "Hand")
         {
+            Debug.Log(col.gameObject.tag);
             if (GetMode().Equals(Mode.OnPlayerCollisionStay))
             {
                 m_IsMoving = false;
