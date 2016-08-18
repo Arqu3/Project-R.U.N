@@ -84,7 +84,7 @@ public class ControllerUI : MonoBehaviour {
         if (m_Player.GetHasKeyBinds())
             m_OptionsPanel.gameObject.SetActive(m_OptionsPanel.m_Options);
         else
-            m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
+            m_Player.SetKeybinds(m_InputManager.GetPrefs());
 
         if (!m_IsScoreScreen)
         {
