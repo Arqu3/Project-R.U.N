@@ -179,7 +179,7 @@ public class OptionsPanelFuncs : MonoBehaviour
     public void ButtonOptions()
     {
         if (m_Options)
-            m_Player.SetKeybinds(m_InputManager.GetPrefs(), m_InputManager.GetKeyCodes(), m_InputManager.GetAxisPrefs());
+            m_Player.SetKeybinds(m_InputManager.GetPrefs());
         m_Options = !m_Options;
     }
 

@@ -7,6 +7,7 @@ public class InputManager : MonoBehaviour
     public KeybindingButton[] m_Buttons;
 
     public List<string> m_KeyCodePrefs = new List<string>();
+    public List<string> m_ControllerPrefs = new List<string>();
 
     public List<string> m_AxisPrefs = new List<string>();
 
@@ -29,16 +30,6 @@ public class InputManager : MonoBehaviour
             for (int i = 0; i < buttons.Length; i++)
             {
                 m_Buttons[i] = buttons[i].GetComponent<KeybindingButton>();
-
-                //Add to different list depending on axis or not
-                if (!buttons[i].GetComponent<KeybindingButton>().m_IsAxis)
-                {
-                    m_KeyCodePrefs.Add(buttons[i].GetComponent<KeybindingButton>().m_PlayerPref);
-                }
-                else
-                {
-                    m_AxisPrefs.Add(buttons[i].GetComponent<KeybindingButton>().m_PlayerPref);
-                }
             }
 
             //Sort buttons
@@ -52,6 +43,23 @@ public class InputManager : MonoBehaviour
                         m_Buttons[sort + 1] = m_Buttons[sort];
                         m_Buttons[sort] = m_Temp;
                     }
+                }
+            }
+
+            for (int i = 0; i < m_Buttons.Length; i++)
+            {
+                //Add to different list depending on axis or not
+                if (buttons[i].GetComponent<KeybindingButton>().m_State.Equals(KeyState.Keyboard) && !buttons[i].GetComponent<KeybindingButton>().m_IsAxis)
+                {
+                    m_KeyCodePrefs.Add(buttons[i].GetComponent<KeybindingButton>().m_PlayerPref);
+                }
+                if (buttons[i].GetComponent<KeybindingButton>().m_IsAxis)
+                {
+                    m_AxisPrefs.Add(buttons[i].GetComponent<KeybindingButton>().m_PlayerPref);
+                }
+                if (buttons[i].GetComponent<KeybindingButton>().m_State.Equals(KeyState.Controller) && !buttons[i].GetComponent<KeybindingButton>().m_IsAxis)
+                {
+                    m_ControllerPrefs.Add(buttons[i].GetComponent<KeybindingButton>().m_PlayerPref);
                 }
             }
         }
@@ -101,7 +109,7 @@ public class InputManager : MonoBehaviour
                                     {
                                         if (!m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_AxisPrefs[j])
                                         {
-                                            m_KeyCodePrefs.Add(m_AxisPrefs[j]);
+                                            m_ControllerPrefs.Add(m_AxisPrefs[j]);
                                             m_AxisPrefs.Remove(m_AxisPrefs[j]);
                                         }
                                     }
@@ -122,12 +130,12 @@ public class InputManager : MonoBehaviour
                         if (!DuplicateCheck(i, m_LastAxis))
                         {
                             m_Buttons[i].SetIsAxis(true);
-                            for (int j = 0; j < m_KeyCodePrefs.Count; j++)
+                            for (int j = 0; j < m_ControllerPrefs.Count; j++)
                             {
-                                if (m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_KeyCodePrefs[j])
+                                if (m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_ControllerPrefs[j])
                                 {
-                                    m_AxisPrefs.Add(m_KeyCodePrefs[j]);
-                                    m_KeyCodePrefs.Remove(m_KeyCodePrefs[j]);
+                                    m_AxisPrefs.Add(m_ControllerPrefs[j]);
+                                    m_ControllerPrefs.Remove(m_ControllerPrefs[j]);
                                 }
                             }
                             m_Buttons[i].m_KeyBinding = m_LastAxis;
@@ -246,6 +254,11 @@ public class InputManager : MonoBehaviour
     public List<string> GetKeyCodes()
     {
         return m_KeyCodePrefs;
+    }
+
+    public List<string> GetControllerPrefs()
+    {
+        return m_ControllerPrefs;
     }
 
     public List<string> GetAxisPrefs()
