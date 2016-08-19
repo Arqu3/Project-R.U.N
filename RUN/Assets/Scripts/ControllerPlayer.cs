@@ -127,8 +127,8 @@ public class ControllerPlayer : MonoBehaviour
     public float m_BoostDecayAmount = 4.0f;
     public float m_VerticalClimbTimer = 1.5f;
 
-    public float t = 0.0f;
-    public float t1 = 0.0f;
+    float t = 0.0f;
+    float t1 = 0.0f;
 
     //Input vars
     string[] m_Keybinds;
@@ -255,12 +255,6 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        for (int i = 0; i < m_Keys.Length; i++)
-        {
-            if (Input.GetKeyDown(KeyCode.H))
-                m_Keys[i].PrintValues();
-        }
-
         if (m_ControlsActive)
         {
             ResetUpdate();
@@ -1179,6 +1173,10 @@ public class ControllerPlayer : MonoBehaviour
 
     public void ResetValues()
     {
+        //Reset acceleration
+        t = 0;
+        t1 = 0;
+
         //Blink
         m_IsBlinkCD = false;
         m_CurBlinkCD = m_BlinkCD;
@@ -1212,7 +1210,7 @@ public class ControllerPlayer : MonoBehaviour
         {
             m_PCheckpoint.SetToCheckpoint(m_PCheckpoint.GetLastPassed());
         }
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.Y))
         {
             m_PCheckpoint.ReloadScene();
         }

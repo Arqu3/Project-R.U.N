@@ -11,12 +11,18 @@ public class ParkourObject : MonoBehaviour
 
     void Start()
     {
-        if (this.gameObject.name == "LedgeX" || this.gameObject.name == "LedgeZ")
+        if (this.gameObject.transform.parent != null)
         {
-            m_IsMovingLedge = true;
+            if (this.gameObject.transform.parent.tag == "MovingPlatform")
+            {
+                if (this.gameObject.name == "LedgeX" || this.gameObject.name == "LedgeZ")
+                {
+                    m_IsMovingLedge = true;
+                }
+                else
+                    m_IsMovingLedge = false;
+            }
         }
-        else
-            m_IsMovingLedge = false;
     }
 
     public bool GetClimbable()
