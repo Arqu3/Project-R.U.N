@@ -281,8 +281,10 @@ public class PlayerCheckpoint : MonoBehaviour
                 time = String.Format("{0:00}:{1:00}", minutes, seconds) + ":" + decimals;
                 s += i + 1 + ": " + time + "\n";
             }
-            GameObject.Find("EndText").GetComponent<Text>().text = "Level Complete!\nTime: " + m_CompleteTime;
-            GameObject.Find("HighscoreText").GetComponent<Text>().text = "Your Best Times:\n" + s;
+            if (GameObject.Find("EndText"))
+                GameObject.Find("EndText").GetComponent<Text>().text = "Level Complete!\nTime: " + m_CompleteTime;
+            if (GameObject.Find("HighscoreText"))
+                GameObject.Find("HighscoreText").GetComponent<Text>().text = "Your Best Times:\n" + s;
         }
     }
 

@@ -83,14 +83,6 @@ public class MainMenuHandler : MonoBehaviour
 
     void TextUpdate()
     {
-        if (m_State.Equals(State.LevelSelect))
-        {
-            for (int i = 0; i < m_LevelSelectButtons.Length; i++)
-            {
-                m_LevelSelectButtons[i].GetComponentInChildren<Text>().text = "Level: " + (i + 1);
-            }
-        }
-
         if (PlayerPrefs.GetInt("CurrentLevel", 0) == 0)
         {
             m_NewGameButton.GetComponentInChildren<Text>().text = "New Game";
