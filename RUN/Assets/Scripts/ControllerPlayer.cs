@@ -17,11 +17,11 @@ public struct Keybinding
     KeyCode m_Keycode;
     KeyCode m_Keycode2;
 
-    public Keybinding(string keycode, string keycode2, string axis, int id)
+    public Keybinding(string keycode, string keycode2, int id)
     {
         this.m_Bind1 = keycode;
         this.m_Bind2 = keycode2;
-        this.m_Axis = axis;
+        this.m_Axis = "";
         this.m_ID = id;
         m_Keycode = (KeyCode)System.Enum.Parse(typeof(KeyCode), keycode);
         m_Keycode2 = (KeyCode)System.Enum.Parse(typeof(KeyCode), keycode2);
@@ -126,6 +126,9 @@ public class ControllerPlayer : MonoBehaviour
     public float m_BoostAmount = 10.0f;
     public float m_BoostDecayAmount = 4.0f;
     public float m_VerticalClimbTimer = 1.5f;
+
+    public float t = 0.0f;
+    public float t1 = 0.0f;
 
     //Input vars
     string[] m_Keybinds;
@@ -1261,16 +1264,45 @@ public class ControllerPlayer : MonoBehaviour
 
     float InputZ()
     {
+        float mult = 2.0f;
+        float decMult = 0.5f;
         if (m_Keys[0].IsButton())
         {
-            m_ZDir = 1.0f;
+            if (t < 1.0f)
+                t += Time.deltaTime * mult;
+            if (t1 > 0.75)
+                t1 = 0.0f;
+            else if (t1 > 0.0f)
+                t1 -= Time.deltaTime * decMult;
+            m_ZDir = Mathf.Lerp(0.0f, 1.0f, t);
+            //Debug.Log(m_Rigidbody.velocity.magnitude);
         }
         else if (m_Keys[1].IsButton())
         {
-            m_ZDir = -1.0f;
+            if (t1 < 1.0f)
+                t1 += Time.deltaTime * mult;
+            if (t > 0.75)
+                t = 0.0f;
+            else if (t > 0.0f)
+                t -= Time.deltaTime * decMult;
+            m_ZDir = Mathf.Lerp(0.0f, -1.0f, t1);
+            //Debug.Log(m_Rigidbody.velocity.magnitude);
         }
         else
-            m_ZDir = 0.0f;
+        {
+            if (t > 0.0f)
+                t -= Time.deltaTime * decMult;
+            if (t1 > 0.0f)
+                t1 -= Time.deltaTime * decMult;
+            m_ZDir = Mathf.Lerp(0.0f, m_ZDir, Mathf.Max(t, t1));
+            //Debug.Log(m_ZDir);
+
+            if (m_Rigidbody.velocity.magnitude < 0.1f)
+            {
+                t = 0.0f;
+                t1 = 0.0f;
+            }
+        }
 
         return m_ZDir;
     }
