@@ -75,9 +75,6 @@ public class InputManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-            PrintKeybindings();
-
         for (int i = 0; i < m_Buttons.Length; i++)
         {
             if (m_Buttons[i].m_IsActive)
@@ -86,37 +83,40 @@ public class InputManager : MonoBehaviour
                 {
                     if (Input.GetKeyDown(code))
                     {
-                        if (m_Buttons[i].m_State.Equals(KeyState.Keyboard))
+                        if (code != KeyCode.Escape)
                         {
-                            if (!IsControllerInput() && !IsControllerAxis())
+                            if (m_Buttons[i].m_State.Equals(KeyState.Keyboard))
                             {
-                                if (!DuplicateCheck(i, code.ToString()))
+                                if (!IsControllerInput() && !IsControllerAxis())
                                 {
-                                    //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
-                                    m_Buttons[i].m_KeyBinding = code.ToString();
-                                    SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                    if (!DuplicateCheck(i, code.ToString()))
+                                    {
+                                        //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
+                                        m_Buttons[i].m_KeyBinding = code.ToString();
+                                        SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                    }
                                 }
                             }
-                        }
-                        else if (m_Buttons[i].m_State.Equals(KeyState.Controller))
-                        {
-                            if (IsControllerInput())
+                            else if (m_Buttons[i].m_State.Equals(KeyState.Controller))
                             {
-                                if (!DuplicateCheck(i, code.ToString()))
+                                if (IsControllerInput())
                                 {
-                                    m_Buttons[i].SetIsAxis(false);
-                                    for (int j = 0; j < m_AxisPrefs.Count; j++)
+                                    if (!DuplicateCheck(i, code.ToString()))
                                     {
-                                        if (!m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_AxisPrefs[j])
+                                        m_Buttons[i].SetIsAxis(false);
+                                        for (int j = 0; j < m_AxisPrefs.Count; j++)
                                         {
-                                            m_ControllerPrefs.Add(m_AxisPrefs[j]);
-                                            m_AxisPrefs.Remove(m_AxisPrefs[j]);
+                                            if (!m_Buttons[i].m_IsAxis && m_Buttons[i].m_PlayerPref == m_AxisPrefs[j])
+                                            {
+                                                m_ControllerPrefs.Add(m_AxisPrefs[j]);
+                                                m_AxisPrefs.Remove(m_AxisPrefs[j]);
+                                            }
                                         }
-                                    }
 
-                                    //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
-                                    m_Buttons[i].m_KeyBinding = code.ToString();
-                                    SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                        //Debug.Log(System.Enum.GetName(typeof(KeyCode), code));
+                                        m_Buttons[i].m_KeyBinding = code.ToString();
+                                        SetKeyBinding(m_Buttons[i].m_PlayerPref, m_Buttons[i].m_KeyBinding);
+                                    }
                                 }
                             }
                         }
