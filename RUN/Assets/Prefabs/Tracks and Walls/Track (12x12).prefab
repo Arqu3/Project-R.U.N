@@ -118,7 +118,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!1 &153976
 GameObject:
@@ -607,7 +607,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsMovingLedge: 0
   m_Wallrunnable: 0
   m_Climbable: 1
   m_VerticalClimbable: 0
@@ -622,7 +621,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsMovingLedge: 0
   m_Wallrunnable: 0
   m_Climbable: 1
   m_VerticalClimbable: 0
@@ -649,7 +647,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cba00f38fdcdccd46b9c6834f4e62609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsMovingLedge: 0
   m_Wallrunnable: 0
   m_Climbable: 0
   m_VerticalClimbable: 0
@@ -2239,6 +2236,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
