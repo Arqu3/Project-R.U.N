@@ -118,6 +118,10 @@ public class PlayerCheckpoint : MonoBehaviour
         {
             Debug.Log(PlayerPrefs.GetFloat("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString(), Mathf.Infinity));
         }
+        else if (Input.GetKeyDown(KeyCode.F12))
+        {
+            PlayerPrefs.DeleteKey("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString());
+        }
 
         m_IsColliding = false;
 
