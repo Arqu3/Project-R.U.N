@@ -6,7 +6,9 @@ public class BodyAnim : MonoBehaviour {
     Animator m_Anim;
     ControllerPlayer m_Player;
 
-    string m_CurrentAnimation;
+
+
+    int m_CurrentAnimation;
 
 	// Use this for initialization
 	void Start () {
@@ -18,17 +20,19 @@ public class BodyAnim : MonoBehaviour {
 	void Update () {
 	    if (m_Player.GetState().Equals(MovementState.Idle))
         {
-
+            PlayAnimation((int)MovementState.Idle);
         }
-	}
+        else if (m_Player.GetState().Equals(MovementState.Moving))
+        {
+            PlayAnimation((int)MovementState.Moving);
+        }
+    }
 
-    void PlayAnimation(string name)
+    void PlayAnimation(int index)
     {
+        m_Anim.SetInteger("State" ,index);
 
-
-
-
-        m_CurrentAnimation = name;
+        m_CurrentAnimation = index;
     }
 
 }
