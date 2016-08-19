@@ -24,23 +24,29 @@ public class Hands : MonoBehaviour {
             {
                 if (!m_HasSetDir)
                 {
-                    float distX = col.bounds.max.x - col.bounds.min.x;
-                    float distZ = col.bounds.max.z - col.bounds.min.z;
-                    Vector3 dist = col.bounds.max - col.bounds.min;
-                    //Debug.Log("X: " + distX);
-                    //Debug.Log("Z: " + distZ);
-                    //Debug.Log("Dist: " + dist);
-                    m_LedgeForward = col.transform.parent.InverseTransformDirection(col.transform.forward);
-                    if (Dot(transform.forward, m_LedgeForward) < 0)
+                    if (col.gameObject.name == "LedgeX" || col.gameObject.name == "LedgeZ")
                     {
-                        m_LedgeForward = -m_LedgeForward;
-                        //Debug.Log("Behind");
+                        m_LedgeForward = col.transform.parent.position - col.bounds.center;
+
+                        Debug.Log("mult");
                     }
                     else
                     {
-                        //Debug.Log("Front");
+                        m_LedgeForward = col.transform.parent.InverseTransformDirection(col.transform.forward);
+                        if (Dot(transform.forward, m_LedgeForward) < 0)
+                        {
+                            m_LedgeForward = -m_LedgeForward;
+                            Debug.Log("Behind");
+                        }
+                        else
+                        {
+                            Debug.Log("Front");
+                        }
+
+                        Debug.Log("one");
                     }
                 }
+                m_LedgeForward.y = 0;
                 m_PlayerVel = m_Rigidbody.velocity;
                 m_Rigidbody.useGravity = false;
                 m_Rigidbody.velocity = Vector3.zero;
