@@ -10,7 +10,7 @@ public class ScorePanelFuncs : MonoBehaviour
 
     void Update()
     {
-        if (SceneManager.GetActiveScene().buildIndex != SceneManager.sceneCountInBuildSettings - 3)
+        if (SceneManager.GetActiveScene().buildIndex < SceneManager.sceneCountInBuildSettings - 3)
         {
             transform.FindChild("ButtonNextLevel").gameObject.SetActive(true);
         }
