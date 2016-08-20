@@ -37,6 +37,8 @@ public class ControllerUI : MonoBehaviour {
         if (GameObject.Find("PlayerBody"))
             m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
 
+        m_OptionsPanel.gameObject.SetActive(true);
+
         //Get inputs
         m_InputManager = GetComponentInChildren<InputManager>();
 
@@ -84,7 +86,10 @@ public class ControllerUI : MonoBehaviour {
         if (m_Player.GetHasKeyBinds())
             m_OptionsPanel.gameObject.SetActive(m_OptionsPanel.m_Options);
         else
-            m_Player.SetKeybinds(m_InputManager.GetPrefs());
+        {
+            if (m_OptionsPanel.gameObject.activeSelf)
+                m_Player.SetKeybinds(m_InputManager.GetPrefs());
+        }
 
         if (!m_IsScoreScreen)
         {
