@@ -27,8 +27,6 @@ public class Hands : MonoBehaviour {
                     if (col.gameObject.name == "LedgeX" || col.gameObject.name == "LedgeZ")
                     {
                         m_LedgeForward = col.transform.parent.position - col.bounds.center;
-
-                        Debug.Log("mult");
                     }
                     else
                     {
@@ -36,14 +34,7 @@ public class Hands : MonoBehaviour {
                         if (Dot(transform.forward, m_LedgeForward) < 0)
                         {
                             m_LedgeForward = -m_LedgeForward;
-                            Debug.Log("Behind");
                         }
-                        else
-                        {
-                            Debug.Log("Front");
-                        }
-
-                        Debug.Log("one");
                     }
                 }
                 m_LedgeForward.y = 0;
@@ -84,7 +75,7 @@ public class Hands : MonoBehaviour {
 
     public Vector3 GetLedgeForward()
     {
-        return m_LedgeForward;
+        return m_LedgeForward.normalized;
     }
 
     float Dot(Vector3 lhs, Vector3 rhs)

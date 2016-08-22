@@ -7,7 +7,6 @@ public class Front : MonoBehaviour
     float m_GraceTimer = 0.0f;
 
     ControllerPlayer m_Player;
-    bool m_HasSentMsg = false;
 
 	void Start ()
     {
@@ -28,12 +27,9 @@ public class Front : MonoBehaviour
         {
             if (col.gameObject.GetComponent<ParkourObject>().m_VerticalClimbable)
             {
-                if (!m_HasSentMsg)
-                {
-                    m_Player.SetVerticalClimb(true);
-                    Debug.Log("Climb");
-                    m_HasSentMsg = true;
-                }
+                m_Player.SetVerticalClimb(true);
+                //Camera.main.GetComponent<SimpleSmoothMouseLook>()._mouseAbsolute.y = 65.0f;
+                Debug.Log("Climb");
             }
         }
     }
@@ -43,7 +39,6 @@ public class Front : MonoBehaviour
         if (col.gameObject.GetComponent<ParkourObject>())
         {
             m_Player.SetVerticalClimb(false);
-            m_HasSentMsg = false;
         }
     }
 }
