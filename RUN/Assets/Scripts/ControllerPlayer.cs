@@ -1203,6 +1203,7 @@ public class ControllerPlayer : MonoBehaviour
         m_IsClimbing = false;
 
         GameObject.Find("Player").transform.parent = null;
+        Camera.main.transform.parent = null;
     }
 
     void ResetUpdate()
