@@ -87,12 +87,12 @@ public class OptionsPanelFuncs : MonoBehaviour
         //Music slider
         m_MusicText = transform.FindChild("MusicText").GetComponent<Text>();
         m_MusicSlider = transform.FindChild("MusicSlider").GetComponent<Slider>();
-        m_MusicSlider.value = PlayerPrefs.GetFloat("Music Volume") * 100.0f;
+        m_MusicSlider.value = PlayerPrefs.GetFloat("Music Volume", 0.5f) * 100.0f;
 
         //Sound slider
         m_SoundText = transform.FindChild("SoundText").GetComponent<Text>();
         m_SoundSlider = transform.FindChild("SoundSlider").GetComponent<Slider>();
-        m_SoundSlider.value = PlayerPrefs.GetFloat("Sound Volume") * 100.0f;
+        m_SoundSlider.value = PlayerPrefs.GetFloat("Sound Volume", 0.5f) * 100.0f;
 
         //Toggle button
         //m_Toggle = transform.FindChild("Toggle").GetComponent<Toggle>();
@@ -103,6 +103,16 @@ public class OptionsPanelFuncs : MonoBehaviour
         {
             //Player
             m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
+            if (m_ToggleSound)
+            {
+                m_Music.SetVolume(PlayerPrefs.GetFloat("Music Volume", 0.5f));
+                Debug.Log("Music unmuted");
+            }
+            else
+            {
+                m_Music.SetVolume(0);
+                Debug.Log("Music muted");
+            }
 
             //Sounds
             var sounds = GameObject.FindGameObjectsWithTag("Sound Emitter");
@@ -243,7 +253,7 @@ public class OptionsPanelFuncs : MonoBehaviour
 
             if (m_State.Equals(State.InGame))
             {
-                m_Music.SetVolumeMuted(Mathf.Clamp01(PlayerPrefs.GetFloat("Music Volume", 0.5f)));
+                m_Music.SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Music Volume", 0.5f)));
                 m_Ambience.SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Sound Volume", 0.5f)));
                 m_UI.SetVolume(Mathf.Clamp01(PlayerPrefs.GetFloat("Music Volume", 0.5f)));
                 m_SoundVolume = PlayerPrefs.GetFloat("Sound Volume", 0.5f);
@@ -260,7 +270,7 @@ public class OptionsPanelFuncs : MonoBehaviour
 
             if (m_State.Equals(State.InGame))
             {
-                m_Music.SetVolumeMuted(0);
+                m_Music.SetVolume(0);
                 m_Ambience.SetVolume(0);
                 m_UI.SetVolume(0);
                 m_SoundVolume = 0;

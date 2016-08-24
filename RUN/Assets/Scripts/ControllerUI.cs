@@ -65,7 +65,7 @@ public class ControllerUI : MonoBehaviour {
             PlayerPrefs.SetInt("Restart", 0);
         }
 
-        if (!m_OptionsPanel.GetIsSound())
+        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
         {
             m_MusicVolume = 0;
         }
@@ -74,7 +74,7 @@ public class ControllerUI : MonoBehaviour {
             m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
         }
 
-        Camera.main.GetComponent<MusicSystem>().SetVolumeMuted(m_MusicVolume);
+        Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
 
         Camera.main.GetComponent<MusicSystem>().PlayClip(0);
     }
@@ -105,11 +105,6 @@ public class ControllerUI : MonoBehaviour {
         {
             ScoreScreenUpdate();
         }
-
-        if (m_OptionsPanel.GetIsSound())
-        {
-            Camera.main.GetComponent<MusicSystem>().SetVolumeMuted(m_MusicVolume);
-        }
     }
 
     void PauseUpdate()
@@ -127,7 +122,6 @@ public class ControllerUI : MonoBehaviour {
 
                 m_Player.ToggleControls(!m_Paused);
                 m_PausePanel.UnPause = false;
-                //m_PausePanel.gameObject.SetActive(m_Paused);
                 Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = !m_Paused;
                 Cursor.lockState = CursorLockMode.None;
                 Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = !m_Paused;
