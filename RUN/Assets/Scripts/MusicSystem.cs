@@ -9,8 +9,14 @@ public class MusicSystem : MonoBehaviour {
     bool m_AudioBusy;
 
 	void Start () {
-        m_Volume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
-        m_Volume = Mathf.Clamp01(m_Volume);
+        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 1)
+        {
+            m_Volume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
+            m_Volume = Mathf.Clamp01(m_Volume);
+            Debug.Log("Music volume set");
+        }
+        else
+            m_Volume = 0;
         m_AudioSource = GameObject.Find("Main Camera").GetComponent<AudioSource>();
 	}
 	
@@ -22,15 +28,8 @@ public class MusicSystem : MonoBehaviour {
     public void SetVolume(float volume)
     {
         if (volume != m_Volume && !m_AudioBusy) {
-            PlayerPrefs.SetFloat("Music Volume", volume);
-            StartCoroutine(LerpVolume(volume));
-        }
-    }
-
-    public void SetVolumeMuted(float volume)
-    {
-        if (volume != m_Volume && !m_AudioBusy)
-        {
+            //PlayerPrefs.SetFloat("Music Volume", volume);
+            m_Volume = volume;
             StartCoroutine(LerpVolume(volume));
         }
     }
