@@ -154,7 +154,8 @@ public class SimpleSmoothMouseLook : MonoBehaviour
                 tempMouseAbs = Mathf.Abs(tempMouseAbs);
             }
 
-            while(tempMouseAbs > 360) { 
+            while (tempMouseAbs > 360 + amount)
+            {
                 tempMouseAbs -= 360;
                 mult++;
             }
@@ -163,7 +164,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 
             if (Mathf.Abs(tempMouseAbs - orientation) > Mathf.Abs(tempMouseAbs - 360 - orientation))
                 round = 360;
-            
+
             m_ClampXMax = (float)((orientation + amount * 0.5) + mult * 360 + round) * positive;
             m_ClampXMin = (float)((orientation - amount * 0.5) + mult * 360 + round) * positive;
 

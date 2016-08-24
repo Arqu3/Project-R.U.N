@@ -91,6 +91,11 @@ public class ControllerUI : MonoBehaviour {
                 m_Player.SetKeybinds(m_InputManager.GetPrefs());
         }
 
+        if (m_Paused && m_OptionsPanel.m_Options)
+            m_PausePanel.gameObject.SetActive(!m_OptionsPanel.m_Options);
+        else
+            m_PausePanel.gameObject.SetActive(m_Paused);
+
         if (!m_IsScoreScreen)
         {
             PauseUpdate();
@@ -122,7 +127,7 @@ public class ControllerUI : MonoBehaviour {
 
                 m_Player.ToggleControls(!m_Paused);
                 m_PausePanel.UnPause = false;
-                m_PausePanel.gameObject.SetActive(m_Paused);
+                //m_PausePanel.gameObject.SetActive(m_Paused);
                 Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = !m_Paused;
                 Cursor.lockState = CursorLockMode.None;
                 Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = !m_Paused;

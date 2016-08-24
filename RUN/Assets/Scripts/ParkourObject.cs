@@ -38,7 +38,21 @@ public class ParkourObject : MonoBehaviour
             {
                 //Like, really unity?
                 col.transform.parent.transform.parent.transform.parent.transform.parent = transform.parent.transform;
+                Camera.main.transform.parent = transform.parent.transform;
                 Debug.Log("Hands hit moving ledge");
+            }
+        }
+    }
+
+    void OnTriggerExit(Collider col)
+    {
+        if (m_IsMovingLedge)
+        {
+            if (col.gameObject.tag == "Hand")
+            {
+                col.transform.parent.transform.parent.transform.parent.transform.parent = null;
+                Camera.main.transform.parent = null;
+                Debug.Log("Hands left moving ledge");
             }
         }
     }

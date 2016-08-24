@@ -21,7 +21,6 @@ public class OptionsPanelFuncs : MonoBehaviour
     ControllerUI m_UI;
     public SoundEmitter[] m_Sounds;
     AmbienceHandler m_Ambience;
-    PausePanelFuncs m_Pause;
     ControllerPlayer m_Player;
     InputManager m_InputManager;
 
@@ -133,20 +132,17 @@ public class OptionsPanelFuncs : MonoBehaviour
             if (GameObject.Find("Ambience").GetComponent<AmbienceHandler>())
             {
                 m_Ambience = GameObject.Find("Ambience").GetComponent<AmbienceHandler>();
-                if (m_ToggleSound)
-                    m_Ambience.SetVolume(PlayerPrefs.GetFloat("Sound Volume", 0.5f));
-                else
-                    m_Ambience.SetVolume(0);
             }
+
+            if (m_ToggleSound)
+                m_Ambience.SetVolume(PlayerPrefs.GetFloat("Sound Volume", 0.5f));
+            else
+                m_Ambience.SetVolume(0);
+
             //UI
             if (GameObject.Find("Canvas").GetComponent<ControllerUI>())
             {
                 m_UI = GameObject.Find("Canvas").GetComponent<ControllerUI>();
-            }
-            //Pause panel
-            if (GameObject.Find("PausePanel").GetComponent<PausePanelFuncs>())
-            {
-                m_Pause = GameObject.Find("PausePanel").GetComponent<PausePanelFuncs>();
             }
         }
     }

@@ -299,10 +299,11 @@ public class MovingPlatform : MonoBehaviour
                 if (!GetMode().Equals(Mode.Constant))
                 {
                     m_IsMoving = true;
-                    Debug.Log("Entered");
                 }
-                col.transform.parent = transform;
             }
+            col.transform.parent = transform;
+            Camera.main.transform.parent = transform;
+            Debug.Log("Entered");
         }
     }
 
@@ -319,6 +320,7 @@ public class MovingPlatform : MonoBehaviour
                 }
             }
             col.transform.parent = transform;
+            Camera.main.transform.parent = transform;
         }
     }
 
@@ -344,6 +346,8 @@ public class MovingPlatform : MonoBehaviour
                 }
             }
             col.transform.parent = null;
+            Camera.main.transform.parent = null;
+            Debug.Log("Exited");
         }
     }
 

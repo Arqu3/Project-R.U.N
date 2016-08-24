@@ -174,9 +174,6 @@ public class PlayerCheckpoint : MonoBehaviour
         m_NumReset++;
         PlayerPrefs.SetInt("NumReset" + SceneManager.GetActiveScene().buildIndex.ToString(), m_NumReset);
 
-        //Reset player velocity
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-
         //Set position
         //Note - y position -16 because of parent offset position in playerbody
         transform.position = new Vector3(m_CheckPoints[num].position.x, m_CheckPoints[num].position.y - 16.0f, m_CheckPoints[num].position.z);
@@ -227,7 +224,7 @@ public class PlayerCheckpoint : MonoBehaviour
             if (m_LastPassed + 1 == m_CheckPoints.Length)
             {
                 m_HasReachedLast = true;
-                Debug.Log(m_ElapsedTime);
+                //Debug.Log(m_ElapsedTime);
                 SetRank(m_ElapsedTime);
 
                 if (!m_HasSetScore)
