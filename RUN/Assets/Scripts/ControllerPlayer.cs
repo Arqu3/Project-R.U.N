@@ -208,6 +208,7 @@ public class ControllerPlayer : MonoBehaviour
 
     //Vertical climb vars
     bool m_IsVerticalClimb = false;
+    public bool m_CanVertical = true;
     float m_VClimbTimer;
 
     //MovingFromInput vars
@@ -376,6 +377,10 @@ public class ControllerPlayer : MonoBehaviour
             else
             {
                 m_OnGround = true;
+
+                if (!m_IsVerticalClimb)
+                    SetCanVertical(true);
+
                 if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
                 {
                     m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
@@ -1025,9 +1030,19 @@ public class ControllerPlayer : MonoBehaviour
         m_IsVerticalClimb = state;
     }
 
+    public void SetCanVertical(bool state)
+    {
+        m_CanVertical = state;
+    }
+
+    public bool GetCanVertical()
+    {
+        return m_CanVertical;
+    }
+
     void VerticalClimbUpdate()
     {
-        if (m_MoveState.Equals(MovementState.VerticalClimbing))
+        if (m_MoveState.Equals(MovementState.VerticalClimbing) && m_CanVertical)
         {
             ToggleGravity(false);
             bool controllerVertical = false;
@@ -1042,6 +1057,7 @@ public class ControllerPlayer : MonoBehaviour
             }
             else
             {
+                SetCanVertical(false);
                 SetVerticalClimb(false);
             }
         }
@@ -1181,6 +1197,7 @@ public class ControllerPlayer : MonoBehaviour
         //Blink
         m_IsBlinkCD = false;
         m_CurBlinkCD = m_BlinkCD;
+        m_BPlayerVel = Vector3.zero;
         m_BlinkChargeSoundEmitter.Pause(true);
         m_BlinkChargeSoundEmitter.ToggleLoop(false);
 
