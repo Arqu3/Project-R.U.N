@@ -965,7 +965,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckWallrun()
     {
-        if (m_MySides.m_CanWallrun && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun)
+        if (m_MySides.m_CanWallrun && !m_IsVerticalClimb && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun)
         {
             m_IsWallrunning = true;
 
@@ -1012,7 +1012,6 @@ public class ControllerPlayer : MonoBehaviour
                 {
                     if (Vector3.Angle(t * 2 * -tempV[i] + tempV[i], forward) < m_WallrunAngle)
                     {
-
                         m_WallrunDir = (t * 2 * -tempV[i] + tempV[i]).normalized;
                         t = 2;
                         i = 4;
