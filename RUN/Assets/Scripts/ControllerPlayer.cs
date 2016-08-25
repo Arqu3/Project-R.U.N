@@ -255,7 +255,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive)
+        if (m_ControlsActive && !m_PCheckpoint.GetIsCountdown())
         {
             ResetUpdate();
 

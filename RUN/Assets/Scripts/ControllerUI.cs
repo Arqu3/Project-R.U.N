@@ -185,6 +185,11 @@ public class ControllerUI : MonoBehaviour {
         return m_IsScoreScreen;
     }
 
+    public bool GetIsPaused()
+    {
+        return m_Paused;
+    }
+
     public void SetVolume(float volume)
     {
         volume = Mathf.Clamp01(volume);
