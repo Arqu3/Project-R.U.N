@@ -401,18 +401,16 @@ public class PlayerCheckpoint : MonoBehaviour
 
     void CountdownUpdate()
     {
-        float mult = 2.0f;
+        float mult = 1.5f;
 
-        if (m_CountdownText.gameObject.transform.localScale.magnitude < 0.1f)
-        {
+        if (m_CountdownText.gameObject.transform.localScale.magnitude < 0.1f && m_CurrentCountdown > 1.0f)
             m_CountdownText.gameObject.transform.localScale = new Vector3(1, 1, 1);
-            if (m_CountdownText.gameObject.transform.localScale.magnitude < 0)
-                m_CountdownText.gameObject.transform.localScale *= -1;
-        }
+
+        if (m_CurrentCountdown > 1.0f)
+            m_CountdownText.text = "" + m_CurrentCountdown.ToString("F0");
 
         if (m_CurrentCountdown > 0.0f)
         {
-            m_CountdownText.text = "" + m_CurrentCountdown.ToString("F0");
             m_CurrentCountdown -= Time.deltaTime * mult;
             m_CountdownText.gameObject.transform.localScale -= new Vector3(1, 1, 1) * Time.deltaTime * mult * 1.1f;
         }
@@ -422,6 +420,10 @@ public class PlayerCheckpoint : MonoBehaviour
             m_IsCountdownFinished = true;
             m_IsCountdown = false;
         }
+
+        m_CountdownText.gameObject.transform.localScale = new Vector3(Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.x), 
+            Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.y),
+            Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.z));
     }
 
     void CountdownFinishedUpdate()
@@ -433,6 +435,8 @@ public class PlayerCheckpoint : MonoBehaviour
         }
         else
         {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
             m_CountdownText.text = "";
             m_IsCountdownFinished = false;
         }

@@ -19,6 +19,9 @@ public class Front : MonoBehaviour
             m_GraceTimer += Time.deltaTime;
         else
             m_GraceTimer = 0.0f;
+
+        if (!m_Player.GetState().Equals(MovementState.VerticalClimbing))
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().m_LookUp = false;
     }
 
     void OnTriggerEnter(Collider col)
@@ -28,7 +31,6 @@ public class Front : MonoBehaviour
             if (col.gameObject.GetComponent<ParkourObject>().m_VerticalClimbable && m_GraceTimer < m_GraceTime && m_Player.GetCanVertical())
             {
                 m_Player.SetVerticalClimb(true);
-                //Camera.main.GetComponent<SimpleSmoothMouseLook>()._mouseAbsolute.y = 65.0f;
                 Debug.Log("Climb");
             }
         }
@@ -38,6 +40,7 @@ public class Front : MonoBehaviour
     {
         if (col.gameObject.GetComponent<ParkourObject>())
         {
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().m_LookUp = false;
             m_Player.SetVerticalClimb(false);
             m_Player.SetCanVertical(false);
         }
