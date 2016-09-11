@@ -31,7 +31,7 @@ public class Hands : MonoBehaviour {
                     else
                     {
                         m_LedgeForward = col.transform.parent.InverseTransformDirection(col.transform.forward);
-                        if (Dot(transform.forward, m_LedgeForward) < 0)
+                        if (Vector3.Dot(transform.forward, m_LedgeForward) < 0)
                         {
                             m_LedgeForward = -m_LedgeForward;
                         }
@@ -45,6 +45,15 @@ public class Hands : MonoBehaviour {
                 m_HasSetDir = true;
                 m_CPlayer.IsGrabbed(true);
             }
+        }
+    }
+
+    void OnTriggerStay(Collider col)
+    {
+        if (col.GetComponent<ParkourObject>())
+        {
+            if (col.GetComponent<ParkourObject>().m_Climbable)
+                Camera.main.GetComponent<SimpleSmoothMouseLook>().m_LookUp = false;
         }
     }
 
@@ -76,10 +85,5 @@ public class Hands : MonoBehaviour {
     public Vector3 GetLedgeForward()
     {
         return m_LedgeForward.normalized;
-    }
-
-    float Dot(Vector3 lhs, Vector3 rhs)
-    {
-        return Vector3.Dot(lhs, rhs);
     }
 }

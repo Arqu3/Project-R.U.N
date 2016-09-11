@@ -255,7 +255,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive)
+        if (m_ControlsActive && !m_PCheckpoint.GetIsCountdown())
         {
             ResetUpdate();
 
@@ -1044,13 +1044,14 @@ public class ControllerPlayer : MonoBehaviour
         if (m_MoveState.Equals(MovementState.VerticalClimbing) && m_CanVertical)
         {
             ToggleGravity(false);
-            bool controllerVertical = false;
-            if (Input.GetAxis("Vertical") > 0)
+            //bool controllerVertical = false;
+            //if (Input.GetAxis("Vertical") > 0)
+            //{
+            //    controllerVertical = true;
+            //}
+            if ((m_Keys[5].IsButton() || m_Keys[5].IsAxisRaw()) && m_VClimbTimer > 0 && !m_IsGrabbed)
             {
-                controllerVertical = true;
-            }
-            if ((m_VClimbTimer > 0 && m_Keys[0].IsButton() || controllerVertical) && !m_IsGrabbed)
-            {
+                Camera.main.GetComponent<SimpleSmoothMouseLook>().m_LookUp = true;
                 m_VClimbTimer -= Time.deltaTime;
                 m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_VClimbTimer * 10, m_Rigidbody.velocity.z);
             }

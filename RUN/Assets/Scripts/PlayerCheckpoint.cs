@@ -13,6 +13,7 @@ public class PlayerCheckpoint : MonoBehaviour
     public float m_ResetDepth = 0.0f;
     public float m_PromptTime = 1.0f;
     public static int m_LastPassed;
+    public float m_CountdownTime = 3.0f;
     public Transform[] m_CheckPoints;
     public List<float> m_HighScores;
     public MovingPlatform[] m_MovingPlatforms;
@@ -22,8 +23,14 @@ public class PlayerCheckpoint : MonoBehaviour
     public float m_RankAVal;
     public float m_RankBVal;
     public float m_RankCVal;
-
     string m_Rank;
+
+    //Countdown
+    bool m_IsCountdown;
+    bool m_IsCountdownFinished;
+    float m_CurrentCountdown;
+    float m_GoTime = 1.0f;
+    float m_GoTimer;
 
     //Other vars
     Transform m_Temp;
@@ -40,6 +47,7 @@ public class PlayerCheckpoint : MonoBehaviour
     Text m_ElapsedText;
     Text m_PromptText;
     Text m_ResetNumText;
+    Text m_CountdownText;
     ControllerUI m_UI;
 
     float m_FTemp = 0.0f;
@@ -50,6 +58,10 @@ public class PlayerCheckpoint : MonoBehaviour
 
     void Start ()
     {
+        m_IsCountdown = true;
+        m_IsCountdownFinished = false;
+        m_CurrentCountdown = m_CountdownTime;
+        m_GoTimer = m_GoTime;
         m_NumReset = 0;
         m_LastPassed = 0;
         m_CPlayer = GetComponentInChildren<ControllerPlayer>();
@@ -58,6 +70,7 @@ public class PlayerCheckpoint : MonoBehaviour
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
         m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
         m_ResetNumText = GameObject.Find("ResetText").GetComponent<Text>();
+        m_CountdownText = GameObject.Find("CountdownText").GetComponent<Text>();
         m_UI = GameObject.Find("Canvas").GetComponent<ControllerUI>();
 
         //Find checkpoints
@@ -167,12 +180,20 @@ public class PlayerCheckpoint : MonoBehaviour
         }
 
         TextUpdate();
-	}
+
+        if (m_IsCountdown && !m_UI.GetIsPaused())
+            CountdownUpdate();
+        else if (m_IsCountdownFinished && !m_UI.GetIsPaused())
+            CountdownFinishedUpdate();
+    }
 
     public void SetToCheckpoint(int num)
     {
-        m_NumReset++;
-        PlayerPrefs.SetInt("NumReset" + SceneManager.GetActiveScene().buildIndex.ToString(), m_NumReset);
+        if (!m_IsCountdown)
+        {
+            m_NumReset++;
+            PlayerPrefs.SetInt("NumReset" + SceneManager.GetActiveScene().buildIndex.ToString(), m_NumReset);
+        }
 
         //Set position
         //Note - y position -16 because of parent offset position in playerbody
@@ -371,5 +392,53 @@ public class PlayerCheckpoint : MonoBehaviour
             m_Rank = "B";
         else if (time >= m_RankCVal)
             m_Rank = "C";
+    }
+
+    public bool GetIsCountdown()
+    {
+        return m_IsCountdown;
+    }
+
+    void CountdownUpdate()
+    {
+        float mult = 1.5f;
+
+        if (m_CountdownText.gameObject.transform.localScale.magnitude < 0.1f && m_CurrentCountdown > 1.0f)
+            m_CountdownText.gameObject.transform.localScale = new Vector3(1, 1, 1);
+
+        if (m_CurrentCountdown > 1.0f)
+            m_CountdownText.text = "" + m_CurrentCountdown.ToString("F0");
+
+        if (m_CurrentCountdown > 0.0f)
+        {
+            m_CurrentCountdown -= Time.deltaTime * mult;
+            m_CountdownText.gameObject.transform.localScale -= new Vector3(1, 1, 1) * Time.deltaTime * mult * 1.1f;
+        }
+        else
+        {
+            m_CountdownText.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            m_IsCountdownFinished = true;
+            m_IsCountdown = false;
+        }
+
+        m_CountdownText.gameObject.transform.localScale = new Vector3(Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.x), 
+            Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.y),
+            Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.z));
+    }
+
+    void CountdownFinishedUpdate()
+    {
+        if (m_GoTimer > 0.0f)
+        {
+            m_GoTimer -= Time.deltaTime;
+            m_CountdownText.text = "GO";
+        }
+        else
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            m_CountdownText.text = "";
+            m_IsCountdownFinished = false;
+        }
     }
 }
