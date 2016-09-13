@@ -13,9 +13,24 @@ public class PlayerCheckpoint : MonoBehaviour
     public float m_ResetDepth = 0.0f;
     public float m_PromptTime = 1.0f;
     public static int m_LastPassed;
+    public float m_CountdownTime = 3.0f;
     public Transform[] m_CheckPoints;
     public List<float> m_HighScores;
     public MovingPlatform[] m_MovingPlatforms;
+
+    //Ranks
+    public float m_RankSVal;
+    public float m_RankAVal;
+    public float m_RankBVal;
+    public float m_RankCVal;
+    string m_Rank;
+
+    //Countdown
+    bool m_IsCountdown;
+    bool m_IsCountdownFinished;
+    float m_CurrentCountdown;
+    float m_GoTime = 1.0f;
+    float m_GoTimer;
 
     //Other vars
     Transform m_Temp;
@@ -31,20 +46,31 @@ public class PlayerCheckpoint : MonoBehaviour
     SimpleSmoothMouseLook m_Camera;
     Text m_ElapsedText;
     Text m_PromptText;
+    Text m_ResetNumText;
+    Text m_CountdownText;
     ControllerUI m_UI;
 
     float m_FTemp = 0.0f;
     string m_SaveString = "";
     string m_CompleteTime;
 
+    int m_NumReset;
+
     void Start ()
     {
+        m_IsCountdown = true;
+        m_IsCountdownFinished = false;
+        m_CurrentCountdown = m_CountdownTime;
+        m_GoTimer = m_GoTime;
+        m_NumReset = 0;
         m_LastPassed = 0;
         m_CPlayer = GetComponentInChildren<ControllerPlayer>();
         m_Camera = GameObject.Find("Main Camera").GetComponent<SimpleSmoothMouseLook>();
 
         m_ElapsedText = GameObject.Find("TimeText").GetComponent<Text>();
         m_PromptText = GameObject.Find("CheckpointPromptText").GetComponent<Text>();
+        m_ResetNumText = GameObject.Find("ResetText").GetComponent<Text>();
+        m_CountdownText = GameObject.Find("CountdownText").GetComponent<Text>();
         m_UI = GameObject.Find("Canvas").GetComponent<ControllerUI>();
 
         //Find checkpoints
@@ -89,6 +115,7 @@ public class PlayerCheckpoint : MonoBehaviour
         {
             m_ElapsedTime = PlayerPrefs.GetFloat("TimeAtCheckpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0.0f);
             SetToCheckpoint(PlayerPrefs.GetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0));
+            m_NumReset = PlayerPrefs.GetInt("NumReset" + SceneManager.GetActiveScene().buildIndex.ToString(), 0);
             Debug.Log(m_ElapsedTime);
             Debug.Log(PlayerPrefs.GetInt("Checkpoint" + SceneManager.GetActiveScene().buildIndex.ToString(), 0));
             PlayerPrefs.SetInt("Continue", 0);
@@ -114,9 +141,15 @@ public class PlayerCheckpoint : MonoBehaviour
 #endif
     void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.F11))
+        if (Input.GetKeyDown(KeyCode.F10))
         {
             Debug.Log(PlayerPrefs.GetFloat("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString(), Mathf.Infinity));
+        }
+        else if (Input.GetKeyDown(KeyCode.F11))
+        {
+            PlayerPrefs.DeleteKey("Time" + SceneManager.GetActiveScene().buildIndex.ToString());
+            PlayerPrefs.DeleteKey("HighScore" + SceneManager.GetActiveScene().buildIndex.ToString());
+            Debug.Log("Deleted highscores for current level");
         }
 
         m_IsColliding = false;
@@ -147,12 +180,20 @@ public class PlayerCheckpoint : MonoBehaviour
         }
 
         TextUpdate();
-	}
+
+        if (m_IsCountdown && !m_UI.GetIsPaused())
+            CountdownUpdate();
+        else if (m_IsCountdownFinished && !m_UI.GetIsPaused())
+            CountdownFinishedUpdate();
+    }
 
     public void SetToCheckpoint(int num)
     {
-        //Reset player velocity
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        if (!m_IsCountdown)
+        {
+            m_NumReset++;
+            PlayerPrefs.SetInt("NumReset" + SceneManager.GetActiveScene().buildIndex.ToString(), m_NumReset);
+        }
 
         //Set position
         //Note - y position -16 because of parent offset position in playerbody
@@ -204,7 +245,8 @@ public class PlayerCheckpoint : MonoBehaviour
             if (m_LastPassed + 1 == m_CheckPoints.Length)
             {
                 m_HasReachedLast = true;
-                Debug.Log("Reached last checkpoint");
+                //Debug.Log(m_ElapsedTime);
+                SetRank(m_ElapsedTime);
 
                 if (!m_HasSetScore)
                 {
@@ -230,7 +272,7 @@ public class PlayerCheckpoint : MonoBehaviour
 
     void TextUpdate()
     {
-        if (!m_HasReachedLast)
+        if (!m_HasReachedLast && !m_IsCountdown)
         {
             m_ElapsedTime += Time.deltaTime;
         }
@@ -260,6 +302,8 @@ public class PlayerCheckpoint : MonoBehaviour
             m_PromptTimer = 0.0f;
         }
 
+        m_ResetNumText.text = "Number Of Resets: " + m_NumReset;
+
         if (m_UI.GetIsScoreScreen())
         {
             int t = 0;
@@ -274,15 +318,16 @@ public class PlayerCheckpoint : MonoBehaviour
             string s = "";
             for (int i = 0; i < t; i++)
             {
+                SetRank(m_HighScores[i]);
                 minutes = Mathf.FloorToInt(m_HighScores[i] / 60f);
                 seconds = Mathf.FloorToInt(m_HighScores[i] - minutes * 60f);
                 decimals = (m_HighScores[i] - (int)m_HighScores[i]).ToString("F2");
                 decimals = decimals.Remove(0, 2);
                 time = String.Format("{0:00}:{1:00}", minutes, seconds) + ":" + decimals;
-                s += i + 1 + ": " + time + "\n";
+                s += i + 1 + ": " + time + ", Rank: " + m_Rank + "\n";
             }
             if (GameObject.Find("EndText"))
-                GameObject.Find("EndText").GetComponent<Text>().text = "Level Complete!\nTime: " + m_CompleteTime;
+                GameObject.Find("EndText").GetComponent<Text>().text = "Level Complete!\nTime: " + m_CompleteTime + ", Rank: " + m_Rank;
             if (GameObject.Find("HighscoreText"))
                 GameObject.Find("HighscoreText").GetComponent<Text>().text = "Your Best Times:\n" + s;
         }
@@ -332,6 +377,68 @@ public class PlayerCheckpoint : MonoBehaviour
                     m_HighScores[sort] = m_FTemp;
                 }
             }
+        }
+    }
+
+    void SetRank(float time)
+    {
+        if (time <= m_RankSVal && m_NumReset == 0)
+            m_Rank = "S+";
+        else if (time <= m_RankSVal)
+            m_Rank = "S";
+        else if (time <= m_RankAVal)
+            m_Rank = "A";
+        else if (time <= m_RankBVal)
+            m_Rank = "B";
+        else if (time >= m_RankCVal)
+            m_Rank = "C";
+    }
+
+    public bool GetIsCountdown()
+    {
+        return m_IsCountdown;
+    }
+
+    void CountdownUpdate()
+    {
+        float mult = 1.5f;
+
+        if (m_CountdownText.gameObject.transform.localScale.magnitude < 0.1f && m_CurrentCountdown > 1.0f)
+            m_CountdownText.gameObject.transform.localScale = new Vector3(1, 1, 1);
+
+        if (m_CurrentCountdown > 1.0f)
+            m_CountdownText.text = "" + m_CurrentCountdown.ToString("F0");
+
+        if (m_CurrentCountdown > 0.0f)
+        {
+            m_CurrentCountdown -= Time.deltaTime * mult;
+            m_CountdownText.gameObject.transform.localScale -= new Vector3(1, 1, 1) * Time.deltaTime * mult * 1.1f;
+        }
+        else
+        {
+            m_CountdownText.gameObject.transform.localScale = new Vector3(1, 1, 1);
+            m_IsCountdownFinished = true;
+            m_IsCountdown = false;
+        }
+
+        m_CountdownText.gameObject.transform.localScale = new Vector3(Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.x), 
+            Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.y),
+            Mathf.Clamp01(m_CountdownText.gameObject.transform.localScale.z));
+    }
+
+    void CountdownFinishedUpdate()
+    {
+        if (m_GoTimer > 0.0f)
+        {
+            m_GoTimer -= Time.deltaTime;
+            m_CountdownText.text = "GO";
+        }
+        else
+        {
+            GetComponent<Rigidbody>().velocity = Vector3.zero;
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+            m_CountdownText.text = "";
+            m_IsCountdownFinished = false;
         }
     }
 }

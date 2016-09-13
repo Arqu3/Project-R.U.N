@@ -37,6 +37,8 @@ public class ControllerUI : MonoBehaviour {
         if (GameObject.Find("PlayerBody"))
             m_Player = GameObject.Find("PlayerBody").GetComponent<ControllerPlayer>();
 
+        m_OptionsPanel.gameObject.SetActive(true);
+
         //Get inputs
         m_InputManager = GetComponentInChildren<InputManager>();
 
@@ -63,7 +65,7 @@ public class ControllerUI : MonoBehaviour {
             PlayerPrefs.SetInt("Restart", 0);
         }
 
-        if (!m_OptionsPanel.GetIsSound())
+        if (PlayerPrefs.GetInt("Toggle Sound", 0) == 0)
         {
             m_MusicVolume = 0;
         }
@@ -72,7 +74,7 @@ public class ControllerUI : MonoBehaviour {
             m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
         }
 
-        Camera.main.GetComponent<MusicSystem>().SetVolumeMuted(m_MusicVolume);
+        Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
 
         Camera.main.GetComponent<MusicSystem>().PlayClip(0);
     }
@@ -84,7 +86,15 @@ public class ControllerUI : MonoBehaviour {
         if (m_Player.GetHasKeyBinds())
             m_OptionsPanel.gameObject.SetActive(m_OptionsPanel.m_Options);
         else
-            m_Player.SetKeybinds(m_InputManager.GetPrefs());
+        {
+            if (m_OptionsPanel.gameObject.activeSelf)
+                m_Player.SetKeybinds(m_InputManager.GetPrefs());
+        }
+
+        if (m_Paused && m_OptionsPanel.m_Options)
+            m_PausePanel.gameObject.SetActive(!m_OptionsPanel.m_Options);
+        else
+            m_PausePanel.gameObject.SetActive(m_Paused);
 
         if (!m_IsScoreScreen)
         {
@@ -94,11 +104,6 @@ public class ControllerUI : MonoBehaviour {
         else
         {
             ScoreScreenUpdate();
-        }
-
-        if (m_OptionsPanel.GetIsSound())
-        {
-            Camera.main.GetComponent<MusicSystem>().SetVolumeMuted(m_MusicVolume);
         }
     }
 
@@ -117,7 +122,6 @@ public class ControllerUI : MonoBehaviour {
 
                 m_Player.ToggleControls(!m_Paused);
                 m_PausePanel.UnPause = false;
-                m_PausePanel.gameObject.SetActive(m_Paused);
                 Camera.main.GetComponent<SimpleSmoothMouseLook>().lockCursor = !m_Paused;
                 Cursor.lockState = CursorLockMode.None;
                 Camera.main.GetComponent<SimpleSmoothMouseLook>().enabled = !m_Paused;
@@ -179,6 +183,11 @@ public class ControllerUI : MonoBehaviour {
     public bool GetIsScoreScreen()
     {
         return m_IsScoreScreen;
+    }
+
+    public bool GetIsPaused()
+    {
+        return m_Paused;
     }
 
     public void SetVolume(float volume)

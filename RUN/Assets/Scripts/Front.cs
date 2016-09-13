@@ -7,7 +7,6 @@ public class Front : MonoBehaviour
     float m_GraceTimer = 0.0f;
 
     ControllerPlayer m_Player;
-    bool m_HasSentMsg = false;
 
 	void Start ()
     {
@@ -20,20 +19,19 @@ public class Front : MonoBehaviour
             m_GraceTimer += Time.deltaTime;
         else
             m_GraceTimer = 0.0f;
+
+        if (!m_Player.GetState().Equals(MovementState.VerticalClimbing))
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().m_LookUp = false;
     }
 
     void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.GetComponent<ParkourObject>() && m_GraceTimer < m_GraceTime)
+        if (col.gameObject.GetComponent<ParkourObject>())
         {
-            if (col.gameObject.GetComponent<ParkourObject>().m_VerticalClimbable)
+            if (col.gameObject.GetComponent<ParkourObject>().m_VerticalClimbable && m_GraceTimer < m_GraceTime && m_Player.GetCanVertical())
             {
-                if (!m_HasSentMsg)
-                {
-                    m_Player.SetVerticalClimb(true);
-                    Debug.Log("Climb");
-                    m_HasSentMsg = true;
-                }
+                m_Player.SetVerticalClimb(true);
+                Debug.Log("Climb");
             }
         }
     }
@@ -42,8 +40,9 @@ public class Front : MonoBehaviour
     {
         if (col.gameObject.GetComponent<ParkourObject>())
         {
+            Camera.main.GetComponent<SimpleSmoothMouseLook>().m_LookUp = false;
             m_Player.SetVerticalClimb(false);
-            m_HasSentMsg = false;
+            m_Player.SetCanVertical(false);
         }
     }
 }

@@ -126,9 +126,8 @@ public class ControllerPlayer : MonoBehaviour
     public float m_BoostAmount = 10.0f;
     public float m_BoostDecayAmount = 4.0f;
     public float m_VerticalClimbTimer = 1.5f;
-
-    float t = 0.0f;
-    float t1 = 0.0f;
+    public float m_ZAcceleration = 2.0f;
+    public float m_ZDeceleration = 0.75f;
 
     //Input vars
     string[] m_Keybinds;
@@ -145,6 +144,8 @@ public class ControllerPlayer : MonoBehaviour
     ParticleSystem m_SanicParticles;
     float m_XDir = 0.0f;
     float m_ZDir = 0.0f;
+    float m_ZAcc = 0.0f;
+    float m_ZAcc1 = 0.0f;
 
     //Component vars
     Rigidbody m_Rigidbody;
@@ -209,6 +210,7 @@ public class ControllerPlayer : MonoBehaviour
 
     //Vertical climb vars
     bool m_IsVerticalClimb = false;
+    public bool m_CanVertical = true;
     float m_VClimbTimer;
 
     //MovingFromInput vars
@@ -255,7 +257,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void Update()
     {
-        if (m_ControlsActive)
+        if (m_ControlsActive && !m_PCheckpoint.GetIsCountdown())
         {
             ResetUpdate();
 
@@ -377,6 +379,10 @@ public class ControllerPlayer : MonoBehaviour
             else
             {
                 m_OnGround = true;
+
+                if (!m_IsVerticalClimb)
+                    SetCanVertical(true);
+
                 if (m_Rigidbody.velocity.magnitude > 1f || m_hMovement.magnitude > 0.4f)
                 {
                     m_AccelPercent = m_AccelPercent + Time.deltaTime * 20 * m_AccelMultiplier;
@@ -397,12 +403,10 @@ public class ControllerPlayer : MonoBehaviour
                         {
                             m_CanMoveForward = false;
                             m_Rigidbody.velocity = new Vector3(0.0f, -50.0f, 0.0f);
-                            Debug.Log("Slope too steep yo");
                         }
                         else
                         {
                             m_CanMoveForward = true;
-                            Debug.Log("We cool");
                         }
                     }
                 }
@@ -963,7 +967,7 @@ public class ControllerPlayer : MonoBehaviour
 
     void CheckWallrun()
     {
-        if (m_MySides.m_CanWallrun && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun)
+        if (m_MySides.m_CanWallrun && !m_IsVerticalClimb && (m_MoveState.Equals(MovementState.Jumping) || (m_WallrunGraceTimer < 0.7f && m_MoveState.Equals(MovementState.Falling))) && m_CanWallrun)
         {
             m_IsWallrunning = true;
 
@@ -1010,7 +1014,6 @@ public class ControllerPlayer : MonoBehaviour
                 {
                     if (Vector3.Angle(t * 2 * -tempV[i] + tempV[i], forward) < m_WallrunAngle)
                     {
-
                         m_WallrunDir = (t * 2 * -tempV[i] + tempV[i]).normalized;
                         t = 2;
                         i = 4;
@@ -1028,23 +1031,35 @@ public class ControllerPlayer : MonoBehaviour
         m_IsVerticalClimb = state;
     }
 
+    public void SetCanVertical(bool state)
+    {
+        m_CanVertical = state;
+    }
+
+    public bool GetCanVertical()
+    {
+        return m_CanVertical;
+    }
+
     void VerticalClimbUpdate()
     {
-        if (m_MoveState.Equals(MovementState.VerticalClimbing))
+        if (m_MoveState.Equals(MovementState.VerticalClimbing) && m_CanVertical)
         {
             ToggleGravity(false);
-            bool controllerVertical = false;
-            if (Input.GetAxis("Vertical") > 0)
+            //bool controllerVertical = false;
+            //if (Input.GetAxis("Vertical") > 0)
+            //{
+            //    controllerVertical = true;
+            //}
+            if ((m_Keys[5].IsButton() || m_Keys[5].IsAxisRaw()) && m_VClimbTimer > 0 && !m_IsGrabbed)
             {
-                controllerVertical = true;
-            }
-            if ((m_VClimbTimer > 0 && m_Keys[0].IsButton() || controllerVertical) && !m_IsGrabbed)
-            {
+                Camera.main.GetComponent<SimpleSmoothMouseLook>().m_LookUp = true;
                 m_VClimbTimer -= Time.deltaTime;
                 m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_VClimbTimer * 10, m_Rigidbody.velocity.z);
             }
             else
             {
+                SetCanVertical(false);
                 SetVerticalClimb(false);
             }
         }
@@ -1174,12 +1189,17 @@ public class ControllerPlayer : MonoBehaviour
     public void ResetValues()
     {
         //Reset acceleration
-        t = 0;
-        t1 = 0;
+        m_ZAcc = 0;
+        m_ZAcc1 = 0;
+
+        //Reset velocity
+        m_Rigidbody.velocity = Vector3.zero;
+        m_Rigidbody.angularVelocity = Vector3.zero;
 
         //Blink
         m_IsBlinkCD = false;
         m_CurBlinkCD = m_BlinkCD;
+        m_BPlayerVel = Vector3.zero;
         m_BlinkChargeSoundEmitter.Pause(true);
         m_BlinkChargeSoundEmitter.ToggleLoop(false);
 
@@ -1202,6 +1222,7 @@ public class ControllerPlayer : MonoBehaviour
         m_IsClimbing = false;
 
         GameObject.Find("Player").transform.parent = null;
+        Camera.main.transform.parent = null;
     }
 
     void ResetUpdate()
@@ -1262,43 +1283,41 @@ public class ControllerPlayer : MonoBehaviour
 
     float InputZ()
     {
-        float mult = 2.0f;
-        float decMult = 0.5f;
         if (m_Keys[0].IsButton())
         {
-            if (t < 1.0f)
-                t += Time.deltaTime * mult;
-            if (t1 > 0.75)
-                t1 = 0.0f;
-            else if (t1 > 0.0f)
-                t1 -= Time.deltaTime * decMult;
-            m_ZDir = Mathf.Lerp(0.0f, 1.0f, t);
+            if (m_ZAcc < 1.0f)
+                m_ZAcc += Time.deltaTime * m_ZAcceleration;
+            if (m_ZAcc1 > 0.75)
+                m_ZAcc1 = 0.0f;
+            else if (m_ZAcc1 > 0.0f)
+                m_ZAcc1 -= Time.deltaTime * m_ZDeceleration;
+            m_ZDir = Mathf.Lerp(0.0f, 1.0f, m_ZAcc);
             //Debug.Log(m_Rigidbody.velocity.magnitude);
         }
         else if (m_Keys[1].IsButton())
         {
-            if (t1 < 1.0f)
-                t1 += Time.deltaTime * mult;
-            if (t > 0.75)
-                t = 0.0f;
-            else if (t > 0.0f)
-                t -= Time.deltaTime * decMult;
-            m_ZDir = Mathf.Lerp(0.0f, -1.0f, t1);
+            if (m_ZAcc1 < 1.0f)
+                m_ZAcc1 += Time.deltaTime * m_ZAcceleration;
+            if (m_ZAcc > 0.75)
+                m_ZAcc = 0.0f;
+            else if (m_ZAcc > 0.0f)
+                m_ZAcc -= Time.deltaTime * m_ZDeceleration;
+            m_ZDir = Mathf.Lerp(0.0f, -1.0f, m_ZAcc1);
             //Debug.Log(m_Rigidbody.velocity.magnitude);
         }
         else
         {
-            if (t > 0.0f)
-                t -= Time.deltaTime * decMult;
-            if (t1 > 0.0f)
-                t1 -= Time.deltaTime * decMult;
-            m_ZDir = Mathf.Lerp(0.0f, m_ZDir, Mathf.Max(t, t1));
+            if (m_ZAcc > 0.0f)
+                m_ZAcc -= Time.deltaTime * m_ZDeceleration;
+            if (m_ZAcc1 > 0.0f)
+                m_ZAcc1 -= Time.deltaTime * m_ZDeceleration;
+            m_ZDir = Mathf.Lerp(0.0f, m_ZDir, Mathf.Max(m_ZAcc, m_ZAcc1));
             //Debug.Log(m_ZDir);
 
             if (m_Rigidbody.velocity.magnitude < 0.1f)
             {
-                t = 0.0f;
-                t1 = 0.0f;
+                m_ZAcc = 0.0f;
+                m_ZAcc1 = 0.0f;
             }
         }
 

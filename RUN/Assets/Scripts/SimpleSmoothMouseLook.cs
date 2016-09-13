@@ -16,6 +16,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
     public Vector2 smoothing = new Vector2(3, 3);
     public Vector2 targetDirection;
     public Vector2 targetCharacterDirection;
+    public bool m_LookUp;
 
     float m_ClampX;
     float m_ClampXMax;
@@ -32,6 +33,8 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 
     void Start()
     {
+        m_LookUp = false;
+
         m_ControllerSens = PlayerPrefs.GetFloat("Controller Sensitivity", 1.0f);
 
         SetSensitivity(m_ControllerSens, m_ControllerSens);
@@ -64,6 +67,14 @@ public class SimpleSmoothMouseLook : MonoBehaviour
         // Get raw mouse input for a cleaner reading on more sensitive mice.
         inputs[0] = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
         inputs[1] = new Vector2(Input.GetAxisRaw("Joystick X"), Input.GetAxisRaw("Joystick Y"));
+
+        if (m_LookUp)
+        {
+            if (_mouseAbsolute.y <= 65)
+                _mouseAbsolute.y = Mathf.Lerp(_mouseAbsolute.y, 70, 0.075f);
+            else
+                m_LookUp = false;
+        }
 
         foreach (Vector2 input in inputs)
         {
@@ -154,7 +165,8 @@ public class SimpleSmoothMouseLook : MonoBehaviour
                 tempMouseAbs = Mathf.Abs(tempMouseAbs);
             }
 
-            while(tempMouseAbs > 360) { 
+            while (tempMouseAbs > 360 + amount)
+            {
                 tempMouseAbs -= 360;
                 mult++;
             }
@@ -163,7 +175,7 @@ public class SimpleSmoothMouseLook : MonoBehaviour
 
             if (Mathf.Abs(tempMouseAbs - orientation) > Mathf.Abs(tempMouseAbs - 360 - orientation))
                 round = 360;
-            
+
             m_ClampXMax = (float)((orientation + amount * 0.5) + mult * 360 + round) * positive;
             m_ClampXMin = (float)((orientation - amount * 0.5) + mult * 360 + round) * positive;
 
