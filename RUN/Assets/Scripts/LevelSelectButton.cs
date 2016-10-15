@@ -31,7 +31,7 @@ public class LevelSelectButton : MonoBehaviour
             if (m_ID <= SceneManager.sceneCountInBuildSettings)
             {
                 Debug.Log("Loaded level:" + m_ID);
-                SceneManager.LoadScene(m_ID);
+                Camera.main.GetComponent<LoadingScreen>().Load(m_ID);
             }
             else
             {
