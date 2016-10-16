@@ -14,7 +14,8 @@ public class MainMenuFuncs : MonoBehaviour
 
 	public State m_State;
 
-	//Component vars
+    //Component vars
+    LoadingScreen m_loadScreen;
 	MainMenuHandler m_Handler;
 	Animator m_Animator;
 	GameObject m_LevelSelect;
@@ -30,8 +31,10 @@ public class MainMenuFuncs : MonoBehaviour
 
 		m_Handler = GetComponent<MainMenuHandler>();
 		m_Animator = GetComponent<Animator>();
+        m_loadScreen = Camera.main.GetComponent<LoadingScreen>();
 
-		Time.timeScale = 1.0f;
+
+        Time.timeScale = 1.0f;
 		m_Animator.SetFloat("Direction", 1.0f);
         PlayerPrefs.SetInt("Continue", 0);
 	}
@@ -42,11 +45,15 @@ public class MainMenuFuncs : MonoBehaviour
         if (PlayerPrefs.GetInt("CurrentLevel", 0) == 0)
 		{
 			PlayerPrefs.SetInt("CurrentLevel", 1);
-			SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
+
+            m_loadScreen.Load(PlayerPrefs.GetInt("CurrentLevel", 0));
+
+			//SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
 		}
 		else
 		{
-			SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
+            m_loadScreen.Load(PlayerPrefs.GetInt("CurrentLevel", 0));
+            //SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
 		}
 	}
 

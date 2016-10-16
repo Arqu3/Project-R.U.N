@@ -126,6 +126,8 @@ public class ControllerPlayer : MonoBehaviour
     public float m_BoostAmount = 10.0f;
     public float m_BoostDecayAmount = 4.0f;
     public float m_VerticalClimbTimer = 1.5f;
+    public float m_ZAcceleration = 2.0f;
+    public float m_ZDeceleration = 0.75f;
 
     //Input vars
     string[] m_Keybinds;
@@ -225,7 +227,7 @@ public class ControllerPlayer : MonoBehaviour
     bool m_CanMoveForward = true;
     RaycastHit m_SlopeHit;
     RaycastHit m_DownHit;
-    Vector3 m_SlopeDirection;
+    Vector3 m_SlopeVelocity;
 
     void Start()
     {
@@ -300,6 +302,11 @@ public class ControllerPlayer : MonoBehaviour
                         {
                             m_hMovement = new Vector3(Mathf.Clamp(InputX() + Input.GetAxis("Horizontal"), -1.0f, 1.0f) * 0.6f, 0, Mathf.Clamp(InputZ() + Input.GetAxis("Vertical"), -1.0f, 1.0f));
                             HorizontalMovement(m_hMovement);
+                        }
+                        else
+                        {
+                            m_Rigidbody.velocity = Vector3.Lerp(m_Rigidbody.velocity, new Vector3(Mathf.Clamp(InputX() + Input.GetAxisRaw("Horizontal"), -1.0f, 1.0f), 0, 0) + (m_SlopeVelocity * 50), 5.0f * Time.deltaTime);
+
                         }
                     }
                     else
@@ -395,17 +402,16 @@ public class ControllerPlayer : MonoBehaviour
                 //Drag player down if trying to run up a steep slope
                 if (CheckSlope())
                 {
+                    if (Vector3.Dot(Vector3.up, m_SlopeHit.normal) < m_SlopeValue)
+                    {
+                        m_CanMoveForward = false;
+                    }
+                    else
+                    {
+                        m_CanMoveForward = true;
+                    }
                     if (m_SlopeHit.collider.gameObject.GetComponent<Terrain>())
                     {
-                        if (Vector3.Dot(Vector3.up, m_SlopeHit.normal) < m_SlopeValue)
-                        {
-                            m_CanMoveForward = false;
-                            m_Rigidbody.velocity = new Vector3(0.0f, -50.0f, 0.0f);
-                        }
-                        else
-                        {
-                            m_CanMoveForward = true;
-                        }
                     }
                 }
                 else
@@ -1100,6 +1106,7 @@ public class ControllerPlayer : MonoBehaviour
             ray = new Ray(v, tempV);
             if (Physics.Raycast(ray, out m_SlopeHit, distance, m_JumpMask) && IsStandingOnSlope())
             {
+                m_SlopeVelocity = new Vector3(m_SlopeHit.normal.x, -m_SlopeHit.normal.y, m_SlopeHit.normal.z);
                 return true;
             }
         }
@@ -1281,36 +1288,34 @@ public class ControllerPlayer : MonoBehaviour
 
     float InputZ()
     {
-        float mult = 2.0f;
-        float decMult = 0.75f;
         if (m_Keys[0].IsButton())
         {
             if (m_ZAcc < 1.0f)
-                m_ZAcc += Time.deltaTime * mult;
+                m_ZAcc += Time.deltaTime * m_ZAcceleration;
             if (m_ZAcc1 > 0.75)
                 m_ZAcc1 = 0.0f;
             else if (m_ZAcc1 > 0.0f)
-                m_ZAcc1 -= Time.deltaTime * decMult;
+                m_ZAcc1 -= Time.deltaTime * m_ZDeceleration;
             m_ZDir = Mathf.Lerp(0.0f, 1.0f, m_ZAcc);
             //Debug.Log(m_Rigidbody.velocity.magnitude);
         }
         else if (m_Keys[1].IsButton())
         {
             if (m_ZAcc1 < 1.0f)
-                m_ZAcc1 += Time.deltaTime * mult;
+                m_ZAcc1 += Time.deltaTime * m_ZAcceleration;
             if (m_ZAcc > 0.75)
                 m_ZAcc = 0.0f;
             else if (m_ZAcc > 0.0f)
-                m_ZAcc -= Time.deltaTime * decMult;
+                m_ZAcc -= Time.deltaTime * m_ZDeceleration;
             m_ZDir = Mathf.Lerp(0.0f, -1.0f, m_ZAcc1);
             //Debug.Log(m_Rigidbody.velocity.magnitude);
         }
         else
         {
             if (m_ZAcc > 0.0f)
-                m_ZAcc -= Time.deltaTime * decMult;
+                m_ZAcc -= Time.deltaTime * m_ZDeceleration;
             if (m_ZAcc1 > 0.0f)
-                m_ZAcc1 -= Time.deltaTime * decMult;
+                m_ZAcc1 -= Time.deltaTime * m_ZDeceleration;
             m_ZDir = Mathf.Lerp(0.0f, m_ZDir, Mathf.Max(m_ZAcc, m_ZAcc1));
             //Debug.Log(m_ZDir);
 

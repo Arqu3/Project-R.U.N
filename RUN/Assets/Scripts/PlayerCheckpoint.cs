@@ -272,7 +272,7 @@ public class PlayerCheckpoint : MonoBehaviour
 
     void TextUpdate()
     {
-        if (!m_HasReachedLast)
+        if (!m_HasReachedLast && !m_IsCountdown)
         {
             m_ElapsedTime += Time.deltaTime;
         }

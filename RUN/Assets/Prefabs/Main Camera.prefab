@@ -18,6 +18,7 @@ GameObject:
   - 114: {fileID: 11400348}
   - 114: {fileID: 11408892}
   - 114: {fileID: 11422938}
+  - 114: {fileID: 11439746}
   m_Layer: 8
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -153,7 +154,7 @@ Transform:
   m_GameObject: {fileID: 101736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 18, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 427026}
   - {fileID: 479072}
@@ -797,6 +798,7 @@ MonoBehaviour:
   smoothing: {x: 3, y: 3}
   targetDirection: {x: 0, y: 0}
   targetCharacterDirection: {x: 0, y: 0}
+  m_LookUp: 0
   characterBody: {fileID: 0}
 --- !u!114 &11407014
 MonoBehaviour:
@@ -838,6 +840,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Image: {fileID: 2800000, guid: 355026ae5377c5c4ba6411fce557f0c0, type: 3}
   m_RemoveAfterFadeIn: 0
+  m_MaxTime: 2
+--- !u!114 &11439746
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 101736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 906fdcdcf192ca244a74f328cce59777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Image: {fileID: 2800000, guid: a8d0743d88afea34f94daa3053b6ed77, type: 3}
 --- !u!114 &11442598
 MonoBehaviour:
   m_ObjectHideFlags: 1
