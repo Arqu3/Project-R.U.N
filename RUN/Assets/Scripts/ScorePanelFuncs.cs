@@ -28,11 +28,11 @@ public class ScorePanelFuncs : MonoBehaviour
 
     public void NextLevel()
     {
-        Camera.main.GetComponent<LoadingScreen>().Load(SceneManager.GetActiveScene().buildIndex + 1);
+        LoadingScreen.Load(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void Exit()
     {
-        Camera.main.GetComponent<LoadingScreen>().Load(0);
+        LoadingScreen.Load(1);
     }
 }

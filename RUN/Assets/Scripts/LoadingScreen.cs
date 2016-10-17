@@ -1,27 +1,99 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System;
 
 public class LoadingScreen : MonoBehaviour
 {
-    public Texture2D m_Image;
-    static bool loading = false;
     static int m_Index;
 
-    GUITexture m_guiTexture;
+    private static LoadingScreen _instance;
+    private LoadingScreen() { }
 
-    void Start()
+    private static object _lock = new object();
+
+    public static LoadingScreen Instance
     {
+        get
+        {
+            if (applicationIsQuitting)
+            {
+                Debug.LogWarning("[Singleton] Instance '" + typeof(LoadingScreen) +
+                    "' already destroyed on application quit." +
+                    " Won't create again - returning null.");
+                return null;
+            }
 
+            lock (_lock)
+            {
+                if (_instance == null)
+                {
+                    _instance = (LoadingScreen)FindObjectOfType(typeof(LoadingScreen));
+
+                    if (FindObjectsOfType(typeof(LoadingScreen)).Length > 1)
+                    {
+                        Debug.LogError("[Singleton] Something went really wrong " +
+                            " - there should never be more than 1 singleton!" +
+                            " Reopening the scene might fix it.");
+                        return _instance;
+                    }
+
+                    if (_instance == null)
+                    {
+                        GameObject singleton = new GameObject();
+                        _instance = singleton.AddComponent<LoadingScreen>();
+                        _instance.gameObject.AddComponent<FadeToBlack>();
+                        singleton.name = "(singleton) " + typeof(LoadingScreen).ToString();
+
+                        DontDestroyOnLoad(singleton);
+
+                        Debug.Log("[Singleton] An instance of " + typeof(LoadingScreen) +
+                            " is needed in the scene, so '" + singleton +
+                            "' was created with DontDestroyOnLoad.");
+                    }
+                    else
+                    {
+                        Debug.Log("[Singleton] Using instance already created: " +
+                            _instance.gameObject.name);
+                    }
+                }
+
+                return _instance;
+            }
+        }
     }
 
-    void OnGUI()
+    private static bool applicationIsQuitting = false;
+    /// <summary>
+    /// When Unity quits, it destroys objects in a random order.
+    /// In principle, a Singleton is only destroyed when application quits.
+    /// If any script calls Instance after it have been destroyed, 
+    ///   it will create a buggy ghost object that will stay on the Editor scene
+    ///   even after stopping playing the Application. Really bad!
+    /// So, this was made to be sure we're not creating that buggy ghost object.
+    /// </summary>
+    public void OnDestroy()
     {
-        if (loading)
+        applicationIsQuitting = true;
+    }
+
+    public static void Load(int index)
+    {
+        _instance.pLoad(index);
+    }
+
+    void Awake()
+    {
+        if (_instance == null)
         {
-            GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), m_Image);
-            GUI.BringWindowToBack(0);
+            _instance = this;
         }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+
+        DontDestroyOnLoad(this);
     }
 
     IEnumerator LoadWithFade()
@@ -30,27 +102,32 @@ public class LoadingScreen : MonoBehaviour
 
         fade.FadeOut(0.5f);
 
-        Time.timeScale = 1;
+        yield return StartCoroutine(CoroutineUtil.WaitForRealSeconds(0.5f));
+        SceneManager.LoadScene("LoadingScene");
+        yield return StartCoroutine(CoroutineUtil.WaitForRealSeconds(0.1f));
 
-        yield return new WaitForSeconds(0.5f);
-        loading = true;
+        fade.FadeIn(1f);
+        yield return StartCoroutine(CoroutineUtil.WaitForRealSeconds(0.5f));
 
-        fade.FadeIn(0.5f);
-        yield return new WaitForSeconds(0.5f);
-        SceneManager.LoadScene(m_Index);
+        AsyncOperation op = SceneManager.LoadSceneAsync(m_Index);
+        op.allowSceneActivation = false;
 
-        if (!SceneManager.LoadSceneAsync(m_Index).isDone)
+        while (op.progress < 0.9f)
         {
-
             yield return new WaitForEndOfFrame();
-        }
+        }    
 
-        Time.timeScale = 0;
+        fade.FadeOut(0.5f);
+        yield return StartCoroutine(CoroutineUtil.WaitForRealSeconds(0.5f));
+        op.allowSceneActivation = true;
 
-        loading = false;
+        yield return StartCoroutine(CoroutineUtil.WaitForRealSeconds(1f));
+
+       
+        fade.FadeIn(1f);
     }
 
-    public void Load(int index)
+    private void pLoad(int index)
     {
         m_Index = index;
 

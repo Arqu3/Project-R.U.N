@@ -46,13 +46,13 @@ public class MainMenuFuncs : MonoBehaviour
 		{
 			PlayerPrefs.SetInt("CurrentLevel", 1);
 
-            m_loadScreen.Load(PlayerPrefs.GetInt("CurrentLevel", 0));
+            LoadingScreen.Load(PlayerPrefs.GetInt("CurrentLevel", 0));
 
 			//SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
 		}
 		else
 		{
-            m_loadScreen.Load(PlayerPrefs.GetInt("CurrentLevel", 0));
+            LoadingScreen.Load(PlayerPrefs.GetInt("CurrentLevel", 0));
             //SceneManager.LoadScene(PlayerPrefs.GetInt("CurrentLevel", 0));
 		}
 	}

@@ -11,6 +11,7 @@ public class ControllerUI : MonoBehaviour {
     TutorialPanelFuncs m_TutorialPanel;
     OptionsPanelFuncs m_OptionsPanel;
     InputManager m_InputManager;
+    MusicSystem m_MusicSystem;
 
     bool m_Init = false;
     bool m_Paused = false;
@@ -74,9 +75,17 @@ public class ControllerUI : MonoBehaviour {
             m_MusicVolume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
         }
 
-        Camera.main.GetComponent<MusicSystem>().SetVolume(m_MusicVolume);
+        if (Camera.main.GetComponent<MusicSystem>())
+        {
+            m_MusicSystem = Camera.main.GetComponent<MusicSystem>();
+        }
+        else if (GameObject.Find("LoadingScreen"))
+        {
+            m_MusicSystem = GameObject.Find("LoadingScreen").GetComponent<MusicSystem>();
+        }
 
-        Camera.main.GetComponent<MusicSystem>().PlayClip(0);
+        m_MusicSystem.SetVolume(m_MusicVolume);
+
     }
 
     void Update ()
@@ -132,7 +141,7 @@ public class ControllerUI : MonoBehaviour {
                 if (!m_MusicStarted && m_Init)
                 {
                     m_MusicStarted = true;
-                    Camera.main.GetComponent<MusicSystem>().PlayClip(1);
+                    m_MusicSystem.PlayClip(1);
                 }
             }
         }

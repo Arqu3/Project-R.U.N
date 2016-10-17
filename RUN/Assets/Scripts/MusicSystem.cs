@@ -1,14 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+//[RequireComponent(typeof(AudioSource))]
 public class MusicSystem : MonoBehaviour {
 
+    public bool m_FindCamera;
+    public bool m_PlayOnAwake;
     public AudioClip[] m_audioClips;
     public float m_Volume = 0.1f;
     AudioSource m_AudioSource;
     bool m_AudioBusy;
 
 	void Start () {
+
         if (PlayerPrefs.GetInt("Toggle Sound", 0) == 1)
         {
             m_Volume = PlayerPrefs.GetFloat("Music Volume", 0.5f);
@@ -17,8 +21,19 @@ public class MusicSystem : MonoBehaviour {
         }
         else
             m_Volume = 0;
-        m_AudioSource = GameObject.Find("Main Camera").GetComponent<AudioSource>();
-	}
+
+        if (m_FindCamera)
+            m_AudioSource = GameObject.Find("Main Camera").GetComponent<AudioSource>();
+        else
+        { 
+            m_AudioSource = GetComponent<AudioSource>();
+        }
+
+        if (m_PlayOnAwake)
+        {
+            PlayClip(0);
+        }
+    }
 	
     public void PlayClip(int index)
     {
@@ -43,7 +58,15 @@ public class MusicSystem : MonoBehaviour {
         while (t < 1)
         {
             t = Time.realtimeSinceStartup - timeAtStart;
-            Camera.main.GetComponent<AudioSource>().volume = Mathf.Lerp(m_Volume, toVolume, t);
+
+            if (m_FindCamera)
+            {
+                Camera.main.GetComponent<AudioSource>().volume = Mathf.Lerp(m_Volume, toVolume, t);
+            }
+            else
+            {
+                GetComponent<AudioSource>().volume = Mathf.Lerp(m_Volume, toVolume, t);
+            }
             yield return new WaitForEndOfFrame();
         }
 
@@ -68,7 +91,16 @@ public class MusicSystem : MonoBehaviour {
         while (f < time)
         {
             f = Time.realtimeSinceStartup - timeAtStart;
-            Camera.main.GetComponent<AudioSource>().volume = volume * (1 - f/time);
+
+            if (m_FindCamera)
+            {
+                Camera.main.GetComponent<AudioSource>().volume = volume * (1 - f / time);
+            }
+            else
+            {
+                GetComponent<AudioSource>().volume = volume * (1 - f / time);
+            }
+            
             yield return new WaitForEndOfFrame();
         }
 
