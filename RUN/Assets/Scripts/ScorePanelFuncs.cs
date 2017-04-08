@@ -28,11 +28,11 @@ public class ScorePanelFuncs : MonoBehaviour
 
     public void NextLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        LoadingScreen.Load(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void Exit()
     {
-        SceneManager.LoadScene(0);
+        LoadingScreen.Load(1);
     }
 }

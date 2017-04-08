@@ -74,6 +74,10 @@ public class OptionsPanelFuncs : MonoBehaviour
         {
             m_Music = GameObject.Find("Main Camera").GetComponent<MusicSystem>();
         }
+        else if (GameObject.Find("LoadingScreen").GetComponent<MusicSystem>())
+        {
+            m_Music = GameObject.Find("LoadingScreen").GetComponent<MusicSystem>();
+        }
 
         //Get inputmanager
         m_InputManager = GetComponent<InputManager>();

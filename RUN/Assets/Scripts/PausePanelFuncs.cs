@@ -26,7 +26,7 @@ public class PausePanelFuncs : MonoBehaviour {
 
     public void ButtonExit()
     {
-        SceneManager.LoadScene(0);
+        LoadingScreen.Load(1);
     }
 
     public void ButtonRestart()
