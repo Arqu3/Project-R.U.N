@@ -1,0 +1,638 @@
+fileFormatVersion: 2
+guid: db6f3e50794540a49bd04d13937cffbc
+timeCreated: 1476827063
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: camera1
+    100002: cluster_01
+    100004: cluster_01_group
+    100006: cluster_02
+    100008: cluster_02_group
+    100010: cluster_03
+    100012: cluster_03_group
+    100014: cluster_04
+    100016: cluster_04_group
+    100018: cluster_05
+    100020: cluster_05_group
+    100022: cluster_06
+    100024: cluster_06_group
+    100026: head_joint
+    100028: hip_ctrl
+    100030: hip_ctrl_group
+    100032: //RootNode
+    100034: l_collar_ctrl
+    100036: l_collar_ctrl_group
+    100038: l_collar_joint
+    100040: l_elbow_ctrl
+    100042: l_elbow_ctrl_group
+    100044: l_elbow_joint
+    100046: l_foot_ctrl
+    100048: l_foot_ctrl_group
+    100050: l_foot_ikHandle
+    100052: l_foot_joint
+    100054: l_forearm_joint
+    100056: l_hand_joint
+    100058: l_hip_joint
+    100060: l_indexfinger_01_joint
+    100062: l_indexfinger_02_joint
+    100064: l_indexfinger_03_joint
+    100066: l_indexfinger_04_joint
+    100068: l_indexfinger_ctrl
+    100070: l_indexfinger_ctrl_group
+    100072: l_knee_ctrl
+    100074: l_knee_ctrl_group
+    100076: l_knee_joint
+    100078: l_littlefinger_01_joint
+    100080: l_littlefinger_02_joint
+    100082: l_littlefinger_03_joint
+    100084: l_littlefinger_04_joint
+    100086: l_littlefinger_ctrl
+    100088: l_littlefinger_ctrl_group
+    100090: l_middlefinger_01_joint
+    100092: l_middlefinger_02_joint
+    100094: l_middlefinger_03_joint
+    100096: l_middlefinger_04_joint
+    100098: l_middlefinger_ctrl
+    100100: l_middlefinger_ctrl_group
+    100102: l_ringfinger_01_joint
+    100104: l_ringfinger_02_joint
+    100106: l_ringfinger_03_joint
+    100108: l_ringfinger_04_joint
+    100110: l_ringfinger_ctrl
+    100112: l_ringfinger_ctrl_group
+    100114: l_shoulder_ctrl
+    100116: l_shoulder_ctrl_group
+    100118: l_shoulder_joint
+    100120: l_thumb_ctrl
+    100122: l_thumb_ctrl_group
+    100124: l_wrist_ctrl
+    100126: l_wrist_ctrl_group
+    100128: l_wrist_joint
+    100130: neck_joint
+    100132: pelvis_joint
+    100134: persp1
+    100136: pSphere3
+    100138: r_collar_ctrl
+    100140: r_collar_ctrl_group
+    100142: r_collar_joint
+    100144: r_elbow_ctrl
+    100146: r_elbow_ctrl_group
+    100148: r_elbow_joint
+    100150: r_foot_ctrl
+    100152: r_foot_ctrl_group
+    100154: r_foot_ikHandle
+    100156: r_foot_joint
+    100158: r_forearm_joint
+    100160: r_hand_joint
+    100162: r_hip_joint
+    100164: r_indexfinger_01_joint
+    100166: r_indexfinger_02_joint
+    100168: r_indexfinger_03_joint
+    100170: r_indexfinger_04_joint
+    100172: r_indexfinger_ctrl
+    100174: r_indexfinger_ctrl_group
+    100176: r_knee_ctrl
+    100178: r_knee_ctrl_group
+    100180: r_knee_joint
+    100182: r_littlefinger_01_joint
+    100184: r_littlefinger_02_joint
+    100186: r_littlefinger_03_joint
+    100188: r_littlefinger_04_joint
+    100190: r_littlefinger_ctrl
+    100192: r_littlefinger_ctrl_group
+    100194: r_middlefinger_01_joint
+    100196: r_middlefinger_02_joint
+    100198: r_middlefinger_03_joint
+    100200: r_middlefinger_04_joint
+    100202: r_middlefinger_ctrl
+    100204: r_middlefinger_ctrl_group
+    100206: r_ringfinger_01_joint
+    100208: r_ringfinger_02_joint
+    100210: r_ringfinger_03_joint
+    100212: r_ringfinger_04_joint
+    100214: r_ringfinger_ctrl
+    100216: r_ringfinger_ctrl_group
+    100218: r_shoulder_ctrl
+    100220: r_shoulder_ctrl_group
+    100222: r_shoulder_joint
+    100224: r_thumb_ctrl
+    100226: r_thumb_ctrl_group
+    100228: r_wrist_ctrl
+    100230: r_wrist_ctrl_group
+    100232: r_wrist_joint
+    100234: shoulder_ctrl
+    100236: shoulder_ctrl_group
+    100238: spine_1_joint
+    100240: spine_2_joint
+    100242: spine_3_joint
+    100244: spine_4_joint
+    100246: spine_5_joint
+    100248: spine_6_joint
+    100250: spine_curve
+    100252: spine_ikHandle
+    100254: thumbfinger_01_joint
+    100256: thumbfinger_01_joint 1
+    100258: thumbfinger_02_joint
+    100260: thumbfinger_02_joint 1
+    100262: thumbfinger_03_joint
+    100264: thumbfinger_03_joint 1
+    400000: camera1
+    400002: cluster_01
+    400004: cluster_01_group
+    400006: cluster_02
+    400008: cluster_02_group
+    400010: cluster_03
+    400012: cluster_03_group
+    400014: cluster_04
+    400016: cluster_04_group
+    400018: cluster_05
+    400020: cluster_05_group
+    400022: cluster_06
+    400024: cluster_06_group
+    400026: head_joint
+    400028: hip_ctrl
+    400030: hip_ctrl_group
+    400032: //RootNode
+    400034: l_collar_ctrl
+    400036: l_collar_ctrl_group
+    400038: l_collar_joint
+    400040: l_elbow_ctrl
+    400042: l_elbow_ctrl_group
+    400044: l_elbow_joint
+    400046: l_foot_ctrl
+    400048: l_foot_ctrl_group
+    400050: l_foot_ikHandle
+    400052: l_foot_joint
+    400054: l_forearm_joint
+    400056: l_hand_joint
+    400058: l_hip_joint
+    400060: l_indexfinger_01_joint
+    400062: l_indexfinger_02_joint
+    400064: l_indexfinger_03_joint
+    400066: l_indexfinger_04_joint
+    400068: l_indexfinger_ctrl
+    400070: l_indexfinger_ctrl_group
+    400072: l_knee_ctrl
+    400074: l_knee_ctrl_group
+    400076: l_knee_joint
+    400078: l_littlefinger_01_joint
+    400080: l_littlefinger_02_joint
+    400082: l_littlefinger_03_joint
+    400084: l_littlefinger_04_joint
+    400086: l_littlefinger_ctrl
+    400088: l_littlefinger_ctrl_group
+    400090: l_middlefinger_01_joint
+    400092: l_middlefinger_02_joint
+    400094: l_middlefinger_03_joint
+    400096: l_middlefinger_04_joint
+    400098: l_middlefinger_ctrl
+    400100: l_middlefinger_ctrl_group
+    400102: l_ringfinger_01_joint
+    400104: l_ringfinger_02_joint
+    400106: l_ringfinger_03_joint
+    400108: l_ringfinger_04_joint
+    400110: l_ringfinger_ctrl
+    400112: l_ringfinger_ctrl_group
+    400114: l_shoulder_ctrl
+    400116: l_shoulder_ctrl_group
+    400118: l_shoulder_joint
+    400120: l_thumb_ctrl
+    400122: l_thumb_ctrl_group
+    400124: l_wrist_ctrl
+    400126: l_wrist_ctrl_group
+    400128: l_wrist_joint
+    400130: neck_joint
+    400132: pelvis_joint
+    400134: persp1
+    400136: pSphere3
+    400138: r_collar_ctrl
+    400140: r_collar_ctrl_group
+    400142: r_collar_joint
+    400144: r_elbow_ctrl
+    400146: r_elbow_ctrl_group
+    400148: r_elbow_joint
+    400150: r_foot_ctrl
+    400152: r_foot_ctrl_group
+    400154: r_foot_ikHandle
+    400156: r_foot_joint
+    400158: r_forearm_joint
+    400160: r_hand_joint
+    400162: r_hip_joint
+    400164: r_indexfinger_01_joint
+    400166: r_indexfinger_02_joint
+    400168: r_indexfinger_03_joint
+    400170: r_indexfinger_04_joint
+    400172: r_indexfinger_ctrl
+    400174: r_indexfinger_ctrl_group
+    400176: r_knee_ctrl
+    400178: r_knee_ctrl_group
+    400180: r_knee_joint
+    400182: r_littlefinger_01_joint
+    400184: r_littlefinger_02_joint
+    400186: r_littlefinger_03_joint
+    400188: r_littlefinger_04_joint
+    400190: r_littlefinger_ctrl
+    400192: r_littlefinger_ctrl_group
+    400194: r_middlefinger_01_joint
+    400196: r_middlefinger_02_joint
+    400198: r_middlefinger_03_joint
+    400200: r_middlefinger_04_joint
+    400202: r_middlefinger_ctrl
+    400204: r_middlefinger_ctrl_group
+    400206: r_ringfinger_01_joint
+    400208: r_ringfinger_02_joint
+    400210: r_ringfinger_03_joint
+    400212: r_ringfinger_04_joint
+    400214: r_ringfinger_ctrl
+    400216: r_ringfinger_ctrl_group
+    400218: r_shoulder_ctrl
+    400220: r_shoulder_ctrl_group
+    400222: r_shoulder_joint
+    400224: r_thumb_ctrl
+    400226: r_thumb_ctrl_group
+    400228: r_wrist_ctrl
+    400230: r_wrist_ctrl_group
+    400232: r_wrist_joint
+    400234: shoulder_ctrl
+    400236: shoulder_ctrl_group
+    400238: spine_1_joint
+    400240: spine_2_joint
+    400242: spine_3_joint
+    400244: spine_4_joint
+    400246: spine_5_joint
+    400248: spine_6_joint
+    400250: spine_curve
+    400252: spine_ikHandle
+    400254: thumbfinger_01_joint
+    400256: thumbfinger_01_joint 1
+    400258: thumbfinger_02_joint
+    400260: thumbfinger_02_joint 1
+    400262: thumbfinger_03_joint
+    400264: thumbfinger_03_joint 1
+    4300000: pSphere3
+    7400000: Jump
+    9500000: //RootNode
+    13700000: pSphere3
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Jump
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 55
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: camera1
+        weight: 1
+      - path: hip_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/cluster_01_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/cluster_01_group/cluster_01
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/cluster_02_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/cluster_02_group/cluster_02
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/cluster_03_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/cluster_03_group/cluster_03
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/l_hip_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/l_hip_joint/l_knee_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/l_hip_joint/l_knee_joint/l_foot_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/r_hip_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/r_hip_joint/r_knee_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/r_hip_joint/r_knee_joint/r_foot_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_ctrl_group/l_collar_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_ctrl_group/l_shoulder_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_ctrl_group/l_elbow_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_indexfinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_indexfinger_01_joint/l_indexfinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_indexfinger_01_joint/l_indexfinger_02_joint/l_indexfinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_indexfinger_01_joint/l_indexfinger_02_joint/l_indexfinger_03_joint/l_indexfinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_indexfinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_indexfinger_ctrl_group/l_indexfinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_littlefinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_littlefinger_01_joint/l_littlefinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_littlefinger_01_joint/l_littlefinger_02_joint/l_littlefinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_littlefinger_01_joint/l_littlefinger_02_joint/l_littlefinger_03_joint/l_littlefinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_littlefinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_littlefinger_ctrl_group/l_littlefinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_middlefinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_middlefinger_01_joint/l_middlefinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_middlefinger_01_joint/l_middlefinger_02_joint/l_middlefinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_middlefinger_01_joint/l_middlefinger_02_joint/l_middlefinger_03_joint/l_middlefinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_middlefinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_middlefinger_ctrl_group/l_middlefinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_ringfinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_ringfinger_01_joint/l_ringfinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_ringfinger_01_joint/l_ringfinger_02_joint/l_ringfinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_ringfinger_01_joint/l_ringfinger_02_joint/l_ringfinger_03_joint/l_ringfinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_ringfinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_ringfinger_ctrl_group/l_ringfinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_thumb_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/l_thumb_ctrl_group/l_thumb_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/thumbfinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/thumbfinger_01_joint/thumbfinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_forearm_joint/l_wrist_joint/l_hand_joint/thumbfinger_01_joint/thumbfinger_02_joint/thumbfinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_wrist_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/l_collar_joint/l_shoulder_joint/l_elbow_joint/l_wrist_ctrl_group/l_wrist_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/neck_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/neck_joint/head_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_ctrl_group/r_collar_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_ctrl_group/r_shoulder_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_ctrl_group/r_elbow_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_indexfinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_indexfinger_01_joint/r_indexfinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_indexfinger_01_joint/r_indexfinger_02_joint/r_indexfinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_indexfinger_01_joint/r_indexfinger_02_joint/r_indexfinger_03_joint/r_indexfinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_indexfinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_indexfinger_ctrl_group/r_indexfinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_littlefinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_littlefinger_01_joint/r_littlefinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_littlefinger_01_joint/r_littlefinger_02_joint/r_littlefinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_littlefinger_01_joint/r_littlefinger_02_joint/r_littlefinger_03_joint/r_littlefinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_littlefinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_littlefinger_ctrl_group/r_littlefinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_middlefinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_middlefinger_01_joint/r_middlefinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_middlefinger_01_joint/r_middlefinger_02_joint/r_middlefinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_middlefinger_01_joint/r_middlefinger_02_joint/r_middlefinger_03_joint/r_middlefinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_middlefinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_middlefinger_ctrl_group/r_middlefinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_ringfinger_01_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_ringfinger_01_joint/r_ringfinger_02_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_ringfinger_01_joint/r_ringfinger_02_joint/r_ringfinger_03_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_ringfinger_01_joint/r_ringfinger_02_joint/r_ringfinger_03_joint/r_ringfinger_04_joint
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_ringfinger_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_ringfinger_ctrl_group/r_ringfinger_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_thumb_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/r_thumb_ctrl_group/r_thumb_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/thumbfinger_01_joint
+          1
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/thumbfinger_01_joint
+          1/thumbfinger_02_joint 1
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_forearm_joint/r_wrist_joint/r_hand_joint/thumbfinger_01_joint
+          1/thumbfinger_02_joint 1/thumbfinger_03_joint 1
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_wrist_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/pelvis_joint/spine_1_joint/spine_2_joint/spine_3_joint/spine_4_joint/spine_5_joint/spine_6_joint/r_collar_joint/r_shoulder_joint/r_elbow_joint/r_wrist_ctrl_group/r_wrist_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group/shoulder_ctrl
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group/shoulder_ctrl/cluster_04_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group/shoulder_ctrl/cluster_04_group/cluster_04
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group/shoulder_ctrl/cluster_05_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group/shoulder_ctrl/cluster_05_group/cluster_05
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group/shoulder_ctrl/cluster_06_group
+        weight: 1
+      - path: hip_ctrl_group/hip_ctrl/shoulder_ctrl_group/shoulder_ctrl/cluster_06_group/cluster_06
+        weight: 1
+      - path: l_foot_ctrl_group
+        weight: 1
+      - path: l_foot_ctrl_group/l_foot_ctrl
+        weight: 1
+      - path: l_foot_ctrl_group/l_foot_ikHandle
+        weight: 1
+      - path: l_knee_ctrl_group
+        weight: 1
+      - path: l_knee_ctrl_group/l_knee_ctrl
+        weight: 1
+      - path: persp1
+        weight: 1
+      - path: pSphere3
+        weight: 1
+      - path: r_foot_ctrl_group
+        weight: 1
+      - path: r_foot_ctrl_group/r_foot_ctrl
+        weight: 1
+      - path: r_foot_ctrl_group/r_foot_ikHandle
+        weight: 1
+      - path: r_knee_ctrl_group
+        weight: 1
+      - path: r_knee_ctrl_group/r_knee_ctrl
+        weight: 1
+      - path: spine_curve
+        weight: 1
+      - path: spine_ikHandle
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
